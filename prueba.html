@@ -1,0 +1,912 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Galería Responsive - Emerald Elite</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-green: #00ff7f;
+            --secondary-green: #32cd32;
+            --dark-green: #228b22;
+            --emerald-dark: #0d2818;
+            --emerald-darker: #061a0d;
+            --emerald-glow: rgba(0, 255, 127, 0.4);
+            --emerald-light-glow: rgba(50, 205, 50, 0.3);
+            --emerald-soft-glow: rgba(0, 255, 127, 0.1);
+            --glass-bg: rgba(13, 40, 24, 0.3);
+            --glass-border: rgba(0, 255, 127, 0.2);
+            --text-primary: #ffffff;
+            --text-secondary: rgba(255, 255, 255, 0.9);
+            --text-muted: rgba(255, 255, 255, 0.7);
+            --card-bg: rgba(13, 40, 24, 0.6);
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #000000;
+            color: var(--text-primary);
+            overflow-x: hidden;
+        }
+
+        /* SECCIÓN DE GALERÍA PREMIUM */
+        .premium-gallery-section {
+            position: relative;
+            padding: 6rem 0;
+            background: 
+                radial-gradient(ellipse at top left, rgba(0, 255, 127, 0.05) 0%, transparent 50%),
+                radial-gradient(ellipse at bottom right, rgba(50, 205, 50, 0.03) 0%, transparent 50%),
+                radial-gradient(ellipse at center, rgba(0, 255, 127, 0.02) 0%, transparent 70%);
+            overflow: hidden;
+        }
+
+        .premium-gallery-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                linear-gradient(45deg, transparent 30%, rgba(0, 255, 127, 0.02) 50%, transparent 70%),
+                linear-gradient(-45deg, transparent 30%, rgba(50, 205, 50, 0.01) 50%, transparent 70%);
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        /* HEADER MEJORADO */
+        .gallery-header {
+            text-align: center;
+            margin-bottom: 4rem;
+            padding: 0 2rem;
+            position: relative;
+            z-index: 2;
+        }
+
+        .gallery-badge {
+            display: inline-block;
+            padding: 0.8rem 2rem;
+            background: linear-gradient(135deg, rgba(0, 255, 127, 0.1), rgba(50, 205, 50, 0.05));
+            backdrop-filter: blur(20px);
+            border: 2px solid transparent;
+            background-clip: padding-box;
+            border-radius: 50px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: var(--primary-green);
+            margin-bottom: 2rem;
+            box-shadow: 
+                0 0 30px var(--emerald-soft-glow),
+                inset 0 0 20px rgba(0, 255, 127, 0.05);
+            position: relative;
+            animation: pulseGlow 3s ease-in-out infinite;
+        }
+
+        .gallery-badge::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: 50px;
+            padding: 2px;
+            background: linear-gradient(135deg, var(--primary-green), var(--secondary-green));
+            mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            mask-composite: xor;
+            -webkit-mask-composite: xor;
+        }
+
+        .gallery-title {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(2.5rem, 6vw, 4rem);
+            font-weight: 700;
+            line-height: 0.9;
+            margin-bottom: 2rem;
+            background: linear-gradient(135deg, #00ff7f 0%, #32cd32 30%, #90ee90 60%, #00ff7f 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            position: relative;
+            animation: titleShimmer 4s ease-in-out infinite;
+        }
+
+        .gallery-title::after {
+            content: '';
+            position: absolute;
+            bottom: -1rem;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 120px;
+            height: 4px;
+            background: linear-gradient(90deg, transparent, var(--primary-green), transparent);
+            border-radius: 4px;
+            box-shadow: 0 0 20px var(--emerald-glow);
+            animation: lineGlow 2s ease-in-out infinite alternate;
+        }
+
+        .gallery-subtitle {
+            font-size: clamp(1rem, 2.5vw, 1.4rem);
+            color: var(--text-secondary);
+            font-weight: 300;
+            max-width: 700px;
+            margin: 0 auto;
+            opacity: 0.9;
+        }
+
+        /* CONTENEDOR PRINCIPAL CON DOS SECCIONES */
+        .gallery-container {
+            max-width: 1600px;
+            margin: 0 auto;
+        }
+
+        /* SECCIÓN DESTACADA (DESKTOP: GRID | MOBILE: SCROLL) */
+        .featured-section {
+            margin-bottom: 4rem;
+        }
+
+        .section-title {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(1.8rem, 4vw, 2.5rem);
+            font-weight: 600;
+            color: var(--primary-green);
+            margin-bottom: 2rem;
+            padding: 0 2rem;
+            text-align: center;
+            position: relative;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -0.5rem;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60px;
+            height: 2px;
+            background: var(--primary-green);
+            border-radius: 2px;
+        }
+
+        /* GALERÍA DESTACADA */
+        .featured-gallery {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 1.5rem;
+            padding: 0 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        /* GALERÍA PREMIUM CON SCROLL HORIZONTAL */
+        .premium-gallery-wrapper {
+            position: relative;
+            padding: 0 2rem;
+        }
+
+        .premium-gallery {
+            display: flex;
+            gap: 2rem;
+            overflow-x: auto;
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+            scroll-behavior: smooth;
+            scroll-snap-type: x mandatory;
+            padding-bottom: 1rem;
+        }
+
+        .premium-gallery::-webkit-scrollbar {
+            display: none;
+        }
+
+        /* SCROLL INDICATORS */
+        .scroll-indicator {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 10;
+            background: rgba(0, 255, 127, 0.1);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--primary-green);
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 0 20px var(--emerald-soft-glow);
+        }
+
+        .scroll-indicator:hover {
+            background: rgba(0, 255, 127, 0.2);
+            transform: translateY(-50%) scale(1.1);
+        }
+
+        .scroll-left {
+            left: 1rem;
+        }
+
+        .scroll-right {
+            right: 1rem;
+        }
+
+        .scroll-indicator::before {
+            content: '';
+            border: solid var(--primary-green);
+            border-width: 0 2px 2px 0;
+            display: inline-block;
+            padding: 4px;
+        }
+
+        .scroll-left::before {
+            transform: rotate(135deg);
+            margin-left: 4px;
+        }
+
+        .scroll-right::before {
+            transform: rotate(-45deg);
+            margin-right: 4px;
+        }
+
+        /* TARJETAS DE GALERÍA */
+        .gallery-card {
+            position: relative;
+            border-radius: 25px;
+            overflow: hidden;
+            background: var(--glass-bg);
+            backdrop-filter: blur(30px);
+            border: 1px solid var(--glass-border);
+            transition: all 0.8s cubic-bezier(0.25, 0.8, 0.25, 1);
+            cursor: pointer;
+            box-shadow: 
+                0 15px 35px rgba(0, 0, 0, 0.4),
+                0 0 0 1px rgba(255, 255, 255, 0.05),
+                inset 0 1px 0 rgba(255, 255, 255, 0.1);
+            transform-style: preserve-3d;
+            perspective: 1000px;
+            scroll-snap-align: center;
+        }
+
+        /* VARIANTES DE TAMAÑO PARA DESKTOP */
+        .gallery-card.featured-large {
+            min-height: 380px;
+            max-height: 420px;
+        }
+
+        .gallery-card.featured-medium {
+            min-height: 320px;
+            max-height: 380px;
+        }
+
+        /* VARIANTES PARA SCROLL HORIZONTAL */
+        .gallery-card.premium-card {
+            flex: 0 0 350px;
+            height: 450px;
+        }
+
+        .gallery-card:hover {
+            transform: translateY(-15px) rotateX(2deg) rotateY(2deg) scale(1.02);
+            border-color: var(--primary-green);
+            box-shadow: 
+                0 25px 50px rgba(0, 0, 0, 0.6),
+                0 0 60px var(--emerald-glow),
+                0 0 0 1px var(--primary-green),
+                inset 0 1px 0 rgba(255, 255, 255, 0.2);
+        }
+
+        /* IMAGEN Y VIDEO PRINCIPAL */
+        .gallery-image, .gallery-video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: all 1s cubic-bezier(0.25, 0.8, 0.25, 1);
+            filter: brightness(0.8) contrast(1.1) saturate(1.2);
+        }
+
+        .gallery-video {
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+
+        .gallery-card:hover .gallery-image,
+        .gallery-card:hover .gallery-video {
+            transform: scale(1.1) rotate(1deg);
+            filter: brightness(1) contrast(1.3) saturate(1.4);
+        }
+
+        /* Overlay para videos con play button */
+        .video-overlay {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 80px;
+            height: 80px;
+            background: rgba(0, 255, 127, 0.2);
+            backdrop-filter: blur(15px);
+            border: 2px solid var(--primary-green);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.4s ease;
+            z-index: 5;
+            box-shadow: 0 0 30px var(--emerald-glow);
+        }
+
+        .video-overlay::before {
+            content: '';
+            width: 0;
+            height: 0;
+            border-left: 20px solid var(--primary-green);
+            border-top: 12px solid transparent;
+            border-bottom: 12px solid transparent;
+            margin-left: 4px;
+        }
+
+        .gallery-card:hover .video-overlay {
+            transform: translate(-50%, -50%) scale(1.1);
+            background: rgba(0, 255, 127, 0.3);
+            box-shadow: 0 0 40px var(--emerald-glow);
+        }
+
+        /* Estilo para videos en reproducción */
+        .gallery-card.playing .video-overlay {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .gallery-card.playing .gallery-video {
+            filter: brightness(1) contrast(1.2) saturate(1.3);
+        }
+
+        /* OVERLAY - *** AQUI ESTA LA CORRECCIÓN *** */
+        .gallery-overlay {
+            position: absolute;
+            inset: 0;
+            background: 
+                linear-gradient(135deg, 
+                    rgba(0, 0, 0, 0.1) 0%,
+                    rgba(6, 26, 13, 0.3) 30%,
+                    rgba(6, 26, 13, 0.7) 70%,
+                    rgba(6, 26, 13, 0.95) 100%
+                ),
+                radial-gradient(circle at 30% 30%, rgba(0, 255, 127, 0.1) 0%, transparent 50%);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            padding: 2rem;
+            opacity: 0; /* CORRECCIÓN: La capa está oculta por defecto */
+            transition: all 0.6s ease;
+        }
+
+        .gallery-card:hover .gallery-overlay {
+            opacity: 1; /* Se muestra al pasar el cursor */
+        }
+
+        /* BADGE FLOTANTE */
+        .item-badge {
+            align-self: flex-start;
+            background: rgba(0, 255, 127, 0.15);
+            backdrop-filter: blur(15px);
+            border: 1px solid var(--primary-green);
+            color: var(--primary-green);
+            font-size: 0.75rem;
+            font-weight: 700;
+            padding: 0.5rem 1.2rem;
+            border-radius: 20px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            box-shadow: 0 0 15px var(--emerald-soft-glow);
+            transform: translateY(-5px);
+            opacity: 0;
+            transition: all 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        }
+
+        .gallery-card:hover .item-badge {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        /* CONTENIDO */
+        .gallery-content {
+            margin-top: auto;
+        }
+
+        .gallery-item-title {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(1.4rem, 3vw, 1.8rem);
+            font-weight: 700;
+            color: white;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, var(--primary-green) 0%, #90ee90 50%, var(--secondary-green) 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            line-height: 1.2;
+            transform: translateY(20px);
+            opacity: 0;
+            transition: all 0.7s cubic-bezier(0.25, 0.8, 0.25, 1) 0.1s;
+        }
+
+        .gallery-specs {
+            display: flex;
+            gap: 0.8rem;
+            margin-bottom: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .spec-item {
+            background: rgba(0, 255, 127, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(0, 255, 127, 0.3);
+            padding: 0.4rem 0.8rem;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--primary-green);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            transform: translateY(20px);
+            opacity: 0;
+            transition: all 0.7s cubic-bezier(0.25, 0.8, 0.25, 1) 0.2s;
+        }
+
+        .gallery-item-description {
+            color: rgba(255, 255, 255, 0.85);
+            font-size: 0.9rem;
+            line-height: 1.5;
+            font-weight: 400;
+            margin-bottom: 1.5rem;
+            transform: translateY(20px);
+            opacity: 0;
+            transition: all 0.7s cubic-bezier(0.25, 0.8, 0.25, 1) 0.3s;
+        }
+
+        .gallery-card:hover .gallery-item-title,
+        .gallery-card:hover .spec-item,
+        .gallery-card:hover .gallery-item-description {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        /* BOTÓN DE ACCIÓN */
+        .gallery-action {
+            background: linear-gradient(135deg, var(--primary-green) 0%, var(--secondary-green) 100%);
+            color: #000;
+            border: none;
+            padding: 0.8rem 1.5rem;
+            border-radius: 20px;
+            font-weight: 700;
+            font-size: 0.8rem;
+            cursor: pointer;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 8px 20px rgba(0, 255, 127, 0.3);
+            transform: translateY(20px);
+            opacity: 0;
+            transition: all 0.7s cubic-bezier(0.25, 0.8, 0.25, 1) 0.4s;
+        }
+
+        .gallery-action::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+            transition: left 0.6s ease;
+        }
+
+        .gallery-action:hover::before {
+            left: 100%;
+        }
+
+        .gallery-action:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 25px rgba(0, 255, 127, 0.5);
+        }
+
+        .gallery-card:hover .gallery-action {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        /* MOBILE FIRST APPROACH */
+        @media (max-width: 768px) {
+            .premium-gallery-section {
+                padding: 4rem 0;
+            }
+
+            .gallery-header {
+                margin-bottom: 3rem;
+            }
+
+            /* En móvil, la sección destacada también usa scroll horizontal */
+            .featured-gallery {
+                display: flex;
+                overflow-x: auto;
+                scrollbar-width: none;
+                -ms-overflow-style: none;
+                scroll-behavior: smooth;
+                scroll-snap-type: x mandatory;
+                gap: 1.5rem;
+                padding: 0 1rem;
+                grid-template-columns: none;
+            }
+
+            .featured-gallery::-webkit-scrollbar {
+                display: none;
+            }
+
+            .gallery-card.featured-large,
+            .gallery-card.featured-medium {
+                flex: 0 0 300px;
+                height: 400px;
+                min-height: auto;
+            }
+
+            .gallery-card.premium-card {
+                flex: 0 0 280px;
+                height: 380px;
+            }
+
+            .premium-gallery-wrapper {
+                padding: 0 1rem;
+            }
+
+            .premium-gallery {
+                gap: 1.5rem;
+            }
+
+            .gallery-overlay {
+                padding: 1.5rem;
+            }
+
+            .section-title {
+                padding: 0 1rem;
+                font-size: 1.5rem;
+            }
+
+            /* Ocultar scroll indicators en móvil */
+            .scroll-indicator {
+                display: none;
+            }
+
+            .gallery-card:hover {
+                transform: translateY(-8px) scale(1.01);
+            }
+        }
+
+        /* TABLET */
+        @media (min-width: 769px) and (max-width: 1024px) {
+            .featured-gallery {
+                grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+                gap: 1.5rem;
+            }
+            
+            .gallery-card.premium-card {
+                flex: 0 0 320px;
+            }
+
+            .gallery-card.featured-large {
+                min-height: 350px;
+                max-height: 380px;
+            }
+
+            .gallery-card.featured-medium {
+                min-height: 300px;
+                max-height: 350px;
+            }
+        }
+
+        /* DESKTOP LARGE */
+        @media (min-width: 1400px) {
+            .featured-gallery {
+                grid-template-columns: repeat(3, 1fr);
+                max-width: 1300px;
+            }
+        }
+
+        /* ANIMACIONES */
+        @keyframes pulseGlow {
+            0%, 100% { box-shadow: 0 0 20px var(--emerald-soft-glow); }
+            50% { box-shadow: 0 0 40px var(--emerald-glow); }
+        }
+
+        @keyframes titleShimmer {
+            0%, 100% { 
+                background-position: 0% 50%; 
+                filter: drop-shadow(0 0 20px var(--emerald-glow));
+            }
+            50% { 
+                background-position: 100% 50%; 
+                filter: drop-shadow(0 0 40px var(--primary-green));
+            }
+        }
+
+        @keyframes lineGlow {
+            from { box-shadow: 0 0 15px var(--emerald-glow); }
+            to { box-shadow: 0 0 30px var(--primary-green); }
+        }
+
+        /* SCROLL SMOOTH BEHAVIOR */
+        html {
+            scroll-behavior: smooth;
+        }
+
+        /* CUSTOM SCROLLBAR PARA DESKTOP */
+        @media (min-width: 1025px) {
+            .premium-gallery::-webkit-scrollbar {
+                display: block;
+                height: 8px;
+            }
+
+            .premium-gallery::-webkit-scrollbar-track {
+                background: rgba(0, 255, 127, 0.1);
+                border-radius: 4px;
+            }
+
+            .premium-gallery::-webkit-scrollbar-thumb {
+                background: var(--primary-green);
+                border-radius: 4px;
+            }
+
+            .premium-gallery::-webkit-scrollbar-thumb:hover {
+                background: var(--secondary-green);
+            }
+        }
+    </style>
+</head>
+<body>
+    <section class="premium-gallery-section">
+        <div class="gallery-header">
+            <div class="gallery-badge">Colección Premium</div>
+            <h2 class="gallery-title">Galería Exclusiva</h2>
+            <p class="gallery-subtitle">Obras maestras en esmeraldas colombianas seleccionadas por su excepcional belleza y rareza</p>
+        </div>
+
+        <div class="gallery-container">
+            <div class="featured-section">
+                <h3 class="section-title">Piezas Destacadas</h3>
+                <div class="featured-gallery">
+                    <div class="gallery-card featured-large">
+                        <video class="gallery-video" muted loop preload="metadata" poster="https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80">
+                            <source src="https://player.vimeo.com/external/454984243.hd.mp4?s=6c21d3e7e8b9e3a7f4c7a1c8a5b9c7d3e6f8a2b4" type="video/mp4">
+                        </video>
+                        <div class="video-overlay"></div>
+                        <div class="gallery-overlay">
+                            <div class="item-badge">Pieza Única</div>
+                            <div class="gallery-content">
+                                <h3 class="gallery-item-title">Corazón del Bosque</h3>
+                                <div class="gallery-specs">
+                                    <span class="spec-item">8.5 QT</span>
+                                    <span class="spec-item">Talla Corazón</span>
+                                    <span class="spec-item">AAA</span>
+                                </div>
+                                <p class="gallery-item-description">Una gema excepcional que captura la esencia misma de los bosques colombianos.</p>
+                                <button class="gallery-action">Ver Detalles</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="gallery-card featured-medium">
+                        <video class="gallery-video" muted loop preload="metadata" poster="https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80">
+                            <source src="https://player.vimeo.com/external/398987123.hd.mp4?s=9c34f5e8a2b6d7c4e5f8a9b2c6d7e3f5" type="video/mp4">
+                        </video>
+                        <div class="video-overlay"></div>
+                        <div class="gallery-overlay">
+                            <div class="item-badge">Exclusiva</div>
+                            <div class="gallery-content">
+                                <h3 class="gallery-item-title">Majestuosa</h3>
+                                <div class="gallery-specs">
+                                    <span class="spec-item">12.7 QT</span>
+                                    <span class="spec-item">Vivid</span>
+                                </div>
+                                <p class="gallery-item-description">La corona de nuestra colección, perfección en cada faceta.</p>
+                                <button class="gallery-action">Solicitar Info</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="gallery-card featured-medium">
+                        <video class="gallery-video" muted loop preload="metadata" poster="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80">
+                            <source src="https://player.vimeo.com/external/421876543.hd.mp4?s=2d5f8e3a9b7c1d4e6f2a8b5c9d7e4f1" type="video/mp4">
+                        </video>
+                        <div class="video-overlay"></div>
+                        <div class="gallery-overlay">
+                            <div class="item-badge">Solitario</div>
+                            <div class="gallery-content">
+                                <h3 class="gallery-item-title">Estrella Real</h3>
+                                <div class="gallery-specs">
+                                    <span class="spec-item">3.2 QT</span>
+                                    <span class="spec-item">VS1</span>
+                                </div>
+                                <p class="gallery-item-description">Perfecta para engastes exclusivos con luminosidad incomparable.</p>
+                                <button class="gallery-action">Explorar</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="premium-section">
+                <h3 class="section-title">Colección Premium</h3>
+                <div class="premium-gallery-wrapper">
+                    <div class="scroll-indicator scroll-left" onclick="scrollGallery('left')"></div>
+                    <div class="premium-gallery" id="premiumGallery">
+                        <div class="gallery-card premium-card">
+                            <img src="https://images.unsplash.com/photo-1589124233488-2DR9a1a4a4d6?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80" alt="Pendientes" class="gallery-image">
+                            <div class="gallery-overlay">
+                                <div class="item-badge">Par</div>
+                                <div class="gallery-content">
+                                    <h3 class="gallery-item-title">Gota de Rocío</h3>
+                                    <div class="gallery-specs">
+                                        <span class="spec-item">Talla Pera</span>
+                                        <span class="spec-item">AA+</span>
+                                    </div>
+                                    <p class="gallery-item-description">Elegancia en cada gota, perfectas para ocasiones especiales.</p>
+                                    <button class="gallery-action">Ver Par</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="gallery-card premium-card">
+                            <img src="https://images.unsplash.com/photo-1602173574767-37ac01994b2a?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80" alt="Collar Verde" class="gallery-image">
+                            <div class="gallery-overlay">
+                                <div class="item-badge">Collar</div>
+                                <div class="gallery-content">
+                                    <h3 class="gallery-item-title">Río Verde</h3>
+                                    <div class="gallery-specs">
+                                        <span class="spec-item">15 Piezas</span>
+                                        <span class="spec-item">AAA</span>
+                                    </div>
+                                    <p class="gallery-item-description">Una sinfonía de verdes que fluye como un río de luz.</p>
+                                    <button class="gallery-action">Descubrir</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="gallery-card premium-card">
+                            <img src="https://images.unsplash.com/photo-1605100804763-247f67b3557e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80" alt="Esmeralda Suprema" class="gallery-image">
+                            <div class="gallery-overlay">
+                                <div class="item-badge">Premium</div>
+                                <div class="gallery-content">
+                                    <h3 class="gallery-item-title">Suprema</h3>
+                                    <div class="gallery-specs">
+                                        <span class="spec-item">6.3 QT</span>
+                                        <span class="spec-item">Octágono</span>
+                                        <span class="spec-item">AAA+</span>
+                                    </div>
+                                    <p class="gallery-item-description">Cristalización perfecta con un verde intenso que hipnotiza.</p>
+                                    <button class="gallery-action">Cotizar</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="gallery-card premium-card">
+                            <img src="https://images.unsplash.com/photo-1596944924616-7b38e7cfac36?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80" alt="Brazalete Lux" class="gallery-image">
+                            <div class="gallery-overlay">
+                                <div class="item-badge">Brazalete</div>
+                                <div class="gallery-content">
+                                    <h3 class="gallery-item-title">Verde Lux</h3>
+                                    <div class="gallery-specs">
+                                        <span class="spec-item">25 Gemas</span>
+                                        <span class="spec-item">Oro 18K</span>
+                                    </div>
+                                    <p class="gallery-item-description">Lujo absoluto en cada centímetro, diseñado para la realeza.</p>
+                                    <button class="gallery-action">Reservar</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="gallery-card premium-card">
+                            <img src="https://images.unsplash.com/photo-1611652022419-a9419f74343d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80" alt="Anillo Imperial" class="gallery-image">
+                            <div class="gallery-overlay">
+                                <div class="item-badge">Anillo</div>
+                                <div class="gallery-content">
+                                    <h3 class="gallery-item-title">Imperial</h3>
+                                    <div class="gallery-specs">
+                                        <span class="spec-item">4.8 QT</span>
+                                        <span class="spec-item">Cojín</span>
+                                        <span class="spec-item">VS</span>
+                                    </div>
+                                    <p class="gallery-item-description">El poder de la naturaleza capturado en oro y esmeralda.</p>
+                                    <button class="gallery-action">Inspeccionar</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="gallery-card premium-card">
+                            <img src="https://images.unsplash.com/photo-1574375927938-d5a98e8ffe85?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80" alt="Tiara Emerald" class="gallery-image">
+                            <div class="gallery-overlay">
+                                <div class="item-badge">Tiara</div>
+                                <div class="gallery-content">
+                                    <h3 class="gallery-item-title">Corona Verde</h3>
+                                    <div class="gallery-specs">
+                                        <span class="spec-item">Única</span>
+                                        <span class="spec-item">Platino</span>
+                                    </div>
+                                    <p class="gallery-item-description">Una obra maestra que define la elegancia suprema.</p>
+                                    <button class="gallery-action">Consultar</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="scroll-indicator scroll-right" onclick="scrollGallery('right')"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        // Funcionalidad para videos
+        function initializeVideoPlayback() {
+            const videoCards = document.querySelectorAll('.gallery-card .gallery-video');
+            const videoOverlays = document.querySelectorAll('.video-overlay');
+
+            videoOverlays.forEach((overlay, index) => {
+                overlay.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    const card = overlay.closest('.gallery-card');
+                    const video = card.querySelector('.gallery-video');
+                    
+                    if (video.paused) {
+                        videoCards.forEach(v => {
+                            if (v !== video) {
+                                v.pause();
+                                v.closest('.gallery-card').classList.remove('playing');
+                            }
+                        });
+                        
+                        video.play();
+                        card.classList.add('playing');
+                    } else {
+                        video.pause();
+                        card.classList.remove('playing');
+                    }
+                });
+            });
+
+            videoCards.forEach(video => {
+                video.addEventListener('ended', () => {
+                    video.closest('.gallery-card').classList.remove('playing');
+                });
+            });
+        }
+
+        // Funcionalidad para scroll horizontal
+        function scrollGallery(direction) {
+            const gallery = document.getElementById('premiumGallery');
+            const scrollAmount = 370;
+            
+            if (direction === 'left') {
+                gallery.scrollBy({ left: -scrollAmount, behavior: 'smooth' });
+            } else {
+                gallery.scrollBy({ left: scrollAmount, behavior: 'smooth' });
+            }
+        }
+
+        // Inicializar cuando el DOM esté listo
+        document.addEventListener('DOMContentLoaded', () => {
+            initializeVideoPlayback();
+        });
+    </script>
+</body>
+</html>
