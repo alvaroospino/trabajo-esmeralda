@@ -21,7 +21,8 @@ class EmeraldElite {
         this.initCarousel();
         this.setupIntersectionObserver();
         this.setupMobileMenu();
-        this.setupVideoHandlers();
+        this.setupGalleryScroll(); // Added for premium gallery
+        this.setupAllVideoPlayers();
         
         // Simulate loading time
         setTimeout(() => {
@@ -57,11 +58,9 @@ class EmeraldElite {
             const particle = document.createElement('div');
             particle.className = 'particle';
             
-            // Random position
             particle.style.left = Math.random() * 100 + '%';
             particle.style.top = Math.random() * 100 + '%';
             
-            // Random animation delay and duration
             particle.style.animationDelay = Math.random() * 8 + 's';
             particle.style.animationDuration = (Math.random() * 6 + 6) + 's';
             
@@ -72,13 +71,12 @@ class EmeraldElite {
 
     // Navigation
     setupEventListeners() {
-        // Smooth scrolling for navigation links
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
             anchor.addEventListener('click', (e) => {
                 e.preventDefault();
                 const target = document.querySelector(anchor.getAttribute('href'));
                 if (target) {
-                    const offsetTop = target.offsetTop - 80; // Account for fixed nav
+                    const offsetTop = target.offsetTop - 80;
                     window.scrollTo({
                         top: offsetTop,
                         behavior: 'smooth'
@@ -87,13 +85,11 @@ class EmeraldElite {
             });
         });
 
-        // Navigation scroll effect
         window.addEventListener('scroll', () => {
             this.handleNavScroll();
             this.handleScrollIndicator();
         });
 
-        // Carousel controls - CORREGIDO
         const prevBtn = document.querySelector('.prev-btn');
         const nextBtn = document.querySelector('.next-btn');
         
@@ -113,7 +109,6 @@ class EmeraldElite {
             });
         }
 
-        // Carousel indicators - CORREGIDO
         document.querySelectorAll('.indicator').forEach((indicator, index) => {
             indicator.addEventListener('click', (e) => {
                 e.preventDefault();
@@ -122,25 +117,18 @@ class EmeraldElite {
             });
         });
 
-        // Pause autoplay on hover
         const carouselContainer = document.querySelector('.carousel-container');
         if (carouselContainer) {
             carouselContainer.addEventListener('mouseenter', () => this.pauseAutoPlay());
             carouselContainer.addEventListener('mouseleave', () => this.resumeAutoPlay());
-            
-            // ELIMINAMOS EL CLICK EN EL CARRUSEL PARA NAVEGAR
-            // Solo los botones y indicadores pueden navegar ahora
         }
 
-        // Touch/swipe support for carousel - MEJORADO
         this.setupTouchSupport();
 
-        // Resize handler
         window.addEventListener('resize', () => {
             this.handleResize();
         });
 
-        // Keyboard navigation
         document.addEventListener('keydown', (e) => {
             if (e.target.closest('.carousel-container') || e.target.closest('.carousel-indicators')) {
                 switch(e.key) {
@@ -201,7 +189,6 @@ class EmeraldElite {
             document.body.style.overflow = menu.classList.contains('active') ? 'hidden' : '';
         });
 
-        // Close menu when clicking on links
         navLinks.forEach(link => {
             link.addEventListener('click', () => {
                 toggle.classList.remove('active');
@@ -210,7 +197,6 @@ class EmeraldElite {
             });
         });
 
-        // Close menu when clicking outside
         document.addEventListener('click', (e) => {
             if (!toggle.contains(e.target) && !menu.contains(e.target)) {
                 toggle.classList.remove('active');
@@ -220,59 +206,118 @@ class EmeraldElite {
         });
     }
 
-    // Video Handlers
-    setupVideoHandlers() {
-        const playButtons = document.querySelectorAll('.play-btn');
-        const videos = document.querySelectorAll('.emerald-video');
+    // CONSOLIDATED Video Handlers
+    _handleVideoPlay(video, allVideos) {
+        if (video.paused) {
+            allVideos.forEach(v => {
+                if (v !== video) {
+                    v.pause();
+                    if(v.closest('.gallery-card')) v.closest('.gallery-card').classList.remove('playing');
+                }
+            });
+            video.play();
+            if(video.closest('.gallery-card')) video.closest('.gallery-card').classList.add('playing');
+        } else {
+            video.pause();
+             if(video.closest('.gallery-card')) video.closest('.gallery-card').classList.remove('playing');
+        }
+    }
+// Video Handlers Unificados
+    setupAllVideoPlayers() {
+        const allVideos = document.querySelectorAll('.emerald-video, .gallery-video');
+        const videoContainers = document.querySelectorAll('.gallery-card');
 
+        videoContainers.forEach(container => {
+            const video = container.querySelector('.gallery-video');
+            if (!video) return;
+
+            // Función para manejar la reproducción/pausa
+            const togglePlay = (e) => {
+                // Evita que el video se active si se hace clic en un botón de acción
+                if (e.target.closest('.gallery-action')) {
+                    return;
+                }
+                e.preventDefault();
+                e.stopPropagation();
+                this._handleVideoPlay(video, allVideos);
+            };
+
+            // Asigna el evento al contenedor principal para asegurar la captura del clic
+            container.addEventListener('click', togglePlay);
+
+            // Gestiona las clases y el estado visual del video
+            video.addEventListener('play', () => {
+                container.classList.add('playing');
+            });
+
+            video.addEventListener('pause', () => {
+                container.classList.remove('playing');
+            });
+
+            video.addEventListener('ended', () => {
+                container.classList.remove('playing');
+                video.currentTime = 0; // Reinicia el video al terminar
+            });
+        });
+
+        // Este código es para los otros videos que puedas tener con la clase .play-btn
+        // Lo mantenemos por si lo usas en otras secciones.
+        const playButtons = document.querySelectorAll('.play-btn');
+        const regularVideos = document.querySelectorAll('.emerald-video');
         playButtons.forEach((btn, index) => {
             btn.addEventListener('click', (e) => {
                 e.preventDefault();
                 e.stopPropagation();
-                const video = videos[index];
+                const video = regularVideos[index];
                 if (video) {
-                    if (video.paused) {
-                        // Pause all other videos
-                        videos.forEach(v => {
-                            if (v !== video) {
-                                v.pause();
-                                v.currentTime = 0;
-                            }
-                        });
-                        video.play();
-                        btn.style.display = 'none';
-                    }
+                   this._handleVideoPlay(video, allVideos);
                 }
             });
         });
 
-        // Show play button when video ends or is paused
-        videos.forEach((video, index) => {
+         regularVideos.forEach((video, index) => {
             video.addEventListener('pause', () => {
-                playButtons[index].style.display = 'flex';
+                if(playButtons[index]) playButtons[index].style.display = 'flex';
             });
 
             video.addEventListener('ended', () => {
-                playButtons[index].style.display = 'flex';
+                if(playButtons[index]) playButtons[index].style.display = 'flex';
                 video.currentTime = 0;
             });
 
             video.addEventListener('play', () => {
-                playButtons[index].style.display = 'none';
+                 if(playButtons[index]) playButtons[index].style.display = 'none';
             });
 
-            // Click on video to pause/play
             video.addEventListener('click', () => {
-                if (video.paused) {
-                    video.play();
-                } else {
-                    video.pause();
-                }
+                this._handleVideoPlay(video, allVideos);
             });
         });
     }
 
-    // Carousel Functionality - MEJORADO
+    // Premium Gallery Scroll
+    setupGalleryScroll() {
+        const leftScroller = document.querySelector('.scroll-indicator.scroll-left');
+        const rightScroller = document.querySelector('.scroll-indicator.scroll-right');
+        const gallery = document.getElementById('premiumGallery');
+
+        if (!gallery) return;
+
+        const scrollAmount = 370;
+
+        if (leftScroller) {
+            leftScroller.addEventListener('click', () => {
+                gallery.scrollBy({ left: -scrollAmount, behavior: 'smooth' });
+            });
+        }
+        if (rightScroller) {
+            rightScroller.addEventListener('click', () => {
+                gallery.scrollBy({ left: scrollAmount, behavior: 'smooth' });
+            });
+        }
+    }
+
+    // Carousel Functionality
     initCarousel() {
         const slides = document.querySelectorAll('.carousel-slide');
         this.totalSlides = slides.length;
@@ -309,32 +354,22 @@ class EmeraldElite {
 
         if (!track || slides.length === 0) return;
 
-        // Update track position - CORREGIDO
-        const translateX = -this.currentSlide * 25; // 25% porque cada slide ocupa 25% del ancho total
+        const translateX = -this.currentSlide * (100 / this.totalSlides);
         track.style.transform = `translateX(${translateX}%)`;
 
-        // Update active states
         slides.forEach((slide, index) => {
-            if (index === this.currentSlide) {
-                slide.classList.add('active');
-            } else {
-                slide.classList.remove('active');
-            }
+            slide.classList.toggle('active', index === this.currentSlide);
         });
 
         indicators.forEach((indicator, index) => {
-            if (index === this.currentSlide) {
-                indicator.classList.add('active');
-            } else {
-                indicator.classList.remove('active');
-            }
+            indicator.classList.toggle('active', index === this.currentSlide);
         });
     }
 
     startAutoPlay() {
         if (!this.isLoaded || this.totalSlides <= 1) return;
         
-        this.pauseAutoPlay(); // Clear any existing interval
+        this.pauseAutoPlay();
         this.autoPlayInterval = setInterval(() => {
             if (!this.isDragging) {
                 this.nextSlide();
@@ -353,7 +388,7 @@ class EmeraldElite {
         this.startAutoPlay();
     }
 
-    // Touch Support for Carousel - MEJORADO
+    // Touch Support for Carousel
     setupTouchSupport() {
         const carousel = document.querySelector('.carousel-container');
         if (!carousel) return;
@@ -361,9 +396,7 @@ class EmeraldElite {
         let startX = 0;
         let currentX = 0;
 
-        // Touch events
         carousel.addEventListener('touchstart', (e) => {
-            // Solo si no es un botón de navegación o indicador
             if (e.target.closest('.nav-btn') || e.target.closest('.indicator')) return;
             
             startX = e.touches[0].clientX;
@@ -375,12 +408,12 @@ class EmeraldElite {
             if (!this.isDragging) return;
             currentX = e.touches[0].clientX;
             
-            // Visual feedback durante el drag
             const diffX = startX - currentX;
             const track = document.querySelector('.carousel-track');
             if (track) {
-                const baseTranslate = -this.currentSlide * 25;
-                const dragOffset = (diffX / carousel.offsetWidth) * 25;
+                const baseTranslate = -this.currentSlide * (100 / this.totalSlides);
+                const dragOffset = (diffX / carousel.offsetWidth) * (100 / this.totalSlides);
+                track.style.transition = 'none'; // Disable transition for smooth dragging
                 track.style.transform = `translateX(${baseTranslate - dragOffset}%)`;
             }
         }, { passive: true });
@@ -388,9 +421,11 @@ class EmeraldElite {
         carousel.addEventListener('touchend', () => {
             if (!this.isDragging) return;
             
+            const track = document.querySelector('.carousel-track');
+            if(track) track.style.transition = ''; // Re-enable transition
+
             const diffX = startX - currentX;
             const threshold = 50;
-            const track = document.querySelector('.carousel-track');
 
             if (Math.abs(diffX) > threshold) {
                 if (diffX > 0) {
@@ -399,7 +434,6 @@ class EmeraldElite {
                     this.previousSlide();
                 }
             } else {
-                // Return to original position
                 this.updateCarousel();
             }
             
@@ -407,11 +441,9 @@ class EmeraldElite {
             this.resumeAutoPlay();
         }, { passive: true });
 
-        // Mouse drag support for desktop - MEJORADO
         let isMouseDown = false;
         
         carousel.addEventListener('mousedown', (e) => {
-            // Solo si no es un botón de navegación o indicador
             if (e.target.closest('.nav-btn') || e.target.closest('.indicator') || e.target.closest('.slide-cta')) return;
             
             startX = e.clientX;
@@ -426,12 +458,12 @@ class EmeraldElite {
             if (!isMouseDown || !this.isDragging) return;
             currentX = e.clientX;
             
-            // Visual feedback durante el drag
             const diffX = startX - currentX;
             const track = document.querySelector('.carousel-track');
             if (track) {
-                const baseTranslate = -this.currentSlide * 25;
-                const dragOffset = (diffX / carousel.offsetWidth) * 25;
+                const baseTranslate = -this.currentSlide * (100 / this.totalSlides);
+                const dragOffset = (diffX / carousel.offsetWidth) * (100 / this.totalSlides);
+                track.style.transition = 'none';
                 track.style.transform = `translateX(${baseTranslate - dragOffset}%)`;
             }
             e.preventDefault();
@@ -439,6 +471,9 @@ class EmeraldElite {
 
         document.addEventListener('mouseup', () => {
             if (!isMouseDown) return;
+
+            const track = document.querySelector('.carousel-track');
+            if(track) track.style.transition = '';
             
             const diffX = startX - currentX;
             const threshold = 50;
@@ -450,7 +485,6 @@ class EmeraldElite {
                     this.previousSlide();
                 }
             } else {
-                // Return to original position
                 this.updateCarousel();
             }
             
@@ -460,7 +494,6 @@ class EmeraldElite {
             this.resumeAutoPlay();
         });
 
-        // Prevent context menu on long press
         carousel.addEventListener('contextmenu', (e) => e.preventDefault());
     }
 
@@ -475,14 +508,13 @@ class EmeraldElite {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
                     entry.target.classList.add('visible');
-                    // Unobserve after animation is done
                     observer.unobserve(entry.target);
                 }
             });
         }, observerOptions);
 
         const elementsToAnimate = document.querySelectorAll(
-            '.section-header, .featured-card, .contact-card, .video-card, .about-grid'
+            '.section-header, .gallery-card, .contact-card, .video-card, .about-grid'
         );
         elementsToAnimate.forEach(element => {
             observer.observe(element);
@@ -491,10 +523,8 @@ class EmeraldElite {
 
     // Handle Window Resize
     handleResize() {
-        // Recalculate carousel position on resize
         this.updateCarousel();
         
-        // Recreate particles if needed
         const particleContainer = document.querySelector('.hero-particles');
         if (particleContainer && this.particles.length > 0) {
             const newParticleCount = window.innerWidth < 768 ? 15 : 30;
@@ -505,297 +535,12 @@ class EmeraldElite {
             }
         }
     }
-
-    // Enhanced Cursor for desktop
-    setupEnhancedCursor() {
-        // Only add custom cursor on desktop devices
-        if (window.innerWidth < 768) return;
-
-        const cursor = document.createElement('div');
-        cursor.className = 'custom-cursor';
-        cursor.style.cssText = `
-            position: fixed;
-            width: 20px;
-            height: 20px;
-            background: radial-gradient(circle, var(--primary-green), transparent);
-            border-radius: 50%;
-            pointer-events: none;
-            z-index: 9999;
-            mix-blend-mode: difference;
-            transition: transform 0.1s ease;
-            opacity: 0;
-        `;
-        document.body.appendChild(cursor);
-
-        document.addEventListener('mousemove', (e) => {
-            cursor.style.left = e.clientX - 10 + 'px';
-            cursor.style.top = e.clientY - 10 + 'px';
-            cursor.style.opacity = '1';
-        });
-
-        document.addEventListener('mouseleave', () => {
-            cursor.style.opacity = '0';
-        });
-
-        const interactable = document.querySelectorAll('a, button, .carousel-container, .featured-card, .video-card');
-        interactable.forEach(element => {
-            element.addEventListener('mouseenter', () => {
-                cursor.style.transform = 'scale(1.5)';
-                cursor.style.background = 'radial-gradient(circle, var(--secondary-green), transparent)';
-            });
-            element.addEventListener('mouseleave', () => {
-                cursor.style.transform = 'scale(1)';
-                cursor.style.background = 'radial-gradient(circle, var(--primary-green), transparent)';
-            });
-        });
-    }
-
-    // Lazy loading for videos
-    setupLazyLoading() {
-        const videoObserver = new IntersectionObserver((entries, observer) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    const video = entry.target;
-                    if (video.dataset.src) {
-                        video.src = video.dataset.src;
-                        video.load();
-                        observer.unobserve(video);
-                    }
-                }
-            });
-        });
-
-        const lazyVideos = document.querySelectorAll('video[data-src]');
-        lazyVideos.forEach(video => {
-            videoObserver.observe(video);
-        });
-    }
-
-    // Performance optimization
-    optimizePerformance() {
-        // Reduce motion for users who prefer it
-        if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-            const animatedElements = document.querySelectorAll('[class*="animation"], [class*="transition"]');
-            animatedElements.forEach(element => {
-                element.style.animation = 'none';
-                element.style.transition = 'none';
-            });
-            this.pauseAutoPlay(); // Disable carousel autoplay
-        }
-
-        // Optimize particles based on device performance
-        if (navigator.hardwareConcurrency <= 2) {
-            const particleContainer = document.querySelector('.hero-particles');
-            if (particleContainer) {
-                particleContainer.innerHTML = '';
-                this.particles = [];
-            }
-        }
-    }
-
-    // Error handling
-    handleErrors() {
-        window.addEventListener('error', (e) => {
-            console.warn('Non-critical error:', e.error?.message || 'Unknown error');
-        });
-
-        window.addEventListener('unhandledrejection', (e) => {
-            console.warn('Promise rejection:', e.reason);
-            e.preventDefault(); // Prevent default browser error handling
-        });
-    }
-
-    // Initialize all features
-    initializeAllFeatures() {
-        this.setupEnhancedCursor();
-        this.setupLazyLoading();
-        this.optimizePerformance();
-        this.handleErrors();
-        
-        // Add loading states
-        this.addLoadingStates();
-        
-        // Performance monitoring
-        if ('performance' in window) {
-            window.addEventListener('load', () => {
-                setTimeout(() => {
-                    const perfData = performance.getEntriesByType('navigation')[0];
-                    if (perfData && perfData.loadEventEnd > 0) {
-                        const loadTime = Math.round(perfData.loadEventEnd - perfData.fetchStart);
-                        console.log(`Page loaded in ${loadTime}ms`);
-                    }
-                }, 0);
-            });
-        }
-    }
-
-    // Add loading states for better UX
-    addLoadingStates() {
-        const videos = document.querySelectorAll('.emerald-video');
-        videos.forEach(video => {
-            video.addEventListener('loadstart', () => {
-                const container = video.closest('.video-container');
-                if (container) {
-                    container.classList.add('loading');
-                }
-            });
-
-            video.addEventListener('canplay', () => {
-                const container = video.closest('.video-container');
-                if (container) {
-                    container.classList.remove('loading');
-                }
-            });
-        });
-    }
-}
-
-// Initialize when DOM is loaded
-document.addEventListener('DOMContentLoaded', () => {
-    const emeraldElite = new EmeraldElite();
-    
-    // Initialize additional features after main load
-    window.addEventListener('load', () => {
-        emeraldElite.initializeAllFeatures();
-    });
-
-    // Handle browser back/forward buttons
-    window.addEventListener('popstate', () => {
-        // Handle navigation state if needed
-    });
-});
-
-// Service Worker Registration (for PWA support)
-if ('serviceWorker' in navigator) {
-    window.addEventListener('load', () => {
-        navigator.serviceWorker.register('/sw.js')
-            .then((registration) => {
-                console.log('SW registered successfully');
-            })
-            .catch((registrationError) => {
-                console.log('SW registration failed:', registrationError);
-            });
-    });
-}
-
-// Additional utility functions
-class EmeraldUtils {
-    // Smooth scroll to element
-    static scrollToElement(elementId, offset = 80) {
-        const element = document.getElementById(elementId);
-        if (element) {
-            const elementPosition = element.offsetTop - offset;
-            window.scrollTo({
-                top: elementPosition,
-                behavior: 'smooth'
-            });
-        }
-    }
-
-    // Format number with commas
-    static formatNumber(num) {
-        return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-    }
-
-    // Debounce function for performance
-    static debounce(func, wait, immediate) {
-        let timeout;
-        return function executedFunction(...args) {
-            const later = () => {
-                timeout = null;
-                if (!immediate) func(...args);
-            };
-            const callNow = immediate && !timeout;
-            clearTimeout(timeout);
-            timeout = setTimeout(later, wait);
-            if (callNow) func(...args);
-        };
-    }
-
-    // Throttle function for scroll events
-    static throttle(func, limit) {
-        let inThrottle;
-        return function() {
-            const args = arguments;
-            const context = this;
-            if (!inThrottle) {
-                func.apply(context, args);
-                inThrottle = true;
-                setTimeout(() => inThrottle = false, limit);
-            }
-        };
-    }
-
-    // Check if element is in viewport
-    static isInViewport(element) {
-        const rect = element.getBoundingClientRect();
-        return (
-            rect.top >= 0 &&
-            rect.left >= 0 &&
-            rect.bottom <= (window.innerHeight || document.documentElement.clientHeight) &&
-            rect.right <= (window.innerWidth || document.documentElement.clientWidth)
-        );
-    }
-
-    // Get device type
-    static getDeviceType() {
-        const ua = navigator.userAgent;
-        if (/(tablet|ipad|playbook|silk)|(android(?!.*mobi))/i.test(ua)) {
-            return "tablet";
-        }
-        if (/Mobile|iP(hone|od)|Android|BlackBerry|IEMobile|Kindle|Silk-Accelerated|(hpw|web)OS|Opera M(obi|ini)/.test(ua)) {
-            return "mobile";
-        }
-        return "desktop";
-    }
-
-    // Preload images
-    static preloadImages(imageUrls) {
-        imageUrls.forEach(url => {
-            const img = new Image();
-            img.src = url;
-        });
-    }
-
-    // Copy text to clipboard
-    static async copyToClipboard(text) {
-        try {
-            await navigator.clipboard.writeText(text);
-            return true;
-        } catch (err) {
-            // Fallback for older browsers
-            const textArea = document.createElement('textarea');
-            textArea.value = text;
-            document.body.appendChild(textArea);
-            textArea.focus();
-            textArea.select();
-            try {
-                document.execCommand('copy');
-                document.body.removeChild(textArea);
-                return true;
-            } catch (err) {
-                document.body.removeChild(textArea);
-                return false;
-            }
-        }
-    }
 }
 
 // Analytics and tracking (placeholder)
 class EmeraldAnalytics {
     static track(event, data = {}) {
-        // Implement your analytics tracking here
         console.log('Analytics Event:', event, data);
-        
-        // Example: Google Analytics 4
-        // gtag('event', event, data);
-        
-        // Example: Custom analytics
-        // analytics.track(event, data);
-    }
-
-    static trackPageView(page) {
-        this.track('page_view', { page });
     }
 
     static trackCarouselInteraction(action, slideIndex) {
@@ -804,18 +549,7 @@ class EmeraldAnalytics {
             slide_index: slideIndex
         });
     }
-
-    static trackVideoPlay(videoTitle) {
-        this.track('video_play', {
-            video_title: videoTitle
-        });
-    }
-
-    static trackContactAction(action) {
-        this.track('contact_action', { action });
-    }
 }
-
 
 // Enhanced carousel with analytics
 class EnhancedCarousel extends EmeraldElite {
@@ -835,21 +569,8 @@ class EnhancedCarousel extends EmeraldElite {
     }
 }
 
-// Global error handling
-window.addEventListener('error', (e) => {
-    console.warn('Global error caught:', e.error?.message || 'Unknown error');
+// Initialize when DOM is loaded
+document.addEventListener('DOMContentLoaded', () => {
+    // *** FIX: Instantiate the EnhancedCarousel to enable analytics ***
+    const emeraldElite = new EnhancedCarousel();
 });
-
-window.addEventListener('unhandledrejection', (e) => {
-    console.warn('Unhandled promise rejection:', e.reason);
-    e.preventDefault();
-});
-
-// Export for module usage
-if (typeof module !== 'undefined' && module.exports) {
-    module.exports = { EmeraldElite, EmeraldUtils, EmeraldAnalytics };
-}
-
-// Global utilities
-window.EmeraldUtils = EmeraldUtils;
-window.EmeraldAnalytics = EmeraldAnalytics;

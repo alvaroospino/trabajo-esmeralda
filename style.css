@@ -31,7 +31,7 @@ html {
 }
 
 body {
-    font-family: 'Inter', sans-serif;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
     background: #000000;
     color: var(--text-primary);
     overflow-x: hidden;
@@ -1115,6 +1115,7 @@ body::before {
 
 .contact-actions {
     text-align: center;
+    margin: 2rem;
 }
 
 /* ====== NEW PREMIUM GALLERY SECTION ====== */

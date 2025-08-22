@@ -244,59 +244,51 @@
                 <h3 class="section-title">Piezas Destacadas</h3>
                 <div class="featured-gallery">
                     <div class="gallery-card featured-large">
-                        <video class="gallery-video" muted loop preload="metadata" poster="https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80">
-                            <source src="https://player.vimeo.com/external/454984243.hd.mp4?s=6c21d3e7e8b9e3a7f4c7a1c8a5b9c7d3e6f8a2b4" type="video/mp4">
+                        <video class="gallery-video" muted loop preload="metadata" poster="assets/img/esmeralda13.jpg">
+                            <source src="assets/esmeralda01.mp4" type="video/mp4">
                         </video>
                         <div class="video-overlay"></div>
                         <div class="gallery-overlay">
                             <div class="item-badge">Pieza Única</div>
                             <div class="gallery-content">
-                                <h3 class="gallery-item-title">Corazón del Bosque</h3>
-                                <div class="gallery-specs">
-                                    <span class="spec-item">8.5 QT</span>
-                                    <span class="spec-item">Talla Corazón</span>
-                                    <span class="spec-item">AAA</span>
-                                </div>
+                                <h3 class="gallery-item-title">Esmeralda</h3>
                                 <p class="gallery-item-description">Una gema excepcional que captura la esencia misma de los bosques colombianos.</p>
-                                <button class="gallery-action">Ver Detalles</button>
                             </div>
                         </div>
                     </div>
 
                     <div class="gallery-card featured-medium">
-                        <video class="gallery-video" muted loop preload="metadata" poster="https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80">
-                            <source src="https://player.vimeo.com/external/398987123.hd.mp4?s=9c34f5e8a2b6d7c4e5f8a9b2c6d7e3f5" type="video/mp4">
+                        <video class="gallery-video" muted loop preload="metadata" poster="assets/img/esmeralda6.jpg">
+                            <source src="assets/esmeralda6.mp4" type="video/mp4">
                         </video>
                         <div class="video-overlay"></div>
                         <div class="gallery-overlay">
                             <div class="item-badge">Exclusiva</div>
                             <div class="gallery-content">
                                 <h3 class="gallery-item-title">Majestuosa</h3>
-                                <div class="gallery-specs">
-                                    <span class="spec-item">12.7 QT</span>
-                                    <span class="spec-item">Vivid</span>
-                                </div>
+                                
                                 <p class="gallery-item-description">La corona de nuestra colección, perfección en cada faceta.</p>
-                                <button class="gallery-action">Solicitar Info</button>
                             </div>
                         </div>
                     </div>
 
                     <div class="gallery-card featured-medium">
-                        <video class="gallery-video" muted loop preload="metadata" poster="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80">
-                            <source src="https://player.vimeo.com/external/421876543.hd.mp4?s=2d5f8e3a9b7c1d4e6f2a8b5c9d7e4f1" type="video/mp4">
+                        <video class="gallery-video" muted loop preload="metadata" poster="assets/img/esmeralda4.jpg">
+                            <source src="assets/esmeralda7.mp4" type="video/mp4">
                         </video>
                         <div class="video-overlay"></div>
                         <div class="gallery-overlay">
                             <div class="item-badge">Solitario</div>
                             <div class="gallery-content">
                                 <h3 class="gallery-item-title">Estrella Real</h3>
+                                <!--
+                                esto es para agregar el quilate el tipo y demas
                                 <div class="gallery-specs">
                                     <span class="spec-item">3.2 QT</span>
                                     <span class="spec-item">VS1</span>
                                 </div>
+                                -->
                                 <p class="gallery-item-description">Perfecta para engastes exclusivos con luminosidad incomparable.</p>
-                                <button class="gallery-action">Explorar</button>
                             </div>
                         </div>
                     </div>
@@ -306,7 +298,7 @@
             <div class="premium-section">
                 <h3 class="section-title">Colección Premium</h3>
                 <div class="premium-gallery-wrapper">
-                    <div class="scroll-indicator scroll-left" onclick="scrollGallery('left')"></div>
+                    <div class="scroll-indicator scroll-left"></div>
                     <div class="premium-gallery" id="premiumGallery">
                         <div class="gallery-card premium-card">
                             <img src="https://images.unsplash.com/photo-1589124233488-2DR9a1a4a4d6?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80" alt="Pendientes" class="gallery-image">
@@ -406,7 +398,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="scroll-indicator scroll-right" onclick="scrollGallery('right')"></div>
+                    <div class="scroll-indicator scroll-right"></div>
                 </div>
             </div>
         </div>
@@ -491,68 +483,15 @@
     </footer>
 
     <script src="script.js"></script>
+    <script src="video-handler.js"></script>
     <script>
         function updateYear() {
             const dateElement = document.getElementById('date');
-            const currentYear = new Date().getFullYear();
-            dateElement.textContent = currentYear;
-        }
-        document.addEventListener('DOMContentLoaded', () => {
-            updateYear();
-        });
-    </script>
-    <script>
-        // Funcionalidad para videos
-        function initializeVideoPlayback() {
-            const videoCards = document.querySelectorAll('.gallery-card .gallery-video');
-            const videoOverlays = document.querySelectorAll('.video-overlay');
-
-            videoOverlays.forEach((overlay, index) => {
-                overlay.addEventListener('click', (e) => {
-                    e.stopPropagation();
-                    const card = overlay.closest('.gallery-card');
-                    const video = card.querySelector('.gallery-video');
-                    
-                    if (video.paused) {
-                        videoCards.forEach(v => {
-                            if (v !== video) {
-                                v.pause();
-                                v.closest('.gallery-card').classList.remove('playing');
-                            }
-                        });
-                        
-                        video.play();
-                        card.classList.add('playing');
-                    } else {
-                        video.pause();
-                        card.classList.remove('playing');
-                    }
-                });
-            });
-
-            videoCards.forEach(video => {
-                video.addEventListener('ended', () => {
-                    video.closest('.gallery-card').classList.remove('playing');
-                });
-            });
-        }
-
-        // Funcionalidad para scroll horizontal
-        function scrollGallery(direction) {
-            const gallery = document.getElementById('premiumGallery');
-            const scrollAmount = 370;
-            
-            if (direction === 'left') {
-                gallery.scrollBy({ left: -scrollAmount, behavior: 'smooth' });
-            } else {
-                gallery.scrollBy({ left: scrollAmount, behavior: 'smooth' });
+            if (dateElement) {
+                dateElement.textContent = new Date().getFullYear();
             }
         }
-
-        // Inicializar cuando el DOM esté listo
-        document.addEventListener('DOMContentLoaded', () => {
-            initializeVideoPlayback();
-        });
+        document.addEventListener('DOMContentLoaded', updateYear);
     </script>
 </body>
 </html>
