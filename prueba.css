@@ -1851,9 +1851,7 @@ body::before {
 }
 
 @media (max-width: 768px) {
-    .section {
-        padding: 5rem 1rem;
-    }
+    
     
     .nav-content {
         padding: 1rem;

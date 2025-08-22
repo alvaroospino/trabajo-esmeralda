@@ -35,6 +35,10 @@ body {
     background: #000000;
     color: var(--text-primary);
     overflow-x: hidden;
+    width: 100%;
+    min-height: 100vh;
+    margin: 0;
+    padding: 0;
 }
 
 body::before {
@@ -642,9 +646,7 @@ body::before {
 }
 
 /* CARRUSEL OPTIMIZADO - MÁS PROTAGONISMO A LAS IMÁGENES */
-.main-carousel {
-    margin-bottom: 6rem;
-}
+
 
 .carousel-container {
     position: relative;
@@ -1848,9 +1850,7 @@ body::before {
 }
 
 @media (max-width: 768px) {
-    .section {
-        padding: 5rem 1rem;
-    }
+   
     
     .nav-content {
         padding: 1rem;
