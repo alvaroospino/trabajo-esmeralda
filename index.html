@@ -1,16 +1,448 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Emerald Elite - Gemas Preciosas Colombianas</title>
-    <link rel="stylesheet" href="style.css">
-    <link rel="stylesheet" href="mobile-fixes.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
-   
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Import Export - Gemas Preciosas Colombianas</title>
+    <link rel="stylesheet" href="./assets/css/style.css" />
+    <link rel="stylesheet" href="./assets/css/mobile-fixes.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap"
+        rel="stylesheet" />
+    <style>
+        /* Variables CSS */
+        :root {
+            --primary-green: #00ff7f;
+            --secondary-green: #32cd32;
+            --emerald-dark: #0d2818;
+            --emerald-darker: #061a0d;
+            --emerald-glow: rgba(0, 255, 127, 0.4);
+            --emerald-light-glow: rgba(50, 205, 50, 0.3);
+            --emerald-soft-glow: rgba(0, 255, 127, 0.1);
+            --glass-bg: rgba(13, 40, 24, 0.3);
+            --glass-border: rgba(0, 255, 127, 0.2);
+            --text-primary: #ffffff;
+            --text-secondary: rgba(255, 255, 255, 0.9);
+            --text-muted: rgba(255, 255, 255, 0.7);
+            --transition-smooth: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+        }
+
+        /* Carrusel de esmeraldas */
+        .emerald-gallery-section {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem 1rem;
+        }
+
+        .gallery-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .gallery-title {
+            font-family: "Playfair Display", serif;
+            font-size: 1.8rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg,
+                    var(--primary-green),
+                    var(--secondary-green));
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            line-height: 1.2;
+        }
+
+        .gallery-subtitle {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            line-height: 1.5;
+        }
+
+        .emerald-carousel {
+            position: relative;
+            overflow: hidden;
+            border-radius: 20px;
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4),
+                0 0 30px var(--emerald-soft-glow);
+            margin-bottom: 1rem;
+        }
+
+        .carousel-container {
+            display: flex;
+            transition: transform 0.8s cubic-bezier(0.25, 0.8, 0.25, 1);
+            will-change: transform;
+        }
+
+        .carousel-slide {
+            min-width: 100%;
+            position: relative;
+            height: 320px;
+            background: linear-gradient(135deg,
+                    var(--emerald-darker),
+                    var(--emerald-dark));
+        }
+
+        .carousel-slide img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            filter: brightness(0.9) contrast(1.3) saturate(1.4);
+            transition: all 0.6s ease;
+        }
+
+        .slide-overlay {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(180deg,
+                    rgba(0, 0, 0, 0.1) 0%,
+                    rgba(6, 26, 13, 0.3) 40%,
+                    rgba(6, 26, 13, 0.8) 80%,
+                    rgba(6, 26, 13, 0.95) 100%);
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            padding: 2rem 1.5rem;
+            opacity: 0;
+            transition: all 0.6s ease;
+        }
+
+        .carousel-slide.active .slide-overlay {
+            opacity: 1;
+        }
+
+        .slide-badge {
+            position: absolute;
+            top: 1.5rem;
+            left: 1.5rem;
+            background: rgba(0, 255, 127, 0.2);
+            backdrop-filter: blur(15px);
+            border: 1px solid var(--primary-green);
+            color: var(--primary-green);
+            font-size: 0.7rem;
+            font-weight: 700;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            box-shadow: 0 0 15px var(--emerald-soft-glow);
+            transform: translateY(-20px);
+            transition: all 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        }
+
+        .carousel-slide.active .slide-badge {
+            transform: translateY(0);
+        }
+
+        .slide-content h3 {
+            font-family: "Playfair Display", serif;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: white;
+            margin-bottom: 0.5rem;
+            background: linear-gradient(135deg, var(--primary-green), #90ee90);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            line-height: 1.2;
+            transform: translateY(20px);
+            transition: all 0.7s cubic-bezier(0.25, 0.8, 0.25, 1);
+        }
+
+        .carousel-slide.active .slide-content h3 {
+            transform: translateY(0);
+        }
+
+        .slide-content p {
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 0.85rem;
+            line-height: 1.5;
+            transform: translateY(20px);
+            transition: all 0.7s cubic-bezier(0.25, 0.8, 0.25, 1) 0.1s;
+        }
+
+        .carousel-slide.active .slide-content p {
+            transform: translateY(0);
+        }
+
+        .slide-specs {
+            display: flex;
+            gap: 1rem;
+            margin-top: 0.8rem;
+            transform: translateY(20px);
+            transition: all 0.7s cubic-bezier(0.25, 0.8, 0.25, 1) 0.2s;
+        }
+
+        .carousel-slide.active .slide-specs {
+            transform: translateY(0);
+        }
+
+        .spec-item {
+            background: rgba(0, 255, 127, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(0, 255, 127, 0.3);
+            border-radius: 12px;
+            padding: 0.4rem 0.8rem;
+            font-size: 0.7rem;
+            color: var(--primary-green);
+            font-weight: 600;
+        }
+
+        /* Controles del carrusel */
+        .carousel-controls {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        .carousel-nav {
+            background: var(--glass-bg);
+            backdrop-filter: blur(15px);
+            border: 1px solid var(--glass-border);
+            border-radius: 50%;
+            width: 45px;
+            height: 45px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary-green);
+            cursor: pointer;
+            transition: var(--transition-smooth);
+            font-size: 1.2rem;
+            user-select: none;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        .carousel-nav:active {
+            transform: scale(0.95);
+            border-color: var(--primary-green);
+            box-shadow: 0 0 20px var(--emerald-glow);
+        }
+
+        .carousel-nav.disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .carousel-nav.disabled:active {
+            transform: none;
+            border-color: var(--glass-border);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Indicadores */
+        .carousel-indicators {
+            display: flex;
+            gap: 0.8rem;
+            align-items: center;
+        }
+
+        .indicator {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.3);
+            border: 1px solid var(--glass-border);
+            cursor: pointer;
+            transition: var(--transition-smooth);
+            position: relative;
+        }
+
+        .indicator.active {
+            background: var(--primary-green);
+            border-color: var(--primary-green);
+            box-shadow: 0 0 15px var(--emerald-glow);
+            transform: scale(1.2);
+        }
+
+        .indicator.active::after {
+            content: "";
+            position: absolute;
+            inset: -3px;
+            border-radius: 50%;
+            border: 2px solid rgba(0, 255, 127, 0.3);
+            animation: ripple 2s ease-in-out infinite;
+        }
+
+        @keyframes ripple {
+            0% {
+                transform: scale(1);
+                opacity: 1;
+            }
+
+            100% {
+                transform: scale(1.5);
+                opacity: 0;
+            }
+        }
+
+        /* Thumbnails adicionales para móvil */
+        .carousel-thumbnails {
+            display: flex;
+            gap: 0.8rem;
+            margin-top: 1.5rem;
+            overflow-x: auto;
+            padding: 0.5rem;
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+        }
+
+        .carousel-thumbnails::-webkit-scrollbar {
+            display: none;
+        }
+
+        .thumbnail {
+            min-width: 70px;
+            height: 70px;
+            border-radius: 12px;
+            overflow: hidden;
+            border: 2px solid var(--glass-border);
+            cursor: pointer;
+            transition: var(--transition-smooth);
+            position: relative;
+            flex-shrink: 0;
+        }
+
+        .thumbnail img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            filter: brightness(0.7) saturate(1.2);
+            transition: var(--transition-smooth);
+        }
+
+        .thumbnail.active {
+            border-color: var(--primary-green);
+            box-shadow: 0 0 15px var(--emerald-glow);
+            transform: scale(1.05);
+        }
+
+        .thumbnail.active img {
+            filter: brightness(1) saturate(1.4);
+        }
+
+        .thumbnail::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: var(--emerald-glow);
+            opacity: 0;
+            transition: var(--transition-smooth);
+        }
+
+        .thumbnail.active::after {
+            opacity: 0.2;
+        }
+
+        /* Media query para tablets en portrait */
+        @media (min-width: 481px) and (max-width: 768px) {
+            .emerald-gallery-section {
+                padding: 0 1rem;
+            }
+
+            .carousel-slide {
+                height: 400px;
+            }
+
+            .carousel-thumbnails {
+                justify-content: center;
+                overflow: visible;
+            }
+
+            .thumbnail {
+                min-width: 80px;
+                height: 80px;
+            }
+        }
+
+        /* Media query para PC */
+        @media (min-width: 769px) {
+            .emerald-gallery-section {
+                padding: 0 2rem;
+            }
+
+            .gallery-title {
+                font-size: 2.2rem;
+            }
+
+            .gallery-subtitle {
+                font-size: 1rem;
+            }
+
+            .emerald-carousel {
+                border-radius: 25px;
+            }
+
+            .carousel-slide {
+                height: 450px;
+            }
+
+            .slide-overlay {
+                padding: 3rem 2.5rem;
+            }
+
+            .slide-content h3 {
+                font-size: 2rem;
+            }
+
+            .slide-content p {
+                font-size: 1rem;
+            }
+
+            .carousel-nav {
+                width: 55px;
+                height: 55px;
+                font-size: 1.4rem;
+            }
+
+            .carousel-nav:hover {
+                transform: scale(1.1);
+                border-color: var(--primary-green);
+                box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4),
+                    0 0 25px var(--emerald-glow);
+            }
+
+            .indicator {
+                width: 14px;
+                height: 14px;
+            }
+
+            .thumbnail {
+                min-width: 90px;
+                height: 90px;
+            }
+
+            .thumbnail:hover {
+                transform: scale(1.05);
+                border-color: var(--primary-green);
+                box-shadow: 0 0 15px var(--emerald-soft-glow);
+            }
+        }
+
+        /* Animaciones adicionales */
+        @keyframes slideInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
 </head>
+
 <body>
     <div class="loading-screen">
         <div class="loading-content">
@@ -25,14 +457,13 @@
     <nav class="nav">
         <div class="nav-content">
             <div class="logo">
-                <img src="assets/img/logo.png" class="logo-image" alt="Import Export Logo">
+                <img src="assets/img/logo.png" class="logo-image" alt="Import Export Logo" />
                 <span class="logo-text">Import Export</span>
             </div>
-            
+
             <ul class="nav-links">
                 <li><a href="#inicio" class="nav-link">Inicio</a></li>
                 <li><a href="#catalogo" class="nav-link">Catálogo</a></li>
-                <li><a href="#videos" class="nav-link">Videos</a></li>
                 <li><a href="#nosotros" class="nav-link">Nosotros</a></li>
                 <li><a href="#contacto" class="nav-link">Contacto</a></li>
             </ul>
@@ -48,7 +479,6 @@
             <div class="mobile-menu-content">
                 <a href="#inicio" class="mobile-nav-link">Inicio</a>
                 <a href="#catalogo" class="mobile-nav-link">Catálogo</a>
-                <a href="#videos" class="mobile-nav-link">Videos</a>
                 <a href="#nosotros" class="mobile-nav-link">Nosotros</a>
                 <a href="#contacto" class="mobile-nav-link">Contacto</a>
             </div>
@@ -59,14 +489,14 @@
         <div class="hero-bg">
             <div class="hero-video-container">
                 <video class="hero-video" autoplay muted loop playsinline>
-                    <source src="assets/fondo.mp4" type="video/mp4">
+                    <source src="assets/video/fondo.mp4" type="video/mp4" />
                 </video>
             </div>
             <div class="hero-overlay"></div>
         </div>
-        
+
         <div class="hero-particles"></div>
-        
+
         <div class="hero-content">
             <div class="hero-badge">
                 <span>Import Export Colombian Emeralds</span>
@@ -86,209 +516,244 @@
                 </a>
             </div>
         </div>
-        
-        <div class="scroll-indicator">
-            <div class="scroll-line"></div>
-            <div class="scroll-text">Scroll</div>
-        </div>
     </section>
 
     <section class="section catalog-section" id="catalogo">
         <div class="section-header">
             <h2 class="section-title">Catálogo Exclusivo</h2>
         </div>
+        <div class="emerald-gallery-section">
+            <div class="emerald-carousel" id="emeraldCarousel">
+                <div class="carousel-container" id="carouselContainer">
+                    <!-- Slide 1 -->
+                    <div class="carousel-slide">
+                        <img src="assets/img/info.jpg" alt="Esmeralda Natural Zambia" />
+                        <div class="slide-overlay">
+                            <div class="slide-badge">Certified Gem</div>
+                            <div class="slide-content">
+                                <h3>Esmeralda Natural</h3>
+                                <p>
+                                    Certificada por GRS, procedente de Zambia. Piedra de gran
+                                    calidad con tratamiento menor.
+                                </p>
+                                <div class="slide-specs">
+                                    <span class="spec-item">Peso: 8.71 ct</span>
+                                    <span class="spec-item">Forma: Oval</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
 
-        <div class="main-carousel">
-            <div class="carousel-container">
-                <div class="carousel-track">
+                    <!-- Slide 2 -->
+                    <div class="carousel-slide">
+                        <img src="assets/img/esmeralda27.jpg" alt="Esmeralda Tallada Muzo" />
+                        <div class="slide-overlay">
+                            <div class="slide-badge">Master Cut</div>
+                            <div class="slide-content">
+                                <h3>Esmeralda Gota de Agua</h3>
+                                <p>
+                                    Perfectamente tallada para maximizar su brillantez natural y
+                                    mostrar toda la belleza del verde Muzo.
+                                </p>
+                                <div class="slide-specs">
+                                    <span class="spec-item">Color verde profundo</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Slide 3 -->
+                    <div class="carousel-slide">
+                        <img src="assets/img/eralda11.jpg" alt="Esmeralda Bruta Muzo" />
+                        <div class="slide-overlay">
+                            <div class="slide-badge">Natural Form</div>
+                            <div class="slide-content">
+                                <h3>Esmeralda Trapiche</h3>
+                                <p>
+                                    Espécimen único que muestra la esmeralda en su estado
+                                    natural, directamente extraída de la matriz rocosa.
+                                </p>
+                                <div class="slide-specs">
+                                    <span class="spec-item">Fenómeno único de Muzo</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Slide 4 -->
+                    <div class="carousel-slide">
+                        <img src="assets/img/esmeralda13.jpg" alt="Joyería con Esmeralda Muzo" />
+                        <div class="slide-overlay">
+                            <div class="slide-badge">Fine Jewelry</div>
+                            <div class="slide-content">
+                                <h3>Anillo Solitario Imperial</h3>
+                                <p>
+                                    Elegante solitario que realza la magnificencia de una
+                                    esmeralda Muzo en montadura de oro blanco.
+                                </p>
+                                <div class="slide-specs">
+                                    <span class="spec-item">6.8 Quilates</span>
+                                    <span class="spec-item">18K Gold</span>
+                                    <span class="spec-item">Handcraft</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Slide 5 -->
+                    <div class="carousel-slide">
+                        <img src="assets/img/esmeralda1.jpg" alt="Collar con Esmeraldas Muzo" />
+                        <div class="slide-overlay">
+                            <div class="slide-badge">Haute Couture</div>
+                            <div class="slide-content">
+                                <h3>Collar Rivière Muzo</h3>
+                                <p>
+                                    Exquisito collar con graduación de esmeraldas Muzo, una
+                                    pieza digna de la realeza colombiana.
+                                </p>
+                                <div class="slide-specs">
+                                    <span class="spec-item">45 Gemas</span>
+                                    <span class="spec-item">Platinum</span>
+                                    <span class="spec-item">Limited</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Slide 6 -->
                     <div class="carousel-slide active">
-                        <div class="slide-media">
-                            <img src="assets/img/esmeralda13.jpg" alt="Esmeralda Emperador" class="slide-image" loading="lazy">
-                        </div>
-                        <div class="slide-content">
-                            <div class="slide-info">
-                                <span class="slide-badge">Pieza Única</span>
-                                <h3>Esmeralda Emperador</h3>
-                                <div class="gem-specs">
-                                    <div class="spec">
-                                        <span class="spec-label">Quilates</span>
-                                        <span class="spec-value">6.8</span>
-                                    </div>
-                                    <div class="spec">
-                                        <span class="spec-label">Claridad</span>
-                                        <span class="spec-value">VS1</span>
-                                    </div>
-                                    <div class="spec">
-                                        <span class="spec-label">Origen</span>
-                                        <span class="spec-value">Muzo</span>
-                                    </div>
+                        <img src="assets/img/naturalMuzo.jpg" alt="Esmeralda Premium Muzo" />
+                        <div class="slide-overlay">
+                            <div class="slide-badge">Premium Collection</div>
+                            <div class="slide-content">
+                                <h3>Esmeralda Clásica Muzo</h3>
+                                <p>
+                                    Gema de excepcional transparencia con el característico
+                                    verde intenso que define a las esmeraldas de Muzo.
+                                </p>
+                                <div class="slide-specs">
+                                    <span class="spec-item">Transparencia alta</span>
                                 </div>
-                                <p>Gema excepcional con un color verde profundo y vibrante que captura la esencia de las mejores esmeraldas del mundo.</p>
                             </div>
                         </div>
                     </div>
-
-                    <div class="carousel-slide">
-                        <div class="slide-media">
-                            <img src="assets/img/esmeralda4.jpg" alt="Esmeralda Suprema" class="slide-image" loading="lazy">
-                        </div>
-                        <div class="slide-content">
-                            <div class="slide-info">
-                                <span class="slide-badge">Colección Premium</span>
-                                <h3>Esmeralda Suprema</h3>
-                                <div class="gem-specs">
-                                    <div class="spec">
-                                        <span class="spec-label">Quilates</span>
-                                        <span class="spec-value">9.2</span>
-                                    </div>
-                                    <div class="spec">
-                                        <span class="spec-label">Color</span>
-                                        <span class="spec-value">Vivid</span>
-                                    </div>
-                                    <div class="spec">
-                                        <span class="spec-label">Calidad</span>
-                                        <span class="spec-value">AAA</span>
-                                    </div>
-                                </div>
-                                <p>Verde vivid excepcional con inclusiones mínimas. Una de las más codiciadas de nuestra colección.</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="carousel-slide">
-                        <div class="slide-media">
-                            <img src="assets/img/esmeralda1.jpg" alt="Esmeralda Majestuosa" class="slide-image" loading="lazy">
-                        </div>
-                        <div class="slide-content">
-                            <div class="slide-info">
-                                <span class="slide-badge">Elite Collection</span>
-                                <h3>Esmeralda Majestuosa</h3>
-                                <div class="gem-specs">
-                                    <div class="spec">
-                                        <span class="spec-label">Quilates</span>
-                                        <span class="spec-value">4.3</span>
-                                    </div>
-                                    <div class="spec">
-                                        <span class="spec-label">Corte</span>
-                                        <span class="spec-value">Emerald</span>
-                                    </div>
-                                    <div class="spec">
-                                        <span class="spec-label">Brillo</span>
-                                        <span class="spec-value">Exceptional</span>
-                                    </div>
-                                </div>
-                                <p>Perfecta transparencia y color verde intenso. Una gema de extraordinaria luminosidad.</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="carousel-slide">
-                        <div class="slide-media">
-                            <img src="assets/img/esmeralda4.jpg" alt="Esmeralda Real" class="slide-image" loading="lazy">
-                        </div>
-                        <div class="slide-content">
-                            <div class="slide-info">
-                                <span class="slide-badge">Masterpiece</span>
-                                <h3>Esmeralda Real</h3>
-                                <div class="gem-specs">
-                                    <div class="spec">
-                                        <span class="spec-label">Quilates</span>
-                                        <span class="spec-value">11.7</span>
-                                    </div>
-                                    <div class="spec">
-                                        <span class="spec-label">Origen</span>
-                                        <span class="spec-value">Chivor</span>
-                                    </div>
-                                    <div class="spec">
-                                        <span class="spec-label">Historia</span>
-                                        <span class="spec-value">Única</span>
-                                    </div>
-                                </div>
-                                <p>Pieza excepcional que representa lo mejor de la tradición esmeraldera colombiana.</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="carousel-nav">
-                    <button class="nav-btn prev-btn" aria-label="Anterior">
-                        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M15 18L9 12L15 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                        </svg>
-                    </button>
-                    <button class="nav-btn next-btn" aria-label="Siguiente">
-                        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M9 18L15 12L9 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                        </svg>
-                    </button>
                 </div>
             </div>
 
-            <div class="carousel-indicators">
-                <button class="indicator active" aria-label="Slide 1"></button>
-                <button class="indicator" aria-label="Slide 2"></button>
-                <button class="indicator" aria-label="Slide 3"></button>
-                <button class="indicator" aria-label="Slide 4"></button>
+            <!-- Controles del carrusel -->
+            <div class="carousel-controls">
+                <div class="carousel-nav" id="prevBtn">‹</div>
+                <div class="carousel-indicators" id="indicators">
+                    <div class="indicator active" data-slide="0"></div>
+                    <div class="indicator" data-slide="1"></div>
+                    <div class="indicator" data-slide="2"></div>
+                    <div class="indicator" data-slide="3"></div>
+                    <div class="indicator" data-slide="4"></div>
+                    <div class="indicator" data-slide="5"></div>
+                </div>
+                <div class="carousel-nav" id="nextBtn">›</div>
+            </div>
+
+            <!-- Thumbnails para navegación rápida -->
+            <div class="carousel-thumbnails" id="thumbnails">
+                <div class="thumbnail active" data-slide="0">
+                    <img src="assets/img/info.jpg" alt="Thumbnail 1" />
+                </div>
+                <div class="thumbnail" data-slide="1">
+                    <img src="assets/img/esmeralda27.jpg" alt="Thumbnail 2" />
+                </div>
+                <div class="thumbnail" data-slide="2">
+                    <img src="assets/img/esmeralda28.jpg" alt="Thumbnail 3" />
+                </div>
+                <div class="thumbnail" data-slide="3">
+                    <img src="assets/img/esmeralda13.jpg" alt="Thumbnail 4" />
+                </div>
+                <div class="thumbnail" data-slide="4">
+                    <img src="assets/img/esmeralda1.jpg" alt="Thumbnail 5" />
+                </div>
+                <div class="thumbnail" data-slide="5">
+                    <img src="assets/img/naturalMuzo.jpg" alt="Thumbnail 6" />
+                </div>
             </div>
         </div>
     </section>
-    <section class="premium-gallery-section">
+
+    <section class="premium-gallery-section" id="catalogo">
         <div class="gallery-header">
             <div class="gallery-badge">Colección Premium</div>
             <h2 class="gallery-title">Galería Exclusiva</h2>
-            <p class="gallery-subtitle">Obras maestras en esmeraldas colombianas seleccionadas por su excepcional belleza y rareza</p>
+            <p class="gallery-subtitle">
+                Obras maestras en esmeraldas colombianas seleccionadas por su
+                excepcional belleza y rareza
+            </p>
         </div>
 
         <div class="gallery-container">
             <div class="featured-section">
-                <h3 class="section-title">Piezas Destacadas</h3>
                 <div class="featured-gallery">
                     <div class="gallery-card featured-large">
                         <video class="gallery-video" muted preload="metadata" poster="assets/img/esmeralda13.jpg">
-                            <source src="assets/esmeralda01.mp4" type="video/mp4">
+                            <source src="assets/video/esmeralda01.mp4" type="video/mp4" />
                         </video>
                         <div class="video-overlay"></div>
                         <div class="gallery-overlay">
                             <div class="item-badge">Pieza Única</div>
                             <div class="gallery-content">
                                 <h3 class="gallery-item-title">Esmeralda</h3>
-                                <p class="gallery-item-description">Una gema excepcional que captura la esencia misma de los bosques colombianos.</p>
+                                <p class="gallery-item-description">
+                                    Una gema excepcional que captura la esencia misma de los
+                                    bosques colombianos.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="gallery-card featured-large">
+                        <video class="gallery-video" muted preload="metadata" poster="assets/img/esmeralda28.jpg">
+                            <source src="assets/video/esmeralda28.mp4" type="video/mp4" />
+                        </video>
+                        <div class="video-overlay"></div>
+                        <div class="gallery-overlay">
+                            <div class="item-badge">Pieza Única</div>
+                            <div class="gallery-content">
+                                <h3 class="gallery-item-title">Esmeralda</h3>
+                                <p class="gallery-item-description">
+                                    Una gema excepcional que captura la esencia misma de los
+                                    bosques colombianos.
+                                </p>
                             </div>
                         </div>
                     </div>
 
                     <div class="gallery-card featured-medium">
                         <video class="gallery-video" muted preload="metadata" poster="assets/img/esmeralda6.jpg">
-                            <source src="assets/esmeralda6.mp4" type="video/mp4">
+                            <source src="assets/video/esmeralda6.mp4" type="video/mp4" />
                         </video>
                         <div class="video-overlay"></div>
                         <div class="gallery-overlay">
                             <div class="item-badge">Exclusiva</div>
                             <div class="gallery-content">
                                 <h3 class="gallery-item-title">Majestuosa</h3>
-                                
-                                <p class="gallery-item-description">La corona de nuestra colección, perfección en cada faceta.</p>
+
+                                <p class="gallery-item-description">
+                                    La corona de nuestra colección, perfección en cada faceta.
+                                </p>
                             </div>
                         </div>
                     </div>
 
                     <div class="gallery-card featured-medium">
                         <video class="gallery-video" muted preload="metadata" poster="assets/img/esmeralda4.jpg">
-                            <source src="assets/esmeralda7.mp4" type="video/mp4">
+                            <source src="assets/video/esmeralda7.mp4" type="video/mp4" />
                         </video>
                         <div class="video-overlay"></div>
                         <div class="gallery-overlay">
                             <div class="item-badge">Solitario</div>
                             <div class="gallery-content">
                                 <h3 class="gallery-item-title">Estrella Real</h3>
-                                <!--
-                                esto es para agregar el quilate el tipo y demas
-                                <div class="gallery-specs">
-                                    <span class="spec-item">3.2 QT</span>
-                                    <span class="spec-item">VS1</span>
-                                </div>
-                                -->
-                                <p class="gallery-item-description">Perfecta para engastes exclusivos con luminosidad incomparable.</p>
+                                <p class="gallery-item-description">
+                                    Perfecta para engastes exclusivos con luminosidad
+                                    incomparable.
+                                </p>
                             </div>
                         </div>
                     </div>
@@ -301,23 +766,44 @@
                     <div class="scroll-indicator scroll-left"></div>
                     <div class="premium-gallery" id="premiumGallery">
                         <div class="gallery-card premium-card">
-                            <img src="https://images.unsplash.com/photo-1589124233488-2DR9a1a4a4d6?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80" alt="Pendientes" class="gallery-image">
+                            <img src="assets/img/info.jpg" alt="Collar Verde" class="gallery-image" />
                             <div class="gallery-overlay">
-                                <div class="item-badge">Par</div>
+                                <div class="item-badge">Certified Gem</div>
                                 <div class="gallery-content">
-                                    <h3 class="gallery-item-title">Gota de Rocío</h3>
+                                    <h3 class="gallery-item-title">Esmeralda Natural</h3>
                                     <div class="gallery-specs">
-                                        <span class="spec-item">Talla Pera</span>
-                                        <span class="spec-item">AA+</span>
+                                        <span class="spec-item">Peso: 8.71 ct</span>
+                                        <span class="spec-item">Forma: Oval</span>
+
                                     </div>
-                                    <p class="gallery-item-description">Elegancia en cada gota, perfectas para ocasiones especiales.</p>
-                                    <button class="gallery-action">Ver Par</button>
+                                    <p>
+                                        Certificada por GRS, procedente de Zambia. Piedra de gran
+                                        calidad con tratamiento menor.
+                                    </p>
                                 </div>
                             </div>
                         </div>
 
                         <div class="gallery-card premium-card">
-                            <img src="https://images.unsplash.com/photo-1602173574767-37ac01994b2a?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80" alt="Collar Verde" class="gallery-image">
+                            <img src="assets/img/esmeralda13.jpg" alt="Pendientes" class="gallery-image" />
+                            <div class="gallery-overlay">
+                                <div class="item-badge">Par</div>
+                                <div class="gallery-content">
+                                    <h3 class="gallery-item-title">Gema</h3>
+                                    <div class="gallery-specs">
+                                        <span class="spec-item">Talla Pera</span>
+                                        <span class="spec-item">AA+</span>
+                                    </div>
+                                    <p class="gallery-item-description">
+                                        Elegancia en cada gota, perfectas para ocasiones
+                                        especiales.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="gallery-card premium-card">
+                            <img src="assets/img/esmeralda22.jpg" alt="Collar Verde" class="gallery-image" />
                             <div class="gallery-overlay">
                                 <div class="item-badge">Collar</div>
                                 <div class="gallery-content">
@@ -326,14 +812,15 @@
                                         <span class="spec-item">15 Piezas</span>
                                         <span class="spec-item">AAA</span>
                                     </div>
-                                    <p class="gallery-item-description">Una sinfonía de verdes que fluye como un río de luz.</p>
-                                    <button class="gallery-action">Descubrir</button>
+                                    <p class="gallery-item-description">
+                                        Una sinfonía de verdes que fluye como un río de luz.
+                                    </p>
                                 </div>
                             </div>
                         </div>
 
                         <div class="gallery-card premium-card">
-                            <img src="https://images.unsplash.com/photo-1605100804763-247f67b3557e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80" alt="Esmeralda Suprema" class="gallery-image">
+                            <img src="assets/img/esmeralda23.jpg" alt="Esmeralda Suprema" class="gallery-image" />
                             <div class="gallery-overlay">
                                 <div class="item-badge">Premium</div>
                                 <div class="gallery-content">
@@ -343,14 +830,16 @@
                                         <span class="spec-item">Octágono</span>
                                         <span class="spec-item">AAA+</span>
                                     </div>
-                                    <p class="gallery-item-description">Cristalización perfecta con un verde intenso que hipnotiza.</p>
-                                    <button class="gallery-action">Cotizar</button>
+                                    <p class="gallery-item-description">
+                                        Cristalización perfecta con un verde intenso que
+                                        hipnotiza.
+                                    </p>
                                 </div>
                             </div>
                         </div>
 
                         <div class="gallery-card premium-card">
-                            <img src="https://images.unsplash.com/photo-1596944924616-7b38e7cfac36?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80" alt="Brazalete Lux" class="gallery-image">
+                            <img src="assets/img/esmeralda24.jpg" alt="Brazalete Lux" class="gallery-image" />
                             <div class="gallery-overlay">
                                 <div class="item-badge">Brazalete</div>
                                 <div class="gallery-content">
@@ -359,14 +848,16 @@
                                         <span class="spec-item">25 Gemas</span>
                                         <span class="spec-item">Oro 18K</span>
                                     </div>
-                                    <p class="gallery-item-description">Lujo absoluto en cada centímetro, diseñado para la realeza.</p>
-                                    <button class="gallery-action">Reservar</button>
+                                    <p class="gallery-item-description">
+                                        Lujo absoluto en cada centímetro, diseñado para la
+                                        realeza.
+                                    </p>
                                 </div>
                             </div>
                         </div>
 
                         <div class="gallery-card premium-card">
-                            <img src="https://images.unsplash.com/photo-1611652022419-a9419f74343d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80" alt="Anillo Imperial" class="gallery-image">
+                            <img src="assets/img/esmeralda25.jpg" alt="Anillo Imperial" class="gallery-image" />
                             <div class="gallery-overlay">
                                 <div class="item-badge">Anillo</div>
                                 <div class="gallery-content">
@@ -376,14 +867,15 @@
                                         <span class="spec-item">Cojín</span>
                                         <span class="spec-item">VS</span>
                                     </div>
-                                    <p class="gallery-item-description">El poder de la naturaleza capturado en oro y esmeralda.</p>
-                                    <button class="gallery-action">Inspeccionar</button>
+                                    <p class="gallery-item-description">
+                                        El poder de la naturaleza capturado en oro y esmeralda.
+                                    </p>
                                 </div>
                             </div>
                         </div>
 
                         <div class="gallery-card premium-card">
-                            <img src="https://images.unsplash.com/photo-1574375927938-d5a98e8ffe85?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80" alt="Tiara Emerald" class="gallery-image">
+                            <img src="assets/img/esmeralda26.jpg" alt="Tiara Emerald" class="gallery-image" />
                             <div class="gallery-overlay">
                                 <div class="item-badge">Tiara</div>
                                 <div class="gallery-content">
@@ -392,8 +884,25 @@
                                         <span class="spec-item">Única</span>
                                         <span class="spec-item">Platino</span>
                                     </div>
-                                    <p class="gallery-item-description">Una obra maestra que define la elegancia suprema.</p>
-                                    <button class="gallery-action">Consultar</button>
+                                    <p class="gallery-item-description">
+                                        Una obra maestra que define la elegancia suprema.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="gallery-card premium-card">
+                            <img src="assets/img/esmeralda27.jpg" alt="Tiara Emerald" class="gallery-image" />
+                            <div class="gallery-overlay">
+                                <div class="item-badge">Gema</div>
+                                <div class="gallery-content">
+                                    <h3 class="gallery-item-title">Gema</h3>
+                                    <div class="gallery-specs">
+                                        <span class="spec-item">Única</span>
+                                    </div>
+                                    <p class="gallery-item-description">
+                                        Una obra maestra que define la elegancia suprema.
+                                    </p>
                                 </div>
                             </div>
                         </div>
@@ -406,12 +915,121 @@
 
     <section class="section about-section" id="nosotros">
         <div class="about-grid">
-            <div class="about-image" style="background-image: url('assets/img/minero.gif');"></div>
+            <div class="about-image" style="background-image: url('assets/img/minero.gif')"></div>
             <div class="about-content">
                 <span class="section-badge">Nuestra Historia</span>
-                <h2 class="section-title">Pasión por la Autenticidad y la Excelencia</h2>
-                <p>En Emerald Elite, nos dedicamos a la selección de las esmeraldas colombianas más finas y raras, provenientes de las minas más prestigiosas del país. Nuestra misión es llevar la belleza y la historia de estas gemas únicas a coleccionistas y amantes del lujo en todo el mundo.</p>
-                <p>Cada pieza de nuestra colección es seleccionada a mano y certificada para garantizar su autenticidad y calidad. Creemos en la transparencia, la ética y la pasión por el detalle, valores que se reflejan en cada gema que ofrecemos.</p>
+                <h2 class="section-title">
+                    Pasión por la Autenticidad y la Excelencia
+                </h2>
+                <p>
+                    En Emerald Elite, nos dedicamos a la selección de las esmeraldas
+                    colombianas más finas y raras, provenientes de las minas más
+                    prestigiosas del país. Nuestra misión es llevar la belleza y la
+                    historia de estas gemas únicas a coleccionistas y amantes del lujo
+                    en todo el mundo.
+                </p>
+                <p>
+                    Cada pieza de nuestra colección es seleccionada a mano y certificada
+                    para garantizar su autenticidad y calidad. Creemos en la
+                    transparencia, la ética y la pasión por el detalle, valores que se
+                    reflejan en cada gema que ofrecemos.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <section class="muzo-mines-section" id="muzo-mines">
+        <div class="muzo-content-wrapper">
+            <div class="muzo-header">
+                <div class="muzo-badge">Origen Legendario</div>
+                <h2 class="muzo-title">Minas de Muzo</h2>
+                <p class="muzo-subtitle">
+                    Cuna de las esmeraldas más preciosas del mundo, donde la naturaleza
+                    ha creado verdaderas obras de arte durante millones de años
+                </p>
+            </div>
+
+            <div class="muzo-hero-image">
+                <img src="assets/img/muzo.jpg" alt="Minas de Muzo - Colombia" />
+                <div class="muzo-hero-overlay">
+                    <div class="hero-overlay-badge">Patrimonio Mundial</div>
+                    <div class="hero-overlay-content">
+                        <h3>Corazón Esmeraldífero</h3>
+                        <p>
+                            Donde cada piedra extraída lleva consigo la magia y el misterio
+                            de los Andes colombianos.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="muzo-info-section">
+                <h3 class="muzo-info-title">El Corazón de los Andes</h3>
+                <p class="muzo-description">
+                    Las minas de Muzo, ubicadas en el corazón de Boyacá, Colombia, son
+                    reconocidas mundialmente como la fuente de las esmeraldas más finas
+                    y codiciadas del planeta.
+                </p>
+                <p class="muzo-description">
+                    Cada esmeralda de Muzo cuenta una historia de millones de años,
+                    formada en condiciones geológicas únicas. Su característico "verde
+                    Muzo" se debe a la perfecta combinación de elementos como el cromo y
+                    el vanadio.
+                </p>
+            </div>
+
+            <div class="muzo-features">
+                <div class="features-container">
+                    <div class="muzo-feature-card">
+                        <span class="feature-icon">💎</span>
+                        <h4 class="feature-title">Calidad Excepcional</h4>
+                        <p class="feature-description">
+                            Gemas de transparencia y color únicos
+                        </p>
+                    </div>
+                    <div class="muzo-feature-card">
+                        <span class="feature-icon">🏔️</span>
+                        <h4 class="feature-title">Tradición Milenaria</h4>
+                        <p class="feature-description">500+ años de historia minera</p>
+                    </div>
+                    <div class="muzo-feature-card">
+                        <span class="feature-icon">🌿</span>
+                        <h4 class="feature-title">Verde Inigualable</h4>
+                        <p class="feature-description">El famoso "verde Muzo"</p>
+                    </div>
+                    <div class="muzo-feature-card">
+                        <span class="feature-icon">🔬</span>
+                        <h4 class="feature-title">Certificación ISO</h4>
+                        <p class="feature-description">Calidad garantizada</p>
+                    </div>
+                </div>
+                <div class="scroll-indicator">← Desliza para ver más →</div>
+            </div>
+
+            <div class="muzo-stats-section">
+                <h3 class="stats-title">Datos Destacados</h3>
+                <div class="muzo-stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-number">500+</div>
+                        <div class="stat-label">Años de Historia</div>
+                        <p class="stat-description">Tradición minera ancestral</p>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">Líder</div>
+                        <div class="stat-label">Calidad Mundial</div>
+                        <p class="stat-description">Principal exportador global</p>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">150+</div>
+                        <div class="stat-label">Metros Profundidad</div>
+                        <p class="stat-description">Extracción especializada</p>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">ISO</div>
+                        <div class="stat-label">Certificado</div>
+                        <p class="stat-description">Trazabilidad garantizada</p>
+                    </div>
+                </div>
             </div>
         </div>
     </section>
@@ -419,7 +1037,10 @@
     <section class="section contact-section" id="contacto">
         <div class="section-header">
             <h2 class="section-title">Contáctanos</h2>
-            <p class="section-subtitle">Estamos listos para ayudarte a encontrar la gema perfecta o resolver tus dudas</p>
+            <p class="section-subtitle">
+                Estamos listos para ayudarte a encontrar la gema perfecta o resolver
+                tus dudas
+            </p>
         </div>
 
         <div class="contact-grid">
@@ -436,8 +1057,8 @@
                 <div class="card-icon">📞</div>
                 <h3>Teléfono</h3>
                 <div class="contact-details">
-                    <p>+57 310 123 4567</p>
-                    <p>+1 305 987 6543</p>
+                    <p>+57 312 361 9734</p>
+                    <p>+57 319 219 54</p>
                 </div>
             </div>
 
@@ -446,8 +1067,6 @@
                 <h3>Oficinas</h3>
                 <div class="contact-details">
                     <p>Bogotá, Colombia</p>
-                    <p>Miami, FL - USA</p>
-                    <p>Panamá City, Panamá</p>
                 </div>
             </div>
         </div>
@@ -459,12 +1078,13 @@
             </button>
         </div>
     </section>
+    
 
     <footer class="footer">
         <div class="footer-content">
             <div class="footer-brand">
                 <div class="logo">
-                    <img src="assets/img/logo.png" class="logo-image" alt="Import Export Logo">
+                    <img src="assets/img/logo.png" class="logo-image" alt="Import Export Logo" />
                     <span class="logo-text">IMPORT EXPORT</span>
                 </div>
                 <p>Excelencia en gemas colombianas de lujo</p>
@@ -472,26 +1092,215 @@
             <div class="footer-links">
                 <a href="#inicio">Inicio</a>
                 <a href="#catalogo">Catálogo</a>
-                <a href="#videos">Videos</a>
                 <a href="#nosotros">Nosotros</a>
                 <a href="#contacto">Contacto</a>
             </div>
         </div>
         <div class="footer-bottom">
-            <p>&copy; <span id="date"> </span> Import Export. Todos los derechos reservados.</p>
+            <p>
+                &copy; <span id="date"> </span> Import Export. Todos los derechos
+                reservados.
+            </p>
         </div>
     </footer>
 
-    <script src="script.js"></script>
-    <script src="video-handler.js"></script>
+    <script src="./assets/js/script.js"></script>
+    <script src="./assets/js/video-handler.js"></script>
     <script>
         function updateYear() {
-            const dateElement = document.getElementById('date');
+            const dateElement = document.getElementById("date");
             if (dateElement) {
                 dateElement.textContent = new Date().getFullYear();
             }
         }
-        document.addEventListener('DOMContentLoaded', updateYear);
+        document.addEventListener("DOMContentLoaded", updateYear);
+    </script>
+    <script>
+        // JavaScript para el carrusel de esmeraldas
+        class EmeraldCarousel {
+            constructor() {
+                this.currentSlide = 0;
+                this.totalSlides = 6;
+                this.container = document.getElementById("carouselContainer");
+                this.indicators = document.querySelectorAll(".indicator");
+                this.thumbnails = document.querySelectorAll(".thumbnail");
+                this.slides = document.querySelectorAll(".carousel-slide");
+                this.prevBtn = document.getElementById("prevBtn");
+                this.nextBtn = document.getElementById("nextBtn");
+                this.isAnimating = false;
+                this.autoPlayInterval = null;
+
+                this.init();
+                this.startAutoPlay();
+            }
+
+            init() {
+                // Event listeners para navegación
+                this.prevBtn.addEventListener("click", () => this.prevSlide());
+                this.nextBtn.addEventListener("click", () => this.nextSlide());
+
+                // Event listeners para indicadores
+                this.indicators.forEach((indicator, index) => {
+                    indicator.addEventListener("click", () => this.goToSlide(index));
+                });
+
+                // Event listeners para thumbnails
+                this.thumbnails.forEach((thumbnail, index) => {
+                    thumbnail.addEventListener("click", () => this.goToSlide(index));
+                });
+
+                // Touch/swipe support para móvil
+                this.addTouchSupport();
+
+                // Keyboard support
+                document.addEventListener("keydown", (e) => {
+                    if (e.key === "ArrowLeft") this.prevSlide();
+                    if (e.key === "ArrowRight") this.nextSlide();
+                });
+
+                // Pausar autoplay al pasar el mouse
+                const carousel = document.getElementById("emeraldCarousel");
+                carousel.addEventListener("mouseenter", () => this.stopAutoPlay());
+                carousel.addEventListener("mouseleave", () => this.startAutoPlay());
+
+                // Actualizar controles iniciales
+                this.updateControls();
+            }
+
+            addTouchSupport() {
+                let startX = 0;
+                let endX = 0;
+                const carousel = document.getElementById("emeraldCarousel");
+
+                carousel.addEventListener("touchstart", (e) => {
+                    startX = e.touches[0].clientX;
+                    this.stopAutoPlay(); // detener autoplay mientras toca
+                });
+
+                carousel.addEventListener("touchmove", (e) => {
+                    e.preventDefault(); // Prevenir scroll vertical
+                });
+
+                carousel.addEventListener("touchend", (e) => {
+                    endX = e.changedTouches[0].clientX;
+                    const diff = startX - endX;
+
+                    // Minimum swipe distance
+                    if (Math.abs(diff) > 50) {
+                        if (diff > 0) {
+                            this.nextSlide();
+                        } else {
+                            this.prevSlide();
+                        }
+                    }
+
+                    this.startAutoPlay(); // reanudar autoplay después de soltar
+                });
+            }
+
+            goToSlide(slideIndex) {
+                if (this.isAnimating || slideIndex === this.currentSlide) return;
+
+                this.isAnimating = true;
+                this.currentSlide = slideIndex;
+
+                // Animate container
+                const translateX = -this.currentSlide * 100;
+                this.container.style.transform = `translateX(${translateX}%)`;
+
+                // Update active states
+                this.updateActiveStates();
+                this.updateControls();
+
+                // Reset animation flag
+                setTimeout(() => {
+                    this.isAnimating = false;
+                }, 800);
+            }
+
+            nextSlide() {
+                const nextIndex = (this.currentSlide + 1) % this.totalSlides;
+                this.goToSlide(nextIndex);
+            }
+
+            prevSlide() {
+                const prevIndex =
+                    (this.currentSlide - 1 + this.totalSlides) % this.totalSlides;
+                this.goToSlide(prevIndex);
+            }
+
+            updateActiveStates() {
+                // Update slides
+                this.slides.forEach((slide, index) => {
+                    slide.classList.toggle("active", index === this.currentSlide);
+                });
+
+                // Update indicators
+                this.indicators.forEach((indicator, index) => {
+                    indicator.classList.toggle("active", index === this.currentSlide);
+                });
+
+                // Update thumbnails
+                this.thumbnails.forEach((thumbnail, index) => {
+                    thumbnail.classList.toggle("active", index === this.currentSlide);
+                });
+            }
+
+            updateControls() {
+                // En móvil, siempre mantener los controles activos para navegación circular
+                // En PC, se pueden deshabilitar en los extremos si se prefiere
+                const isMobile = window.innerWidth <= 768;
+
+                if (!isMobile) {
+                    this.prevBtn.classList.toggle("disabled", this.currentSlide === 0);
+                    this.nextBtn.classList.toggle(
+                        "disabled",
+                        this.currentSlide === this.totalSlides - 1
+                    );
+                } else {
+                    this.prevBtn.classList.remove("disabled");
+                    this.nextBtn.classList.remove("disabled");
+                }
+            }
+
+            startAutoPlay() {
+                this.stopAutoPlay(); // limpiar antes de iniciar
+                this.autoPlayInterval = setInterval(() => {
+                    if (!this.isAnimating) {
+                        this.nextSlide();
+                    }
+                }, 5000);
+            }
+
+            stopAutoPlay() {
+                clearInterval(this.autoPlayInterval);
+            }
+        }
+
+        // Initialize carousel when DOM is loaded
+        document.addEventListener("DOMContentLoaded", () => {
+            new EmeraldCarousel();
+
+            // Intersection Observer para animaciones cuando el carrusel entra en viewport
+            const observerOptions = {
+                threshold: 0.3,
+                rootMargin: "0px 0px -100px 0px",
+            };
+
+            const carouselObserver = new IntersectionObserver((entries) => {
+                entries.forEach((entry) => {
+                    if (entry.isIntersecting) {
+                        entry.target.style.animation = "slideInUp 0.8s ease-out";
+                    }
+                });
+            }, observerOptions);
+
+            const carouselElement = document.querySelector(".emerald-carousel");
+            if (carouselElement) {
+                carouselObserver.observe(carouselElement);
+            }
+        });
     </script>
 </body>
+
 </html>

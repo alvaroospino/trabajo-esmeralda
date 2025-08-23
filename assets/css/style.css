@@ -648,181 +648,7 @@ body::before {
 /* CARRUSEL OPTIMIZADO - MÁS PROTAGONISMO A LAS IMÁGENES */
 
 
-.carousel-container {
-    position: relative;
-    height: 550px; /* Altura ajustada para no exceder la pantalla */
-    border-radius: 20px;
-    overflow: hidden;
-    background: var(--card-bg);
-    backdrop-filter: blur(20px);
-    border: 1px solid var(--glass-border);
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4), 0 0 60px var(--emerald-soft-glow);
-    max-width: 100%;
-}
 
-.carousel-track {
-    display: flex;
-    height: 100%;
-    width: 400%;
-    transition: transform 0.8s cubic-bezier(0.25, 0.8, 0.25, 1);
-}
-
-.carousel-slide {
-    width: 25%;
-    height: 100%;
-    position: relative;
-    flex-shrink: 0;
-    display: flex;
-    flex-direction: column;
-}
-
-/* IMAGEN PRINCIPAL - MÁS ESPACIO */
-.slide-media {
-    flex: 1;
-    min-height: 350px; /* Mínimo para las imágenes */
-    overflow: hidden;
-    position: relative;
-}
-
-.slide-image {
-    width: 100%;
-    height: 100%;
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-    transition: transform 0.8s ease;
-    object-fit: cover;
-    image-rendering: -webkit-optimize-contrast;
-    image-rendering: crisp-edges;
-    backface-visibility: hidden;
-    transform: translateZ(0);
-    will-change: transform;
-}
-
-.slide-media::after {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(to bottom, transparent 70%, rgba(6, 26, 13, 0.1) 100%);
-    pointer-events: none;
-    z-index: 1;
-}
-
-
-.carousel-slide:hover .slide-image {
-    transform: scale(1.08);
-}
-
-/* CONTENIDO COMPACTO */
-.slide-content {
-    background: linear-gradient(to top, rgba(6, 26, 13, 0.98) 0%, rgba(6, 26, 13, 0.9) 70%, rgba(6, 26, 13, 0.7) 100%);
-    padding: 1.5rem 2rem;
-    color: white;
-    position: relative;
-    z-index: 2;
-    height: 200px; /* Altura fija más compacta */
-    display: flex;
-    align-items: center;
-    flex-shrink: 0;
-}
-
-.slide-info {
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-}
-
-/* BADGE MÁS COMPACTO */
-.slide-badge {
-    display: inline-block;
-    padding: 0.25rem 0.8rem;
-    background: var(--glass-bg);
-    border: 1px solid var(--glass-border);
-    border-radius: 15px;
-    font-size: 0.7rem;
-    font-weight: 500;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    color: var(--primary-green);
-    margin-bottom: 0.5rem;
-    box-shadow: 0 0 10px var(--emerald-soft-glow);
-    align-self: flex-start;
-}
-
-/* TÍTULO MÁS COMPACTO */
-.slide-content h3 {
-    font-family: 'Playfair Display', serif;
-    font-size: 1.8rem;
-    font-weight: 600;
-    margin-bottom: 0.8rem;
-    background: linear-gradient(135deg, var(--primary-green), var(--secondary-green));
-    -webkit-background-clip: text;
-    background-clip: text;
-    -webkit-text-fill-color: transparent;
-    text-shadow: 0 0 20px var(--emerald-glow);
-    line-height: 1.1;
-}
-
-/* ESPECIFICACIONES EN LÍNEA HORIZONTAL */
-.gem-specs {
-    display: flex;
-    gap: 0.8rem;
-    margin-bottom: 0.8rem;
-    flex-wrap: wrap;
-}
-
-.spec {
-    background: var(--glass-bg);
-    backdrop-filter: blur(10px);
-    border: 1px solid var(--glass-border);
-    padding: 0.4rem 0.8rem;
-    border-radius: 8px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    box-shadow: 0 0 8px var(--emerald-soft-glow);
-    transition: var(--transition-smooth);
-    min-width: 60px;
-}
-
-.spec:hover {
-    transform: translateY(-1px);
-    border-color: var(--primary-green);
-}
-
-.spec-label {
-    font-size: 0.6rem;
-    color: var(--primary-green);
-    margin-bottom: 0.1rem;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    font-weight: 500;
-    text-align: center;
-}
-
-.spec-value {
-    font-size: 0.85rem;
-    font-weight: 600;
-    color: white;
-    text-align: center;
-}
-
-/* DESCRIPCIÓN MÁS BREVE */
-.slide-content p {
-    font-size: 0.9rem;
-    line-height: 1.4;
-    color: var(--text-secondary);
-    margin-bottom: 1rem;
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-    text-overflow: ellipsis;
-}
 
 /* BOTÓN MÁS PEQUEÑO */
 .slide-cta {
@@ -845,18 +671,7 @@ body::before {
     box-shadow: 0 8px 20px var(--emerald-glow);
 }
 
-/* CONTROLES DE NAVEGACIÓN */
-.carousel-nav {
-    position: absolute;
-    top: 50%; /* Posicionamos en la zona de la imagen */
-    transform: translateY(-50%);
-    z-index: 10;
-    width: 100%;
-    display: flex;
-    justify-content: space-between;
-    padding: 0 2rem;
-    pointer-events: none;
-}
+
 
 .nav-btn {
     width: 50px;
@@ -1295,30 +1110,8 @@ body::before {
     display: none;
 }
 
-/* SCROLL INDICATORS */
-.scroll-indicator {
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-    z-index: 10;
-    background: rgba(0, 255, 127, 0.1);
-    backdrop-filter: blur(20px);
-    border: 1px solid var(--primary-green);
-    border-radius: 50%;
-    width: 50px;
-    height: 50px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    box-shadow: 0 0 20px var(--emerald-soft-glow);
-}
 
-.scroll-indicator:hover {
-    background: rgba(0, 255, 127, 0.2);
-    transform: translateY(-50%) scale(1.1);
-}
+
 
 .scroll-left {
     left: 1rem;
@@ -1328,13 +1121,7 @@ body::before {
     right: 1rem;
 }
 
-.scroll-indicator::before {
-    content: '';
-    border: solid var(--primary-green);
-    border-width: 0 2px 2px 0;
-    display: inline-block;
-    padding: 4px;
-}
+
 
 .scroll-left::before {
     transform: rotate(135deg);
@@ -1627,6 +1414,440 @@ body::before {
     color: rgba(255, 255, 255, 0.95);
 }
 
+
+
+/* Sección principal mejorada para móvil */
+        .muzo-mines-section {
+            position: relative;
+            padding: 4rem 1rem;
+            background: 
+                radial-gradient(ellipse at top, rgba(0, 255, 127, 0.06) 0%, transparent 70%),
+                radial-gradient(ellipse at bottom, rgba(50, 205, 50, 0.04) 0%, transparent 70%);
+            overflow: hidden;
+            min-height: 100vh;
+        }
+
+        .muzo-mines-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                linear-gradient(45deg, transparent 30%, rgba(0, 255, 127, 0.02) 50%, transparent 70%);
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        .muzo-content-wrapper {
+            max-width: 100%;
+            margin: 0 auto;
+            position: relative;
+            z-index: 2;
+        }
+
+        /* Header rediseñado para móvil */
+        .muzo-header {
+            text-align: center;
+            margin-bottom: 3rem;
+            padding: 0 1rem;
+        }
+
+        .muzo-badge {
+            display: inline-block;
+            padding: 0.7rem 1.5rem;
+            background: linear-gradient(135deg, rgba(0, 255, 127, 0.15), rgba(50, 205, 50, 0.08));
+            backdrop-filter: blur(15px);
+            border: 1px solid var(--glass-border);
+            border-radius: 25px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: var(--primary-green);
+            margin-bottom: 1.5rem;
+            box-shadow: 0 0 20px var(--emerald-soft-glow);
+            animation: pulseGlow 3s ease-in-out infinite;
+        }
+
+        .muzo-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.5rem;
+            font-weight: 700;
+            line-height: 1.1;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, #00ff7f 0%, #32cd32 50%, #90ee90 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 0 30px var(--emerald-glow);
+            animation: titleShimmer 4s ease-in-out infinite;
+        }
+
+        .muzo-title::after {
+            content: '';
+            display: block;
+            width: 80px;
+            height: 3px;
+            background: linear-gradient(90deg, var(--primary-green), var(--secondary-green));
+            margin: 1rem auto 0;
+            border-radius: 3px;
+            box-shadow: 0 0 15px var(--emerald-glow);
+        }
+
+        .muzo-subtitle {
+            font-size: 1rem;
+            color: var(--text-secondary);
+            font-weight: 300;
+            line-height: 1.6;
+            opacity: 0.9;
+            max-width: none;
+        }
+
+        /* Imagen hero optimizada para móvil */
+        .muzo-hero-image {
+            position: relative;
+            margin: 2rem 0;
+            border-radius: 20px;
+            overflow: hidden;
+            height: 280px;
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            box-shadow: 
+                0 15px 35px rgba(0, 0, 0, 0.4),
+                0 0 30px var(--emerald-soft-glow);
+        }
+
+        .muzo-hero-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            filter: brightness(0.8) contrast(1.2) saturate(1.3);
+            transition: var(--transition-smooth);
+        }
+
+        .muzo-hero-overlay {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(
+                180deg,
+                transparent 0%,
+                rgba(6, 26, 13, 0.3) 40%,
+                rgba(6, 26, 13, 0.8) 80%,
+                rgba(6, 26, 13, 0.95) 100%
+            );
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            padding: 1.5rem;
+        }
+
+        .hero-overlay-badge {
+            position: absolute;
+            top: 1.5rem;
+            right: 1.5rem;
+            background: rgba(0, 255, 127, 0.2);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--primary-green);
+            color: var(--primary-green);
+            font-size: 0.7rem;
+            font-weight: 700;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            box-shadow: 0 0 15px var(--emerald-soft-glow);
+        }
+
+        .hero-overlay-content h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: white;
+            margin-bottom: 0.5rem;
+            background: linear-gradient(135deg, var(--primary-green), #90ee90);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            line-height: 1.2;
+        }
+
+        .hero-overlay-content p {
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 0.85rem;
+            line-height: 1.5;
+        }
+
+        /* Contenido de información rediseñado */
+        .muzo-info-section {
+            margin: 3rem 0;
+            padding: 0 0.5rem;
+        }
+
+        .muzo-info-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.8rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            text-align: center;
+            background: linear-gradient(135deg, var(--primary-green), var(--secondary-green));
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            line-height: 1.2;
+        }
+
+        .muzo-description {
+            font-size: 0.95rem;
+            color: var(--text-secondary);
+            line-height: 1.7;
+            margin-bottom: 1.5rem;
+            text-align: justify;
+        }
+
+        /* Características rediseñadas como carrusel móvil */
+        .muzo-features {
+            margin: 2rem 0;
+            overflow-x: auto;
+            padding-bottom: 1rem;
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+        }
+
+        .muzo-features::-webkit-scrollbar {
+            display: none;
+        }
+
+        .features-container {
+            display: flex;
+            gap: 1rem;
+            padding: 0 0.5rem;
+            width: max-content;
+        }
+
+        .muzo-feature-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 15px;
+            padding: 1.5rem;
+            text-align: center;
+            min-width: 160px;
+            flex-shrink: 0;
+            transition: var(--transition-smooth);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+        }
+
+        .muzo-feature-card:active {
+            transform: scale(0.98);
+            border-color: var(--primary-green);
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.4), 0 0 25px var(--emerald-glow);
+        }
+
+        .feature-icon {
+            font-size: 2rem;
+            margin-bottom: 0.8rem;
+            display: block;
+            filter: drop-shadow(0 0 10px var(--emerald-light-glow));
+        }
+
+        .feature-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 0.6rem;
+            color: var(--primary-green);
+        }
+
+        .feature-description {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            line-height: 1.4;
+        }
+
+        /* Estadísticas en grid móvil optimizado */
+        .muzo-stats-section {
+            margin: 3rem 0;
+            padding: 0 0.5rem;
+        }
+
+        .stats-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.6rem;
+            font-weight: 600;
+            text-align: center;
+            margin-bottom: 2rem;
+            color: var(--primary-green);
+        }
+
+        .muzo-stats-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+
+        .stat-card {
+            background: var(--card-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 15px;
+            padding: 1.5rem 1rem;
+            text-align: center;
+            transition: var(--transition-smooth);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stat-card:active {
+            transform: scale(0.98);
+            border-color: var(--primary-green);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4), 0 0 30px var(--emerald-glow);
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(0, 255, 127, 0.1), transparent);
+            transition: left 0.8s ease;
+        }
+
+        .stat-card:active::before {
+            left: 100%;
+        }
+
+        .stat-number {
+            font-family: 'Playfair Display', serif;
+            font-size: 2rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--primary-green), var(--secondary-green));
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 0.3rem;
+            line-height: 1;
+        }
+
+        .stat-label {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 0.8rem;
+        }
+
+        .stat-description {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            line-height: 1.4;
+        }
+
+        
+
+        /* Animaciones optimizadas para móvil */
+        @keyframes pulseGlow {
+            0%, 100% { 
+                box-shadow: 0 0 15px var(--emerald-soft-glow);
+                transform: scale(1);
+            }
+            50% { 
+                box-shadow: 0 0 25px var(--emerald-glow);
+                transform: scale(1.02);
+            }
+        }
+
+        @keyframes titleShimmer {
+            0%, 100% { 
+                background-position: 0% 50%; 
+                filter: drop-shadow(0 0 15px var(--emerald-glow));
+            }
+            50% { 
+                background-position: 100% 50%; 
+                filter: drop-shadow(0 0 25px var(--primary-green));
+            }
+        }
+
+        /* Indicador de scroll para features */
+        .scroll-indicator {
+            text-align: center;
+            margin-top: 0.5rem;
+            color: var(--text-muted);
+            font-size: 0.7rem;
+            animation: fadeInOut 2s ease-in-out infinite;
+        }
+
+        @keyframes fadeInOut {
+            0%, 100% { opacity: 0.5; }
+            50% { opacity: 1; }
+        }
+
+        /* Media query para pantallas muy pequeñas */
+        @media (max-width: 360px) {
+            .muzo-mines-section {
+                padding: 3rem 0.5rem;
+            }
+            
+            .muzo-title {
+                font-size: 2.2rem;
+            }
+            
+            .muzo-hero-image {
+                height: 240px;
+            }
+            
+            .muzo-feature-card {
+                min-width: 140px;
+                padding: 1.2rem;
+            }
+            
+            .stat-card {
+                padding: 1.2rem 0.8rem;
+            }
+            
+            .stat-number {
+                font-size: 1.8rem;
+            }
+        }
+
+        /* Media query para tablets en portrait */
+        @media (min-width: 481px) and (max-width: 768px) {
+            .muzo-mines-section {
+                padding: 5rem 2rem;
+            }
+            
+            .muzo-hero-image {
+                height: 350px;
+            }
+            
+            .muzo-features {
+                overflow: visible;
+            }
+            
+            .features-container {
+                display: grid;
+                grid-template-columns: repeat(3, 1fr);
+                gap: 1.5rem;
+                width: 100%;
+                padding: 0;
+            }
+            
+            .muzo-feature-card {
+                min-width: auto;
+            }
+            
+            .muzo-stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 1.5rem;
+            }
+        }
 /* BOTÓN DE ACCIÓN - VISIBLE POR DEFECTO */
 .gallery-action {
     background: linear-gradient(135deg, var(--primary-green) 0%, var(--secondary-green) 100%);
@@ -1862,18 +2083,6 @@ body::before {
         grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
     }
 
-    .carousel-container {
-        height: 500px;
-    }
-    
-    .slide-media {
-        min-height: 300px;
-    }
-    
-    .slide-content {
-        height: 200px;
-        padding: 1.5rem;
-    }
 }
 
 @media (max-width: 992px) {
@@ -1894,23 +2103,7 @@ body::before {
         width: 40px;
         height: 40px;
     }
-
-    .carousel-container {
-        height: 450px;
-    }
     
-    .slide-media {
-        min-height: 250px;
-    }
-    
-    .slide-content {
-        height: 200px;
-        padding: 1.5rem;
-    }
-    
-    .slide-content h3 {
-        font-size: 1.7rem;
-    }
 }
 
 @media (max-width: 768px) {
@@ -1930,57 +2123,23 @@ body::before {
         width: 100%;
         max-width: 280px;
     }
-
-    .carousel-container {
-        height: 400px;
-    }
-
-    .slide-media {
-        min-height: 220px;
-    }
-    
-    .slide-content {
-        height: 180px;
-        padding: 1.2rem;
-    }
-    
-    .slide-content h3 {
-        font-size: 1.6rem;
-        margin-bottom: 0.6rem;
-    }
-    
-    .gem-specs {
-        gap: 0.6rem;
-        margin-bottom: 0.6rem;
-    }
     
     .spec {
         padding: 0.3rem 0.6rem;
         min-width: 50px;
     }
-    
-    .spec-label {
-        font-size: 0.55rem;
-    }
+   
     
     .spec-value {
         font-size: 0.8rem;
     }
-    
-    .slide-content p {
-        font-size: 0.85rem;
-        margin-bottom: 0.8rem;
-        -webkit-line-clamp: 2;
-    }
+   
     
     .about-image {
         height: 300px;
     }
     
-    .carousel-nav {
-        padding: 0 1rem;
-        top: 50%;
-    }
+    
 
     .videos-grid {
         grid-template-columns: 1fr;
@@ -2040,49 +2199,15 @@ body::before {
     .hero-subtitle {
         font-size: 1rem;
     }
-    
-    .carousel-container {
-        height: 350px;
-    }
-    
-    .slide-media {
-        min-height: 180px;
-    }
-    
-    .slide-content {
-        height: 170px;
-        padding: 1rem;
-    }
-    
-    .slide-content h3 {
-        font-size: 1.4rem;
-        margin-bottom: 0.5rem;
-    }
-    
-    .gem-specs {
-        gap: 0.4rem;
-        margin-bottom: 0.5rem;
-    }
-    
+   
     .spec {
         padding: 0.25rem 0.5rem;
         min-width: 45px;
     }
-    
-    .spec-label {
-        font-size: 0.5rem;
-    }
-    
+   
     .spec-value {
         font-size: 0.75rem;
     }
-    
-    .slide-content p {
-        font-size: 0.8rem;
-        margin-bottom: 0.6rem;
-        -webkit-line-clamp: 2;
-    }
-    
     .slide-cta {
         padding: 0.5rem 1.2rem;
         font-size: 0.75rem;
@@ -2189,12 +2314,6 @@ body::before {
         padding: 0 1rem;
         font-size: 1.5rem;
     }
-
-    /* Ocultar scroll indicators en móvil */
-    .scroll-indicator {
-        display: none;
-    }
-
     .gallery-card:hover {
         transform: translateY(-8px) scale(1.01);
     }
