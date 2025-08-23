@@ -540,18 +540,27 @@ class EmeraldCarousel {
         this.updateControls();
     }
 
-    addTouchSupport() {
+   addTouchSupport() {
         let startX = 0;
+        let startY = 0;
         let endX = 0;
         const carousel = document.getElementById("emeraldCarousel");
 
         carousel.addEventListener("touchstart", (e) => {
             startX = e.touches[0].clientX;
+            startY = e.touches[0].clientY;
             this.stopAutoPlay(); // detener autoplay mientras toca
         });
 
         carousel.addEventListener("touchmove", (e) => {
-            e.preventDefault(); // Prevenir scroll vertical
+            endX = e.touches[0].clientX;
+            const diffX = startX - endX;
+            const diffY = startY - e.touches[0].clientY;
+            
+            // Prevenir scroll vertical solo si el movimiento horizontal es mayor
+            if (Math.abs(diffX) > Math.abs(diffY)) {
+                e.preventDefault();
+            }
         });
 
         carousel.addEventListener("touchend", (e) => {
@@ -570,7 +579,6 @@ class EmeraldCarousel {
             this.startAutoPlay(); // reanudar autoplay después de soltar
         });
     }
-
     goToSlide(slideIndex) {
         if (this.isAnimating || slideIndex === this.currentSlide) return;
 

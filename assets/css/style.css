@@ -2420,11 +2420,6 @@ body::before {
         flex: 0 0 280px;
         height: 380px;
     }
-
-    .premium-gallery-wrapper {
-        
-    }
-
     .premium-gallery {
         gap: 1.5rem;
     }
