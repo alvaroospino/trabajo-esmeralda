@@ -64,7 +64,8 @@
 
         .emerald-carousel {
             position: relative;
-            overflow: hidden;
+            overflow-x: hidden;
+            overflow-y: visible;
             border-radius: 20px;
             background: var(--glass-bg);
             backdrop-filter: blur(20px);
@@ -78,6 +79,7 @@
             display: flex;
             transition: transform 0.8s cubic-bezier(0.25, 0.8, 0.25, 1);
             will-change: transform;
+            overflow: visible;
         }
 
         .carousel-slide {
