@@ -297,22 +297,27 @@ class VideoHandler {
 
             // Función principal para manejar reproducción
             const handleVideoToggle = (e) => {
-                // Prevenir que se active si se hace clic en botones
-                if (e.target.closest('.gallery-action')) {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    return;
-                }
+    // Si hago clic en una imagen (pero NO en un video)
+    if (e.target.tagName === "IMG" && !e.target.classList.contains("gallery-video")) {
+        return; // dejamos que se dispare el modal
+    }
 
-                e.preventDefault();
-                e.stopPropagation();
-                
-                if (video.paused) {
-                    this.playVideo(video, container);
-                } else {
-                    this.pauseVideo(video, container);
-                }
-            };
+    if (e.target.closest('.gallery-action')) {
+        e.preventDefault();
+        e.stopPropagation();
+        return;
+    }
+
+    e.preventDefault();
+    e.stopPropagation();
+
+    if (video.paused) {
+        this.playVideo(video, container);
+    } else {
+        this.pauseVideo(video, container);
+    }
+};
+
 
             // Eventos para el overlay de play y el contenedor
             if (videoOverlay) {
@@ -482,25 +487,242 @@ class VideoHandler {
     }
 }
 
-// Analytics y tracking (placeholder)
-class EmeraldAnalytics {
-    static track(event, data = {}) {
-        console.log('Analytics Event:', event, data);
+// NUEVO: Clase para manejar el carrusel de esmeraldas
+class EmeraldCarousel {
+    constructor() {
+        this.currentSlide = 0;
+        this.totalSlides = 6;
+        this.container = document.getElementById("carouselContainer");
+        this.indicators = document.querySelectorAll(".indicator");
+        this.thumbnails = document.querySelectorAll(".thumbnail");
+        this.slides = document.querySelectorAll(".carousel-slide");
+        this.prevBtn = document.getElementById("prevBtn");
+        this.nextBtn = document.getElementById("nextBtn");
+        this.isAnimating = false;
+        this.autoPlayInterval = null;
+
+        if (this.container) {
+            this.init();
+            this.startAutoPlay();
+        }
     }
 
-    static trackVideoInteraction(action, videoElement) {
-        this.track('video_interaction', {
-            action,
-            video_src: videoElement.currentSrc || videoElement.src,
-            duration: videoElement.duration,
-            current_time: videoElement.currentTime
+    init() {
+        // Event listeners para navegación
+        this.prevBtn.addEventListener("click", () => this.prevSlide());
+        this.nextBtn.addEventListener("click", () => this.nextSlide());
+
+        // Event listeners para indicadores
+        this.indicators.forEach((indicator, index) => {
+            indicator.addEventListener("click", () => this.goToSlide(index));
         });
+
+        // Event listeners para thumbnails
+        this.thumbnails.forEach((thumbnail, index) => {
+            thumbnail.addEventListener("click", () => this.goToSlide(index));
+        });
+
+        // Touch/swipe support para móvil
+        this.addTouchSupport();
+
+        // Keyboard support
+        document.addEventListener("keydown", (e) => {
+            if (e.key === "ArrowLeft") this.prevSlide();
+            if (e.key === "ArrowRight") this.nextSlide();
+        });
+
+        // Pausar autoplay al pasar el mouse
+        const carousel = document.getElementById("emeraldCarousel");
+        carousel.addEventListener("mouseenter", () => this.stopAutoPlay());
+        carousel.addEventListener("mouseleave", () => this.startAutoPlay());
+
+        // Actualizar controles iniciales
+        this.updateControls();
+    }
+
+    addTouchSupport() {
+        let startX = 0;
+        let endX = 0;
+        const carousel = document.getElementById("emeraldCarousel");
+
+        carousel.addEventListener("touchstart", (e) => {
+            startX = e.touches[0].clientX;
+            this.stopAutoPlay(); // detener autoplay mientras toca
+        });
+
+        carousel.addEventListener("touchmove", (e) => {
+            e.preventDefault(); // Prevenir scroll vertical
+        });
+
+        carousel.addEventListener("touchend", (e) => {
+            endX = e.changedTouches[0].clientX;
+            const diff = startX - endX;
+
+            // Minimum swipe distance
+            if (Math.abs(diff) > 50) {
+                if (diff > 0) {
+                    this.nextSlide();
+                } else {
+                    this.prevSlide();
+                }
+            }
+
+            this.startAutoPlay(); // reanudar autoplay después de soltar
+        });
+    }
+
+    goToSlide(slideIndex) {
+        if (this.isAnimating || slideIndex === this.currentSlide) return;
+
+        this.isAnimating = true;
+        this.currentSlide = slideIndex;
+
+        // Animate container
+        const translateX = -this.currentSlide * 100;
+        this.container.style.transform = `translateX(${translateX}%)`;
+
+        // Update active states
+        this.updateActiveStates();
+        this.updateControls();
+
+        // Reset animation flag
+        setTimeout(() => {
+            this.isAnimating = false;
+        }, 800);
+    }
+
+    nextSlide() {
+        const nextIndex = (this.currentSlide + 1) % this.totalSlides;
+        this.goToSlide(nextIndex);
+    }
+
+    prevSlide() {
+        const prevIndex = (this.currentSlide - 1 + this.totalSlides) % this.totalSlides;
+        this.goToSlide(prevIndex);
+    }
+
+    updateActiveStates() {
+        // Update slides
+        this.slides.forEach((slide, index) => {
+            slide.classList.toggle("active", index === this.currentSlide);
+        });
+
+        // Update indicators
+        this.indicators.forEach((indicator, index) => {
+            indicator.classList.toggle("active", index === this.currentSlide);
+        });
+
+        // Update thumbnails
+        this.thumbnails.forEach((thumbnail, index) => {
+            thumbnail.classList.toggle("active", index === this.currentSlide);
+        });
+    }
+
+    updateControls() {
+        // En móvil, siempre mantener los controles activos para navegación circular
+        // En PC, se pueden deshabilitar en los extremos si se prefiere
+        const isMobile = window.innerWidth <= 768;
+
+        if (!isMobile) {
+            this.prevBtn.classList.toggle("disabled", this.currentSlide === 0);
+            this.nextBtn.classList.toggle(
+                "disabled",
+                this.currentSlide === this.totalSlides - 1
+            );
+        } else {
+            this.prevBtn.classList.remove("disabled");
+            this.nextBtn.classList.remove("disabled");
+        }
+    }
+
+    startAutoPlay() {
+        this.stopAutoPlay(); // limpiar antes de iniciar
+        this.autoPlayInterval = setInterval(() => {
+            if (!this.isAnimating) {
+                this.nextSlide();
+            }
+        }, 5000);
+    }
+
+    stopAutoPlay() {
+        clearInterval(this.autoPlayInterval);
     }
 }
 
-// Inicializar cuando DOM esté listo
+
+// NUEVO: Clase para el modal de imágenes
+
+class ImageModal {
+    constructor() {
+        this.modal = document.getElementById("imageModal");
+        this.modalImg = document.getElementById("modalImg");
+        this.captionText = document.getElementById("caption");
+        this.closeBtn = document.querySelector(".modal .close");
+
+        if (this.modal) {
+            this.setupEventListeners();
+        }
+    }
+
+    setupEventListeners() {
+        // Al dar click en el botón 'Ver Imagen' -> abre modal con la imagen
+        document.querySelectorAll('.view-image-btn').forEach(button => {
+            button.addEventListener('click', (e) => {
+                e.preventDefault(); // Evita el comportamiento predeterminado del botón
+                e.stopPropagation(); // Evita que el evento se propague a la tarjeta padre
+
+                // Encuentra la tarjeta padre para obtener la imagen
+                const card = e.target.closest('.premium-card');
+                const img = card.querySelector('img.gallery-image');
+                
+                if (img) {
+                    this.openModal(img.src, img.alt);
+                }
+            });
+        });
+
+        // Cerrar modal al dar click en la X
+        if (this.closeBtn) {
+            this.closeBtn.onclick = () => { this.closeModal(); };
+        }
+
+        // Cerrar modal al dar click fuera de la imagen
+        this.modal.onclick = (e) => {
+            if (e.target === this.modal) {
+                this.closeModal();
+            }
+        };
+    }
+
+    // El resto de tus métodos openModal() y closeModal()
+    openModal(imageSrc, altText) {
+        this.modal.style.display = "block";
+        this.modalImg.src = imageSrc;
+        this.captionText.innerHTML = altText;
+        document.body.style.overflow = "hidden"; // Deshabilita el scroll del fondo
+    }
+
+    closeModal() {
+        this.modal.style.display = "none";
+        document.body.style.overflow = "auto"; // Habilita el scroll del fondo
+    }
+}
+
+// NUEVO: Función para actualizar el año
+function updateYear() {
+    const dateElement = document.getElementById("date");
+    if (dateElement) {
+        dateElement.textContent = new Date().getFullYear();
+    }
+}
+
+
+// Inicializar todas las clases cuando DOM esté listo
 document.addEventListener('DOMContentLoaded', () => {
     window.emeraldElite = new EmeraldElite();
+    new EmeraldCarousel();
+    new ImageModal();
+    updateYear();
     
     // Estilos CSS adicionales para efectos
     const additionalStyles = `
