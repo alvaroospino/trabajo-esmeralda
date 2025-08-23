@@ -1,4 +1,4 @@
-// Emerald Elite - Main JavaScript - Mejorado
+// Emerald Elite - Main JavaScript - Mejorado con Galería Visible
 
 class EmeraldElite {
     constructor() {
@@ -10,6 +10,7 @@ class EmeraldElite {
         this.isDragging = false;
         this.dragStartX = 0;
         this.dragCurrentX = 0;
+        this.videoHandler = null;
         
         this.init();
     }
@@ -21,13 +22,18 @@ class EmeraldElite {
         this.initCarousel();
         this.setupIntersectionObserver();
         this.setupMobileMenu();
-        this.setupGalleryScroll(); // Added for premium gallery
-        this.setupAllVideoPlayers();
+        this.setupGalleryScroll();
+        this.initVideoHandler(); // Nueva inicialización
         
         // Simulate loading time
         setTimeout(() => {
             this.hideLoadingScreen();
         }, 3000);
+    }
+
+    // NUEVO: Inicializar el manejador de videos mejorado
+    initVideoHandler() {
+        this.videoHandler = new VideoHandler(this);
     }
 
     // Loading Screen
@@ -74,6 +80,12 @@ class EmeraldElite {
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
             anchor.addEventListener('click', (e) => {
                 e.preventDefault();
+                
+                // Pausar videos al navegar
+                if (this.videoHandler) {
+                    this.videoHandler.stopAllPlayback();
+                }
+                
                 const target = document.querySelector(anchor.getAttribute('href'));
                 if (target) {
                     const offsetTop = target.offsetTop - 80;
@@ -88,6 +100,7 @@ class EmeraldElite {
         window.addEventListener('scroll', () => {
             this.handleNavScroll();
             this.handleScrollIndicator();
+            this.handleVideoVisibility(); // NUEVO: Manejar visibilidad de videos
         });
 
         const prevBtn = document.querySelector('.prev-btn');
@@ -148,9 +161,33 @@ class EmeraldElite {
                         e.preventDefault();
                         this.goToSlide(this.totalSlides - 1);
                         break;
+                    case 'Escape':
+                        // Pausar videos con ESC
+                        if (this.videoHandler) {
+                            this.videoHandler.stopAllPlayback();
+                        }
+                        break;
                 }
             }
         });
+    }
+
+    // NUEVO: Manejar visibilidad de videos al hacer scroll
+    handleVideoVisibility() {
+        if (!this.videoHandler || !this.videoHandler.hasActiveVideo()) return;
+        
+        const activeVideo = this.videoHandler.getActiveVideo();
+        if (!activeVideo) return;
+        
+        const videoRect = activeVideo.getBoundingClientRect();
+        const isInViewport = videoRect.top < window.innerHeight && videoRect.bottom > 0;
+        
+        // Pausar video si sale del viewport
+        if (!isInViewport && !activeVideo.paused) {
+            setTimeout(() => {
+                this.videoHandler.stopAllPlayback();
+            }, 500); // Delay para evitar pausas accidentales
+        }
     }
 
     handleNavScroll() {
@@ -191,6 +228,11 @@ class EmeraldElite {
 
         navLinks.forEach(link => {
             link.addEventListener('click', () => {
+                // Pausar videos al navegar en móvil
+                if (this.videoHandler) {
+                    this.videoHandler.stopAllPlayback();
+                }
+                
                 toggle.classList.remove('active');
                 menu.classList.remove('active');
                 document.body.style.overflow = '';
@@ -206,95 +248,6 @@ class EmeraldElite {
         });
     }
 
-    // CONSOLIDATED Video Handlers
-    _handleVideoPlay(video, allVideos) {
-        if (video.paused) {
-            allVideos.forEach(v => {
-                if (v !== video) {
-                    v.pause();
-                    if(v.closest('.gallery-card')) v.closest('.gallery-card').classList.remove('playing');
-                }
-            });
-            video.play();
-            if(video.closest('.gallery-card')) video.closest('.gallery-card').classList.add('playing');
-        } else {
-            video.pause();
-             if(video.closest('.gallery-card')) video.closest('.gallery-card').classList.remove('playing');
-        }
-    }
-// Video Handlers Unificados
-    setupAllVideoPlayers() {
-        const allVideos = document.querySelectorAll('.emerald-video, .gallery-video');
-        const videoContainers = document.querySelectorAll('.gallery-card');
-
-        videoContainers.forEach(container => {
-            const video = container.querySelector('.gallery-video');
-            if (!video) return;
-
-            // Función para manejar la reproducción/pausa
-            const togglePlay = (e) => {
-                // Evita que el video se active si se hace clic en un botón de acción
-                if (e.target.closest('.gallery-action')) {
-                    return;
-                }
-                e.preventDefault();
-                e.stopPropagation();
-                this._handleVideoPlay(video, allVideos);
-            };
-
-            // Asigna el evento al contenedor principal para asegurar la captura del clic
-            container.addEventListener('click', togglePlay);
-
-            // Gestiona las clases y el estado visual del video
-            video.addEventListener('play', () => {
-                container.classList.add('playing');
-            });
-
-            video.addEventListener('pause', () => {
-                container.classList.remove('playing');
-            });
-
-            video.addEventListener('ended', () => {
-                container.classList.remove('playing');
-                video.currentTime = 0; // Reinicia el video al terminar
-            });
-        });
-
-        // Este código es para los otros videos que puedas tener con la clase .play-btn
-        // Lo mantenemos por si lo usas en otras secciones.
-        const playButtons = document.querySelectorAll('.play-btn');
-        const regularVideos = document.querySelectorAll('.emerald-video');
-        playButtons.forEach((btn, index) => {
-            btn.addEventListener('click', (e) => {
-                e.preventDefault();
-                e.stopPropagation();
-                const video = regularVideos[index];
-                if (video) {
-                   this._handleVideoPlay(video, allVideos);
-                }
-            });
-        });
-
-         regularVideos.forEach((video, index) => {
-            video.addEventListener('pause', () => {
-                if(playButtons[index]) playButtons[index].style.display = 'flex';
-            });
-
-            video.addEventListener('ended', () => {
-                if(playButtons[index]) playButtons[index].style.display = 'flex';
-                video.currentTime = 0;
-            });
-
-            video.addEventListener('play', () => {
-                 if(playButtons[index]) playButtons[index].style.display = 'none';
-            });
-
-            video.addEventListener('click', () => {
-                this._handleVideoPlay(video, allVideos);
-            });
-        });
-    }
-
     // Premium Gallery Scroll
     setupGalleryScroll() {
         const leftScroller = document.querySelector('.scroll-indicator.scroll-left');
@@ -307,13 +260,45 @@ class EmeraldElite {
 
         if (leftScroller) {
             leftScroller.addEventListener('click', () => {
+                // Pausar videos antes de hacer scroll
+                if (this.videoHandler) {
+                    this.videoHandler.stopAllPlayback();
+                }
                 gallery.scrollBy({ left: -scrollAmount, behavior: 'smooth' });
             });
         }
         if (rightScroller) {
             rightScroller.addEventListener('click', () => {
+                // Pausar videos antes de hacer scroll
+                if (this.videoHandler) {
+                    this.videoHandler.stopAllPlayback();
+                }
                 gallery.scrollBy({ left: scrollAmount, behavior: 'smooth' });
             });
+        }
+
+        // NUEVO: Manejar scroll en galería premium
+        gallery.addEventListener('scroll', () => {
+            this.handleGalleryScroll();
+        });
+    }
+
+    // NUEVO: Manejar scroll en galería
+    handleGalleryScroll() {
+        // Pausar videos que salen del área visible durante el scroll
+        if (this.videoHandler && this.videoHandler.hasActiveVideo()) {
+            const gallery = document.getElementById('premiumGallery');
+            const activeVideo = this.videoHandler.getActiveVideo();
+            const galleryRect = gallery.getBoundingClientRect();
+            const videoRect = activeVideo.getBoundingClientRect();
+            
+            const isVisibleInGallery = 
+                videoRect.left < galleryRect.right && 
+                videoRect.right > galleryRect.left;
+                
+            if (!isVisibleInGallery) {
+                this.videoHandler.stopAllPlayback();
+            }
         }
     }
 
@@ -371,7 +356,8 @@ class EmeraldElite {
         
         this.pauseAutoPlay();
         this.autoPlayInterval = setInterval(() => {
-            if (!this.isDragging) {
+            // No avanzar si hay un video reproduciéndose
+            if (!this.isDragging && (!this.videoHandler || !this.videoHandler.hasActiveVideo())) {
                 this.nextSlide();
             }
         }, 6000);
@@ -413,7 +399,7 @@ class EmeraldElite {
             if (track) {
                 const baseTranslate = -this.currentSlide * (100 / this.totalSlides);
                 const dragOffset = (diffX / carousel.offsetWidth) * (100 / this.totalSlides);
-                track.style.transition = 'none'; // Disable transition for smooth dragging
+                track.style.transition = 'none';
                 track.style.transform = `translateX(${baseTranslate - dragOffset}%)`;
             }
         }, { passive: true });
@@ -422,7 +408,7 @@ class EmeraldElite {
             if (!this.isDragging) return;
             
             const track = document.querySelector('.carousel-track');
-            if(track) track.style.transition = ''; // Re-enable transition
+            if(track) track.style.transition = '';
 
             const diffX = startX - currentX;
             const threshold = 50;
@@ -537,7 +523,223 @@ class EmeraldElite {
     }
 }
 
-// Analytics and tracking (placeholder)
+// NUEVO: Manejador de Videos Mejorado
+class VideoHandler {
+    constructor(emeraldElite) {
+        this.activeVideo = null;
+        this.emeraldElite = emeraldElite;
+        this.setupVideoHandlers();
+    }
+
+    setupVideoHandlers() {
+        const allVideos = document.querySelectorAll('.gallery-video');
+        const videoContainers = document.querySelectorAll('.gallery-card');
+
+        videoContainers.forEach(container => {
+            const video = container.querySelector('.gallery-video');
+            const videoOverlay = container.querySelector('.video-overlay');
+            
+            if (!video) return;
+
+            // Función principal para manejar reproducción
+            const handleVideoToggle = (e) => {
+                // Prevenir que se active si se hace clic en botones
+                if (e.target.closest('.gallery-action')) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    return;
+                }
+
+                e.preventDefault();
+                e.stopPropagation();
+                
+                if (video.paused) {
+                    this.playVideo(video, container);
+                } else {
+                    this.pauseVideo(video, container);
+                }
+            };
+
+            // Eventos para el overlay de play y el contenedor
+            if (videoOverlay) {
+                videoOverlay.addEventListener('click', handleVideoToggle);
+            }
+            
+            container.addEventListener('click', handleVideoToggle);
+
+            // Eventos del video
+            video.addEventListener('play', () => {
+                this.onVideoPlay(video, container);
+            });
+
+            video.addEventListener('pause', () => {
+                this.onVideoPause(video, container);
+            });
+
+            video.addEventListener('ended', () => {
+                this.onVideoEnd(video, container);
+            });
+
+            video.addEventListener('loadeddata', () => {
+                container.classList.add('video-loaded');
+            });
+
+            video.addEventListener('contextmenu', (e) => {
+                e.preventDefault();
+            });
+        });
+
+        this.setupRegularVideos();
+    }
+
+    playVideo(video, container) {
+        this.pauseAllVideos();
+        
+        const playPromise = video.play();
+        
+        if (playPromise !== undefined) {
+            playPromise
+                .then(() => {
+                    this.activeVideo = video;
+                })
+                .catch(error => {
+                    console.log('Error al reproducir video:', error);
+                    this.onVideoError(video, container, error);
+                });
+        }
+    }
+
+    pauseVideo(video, container) {
+        video.pause();
+    }
+
+    pauseAllVideos() {
+        const allVideos = document.querySelectorAll('.gallery-video, .emerald-video');
+        allVideos.forEach(video => {
+            if (!video.paused) {
+                video.pause();
+            }
+        });
+    }
+
+    onVideoPlay(video, container) {
+        container.classList.add('playing');
+        
+        if (this.emeraldElite && this.emeraldElite.pauseAutoPlay) {
+            this.emeraldElite.pauseAutoPlay();
+        }
+    }
+
+    onVideoPause(video, container) {
+        container.classList.remove('playing');
+        
+        if (this.emeraldElite && this.emeraldElite.resumeAutoPlay) {
+            setTimeout(() => {
+                this.emeraldElite.resumeAutoPlay();
+            }, 1000);
+        }
+
+        this.activeVideo = null;
+    }
+
+    onVideoEnd(video, container) {
+        video.currentTime = 0;
+        container.classList.remove('playing');
+        this.addEndEffect(container);
+        this.activeVideo = null;
+    }
+
+    onVideoError(video, container, error) {
+        container.classList.remove('playing');
+        this.showErrorMessage(container);
+    }
+
+    addEndEffect(container) {
+        container.classList.add('video-ended');
+        setTimeout(() => {
+            container.classList.remove('video-ended');
+        }, 2000);
+    }
+
+    showErrorMessage(container) {
+        const errorDiv = document.createElement('div');
+        errorDiv.className = 'video-error-message';
+        errorDiv.innerHTML = `
+            <div class="error-content">
+                <span>⚠️</span>
+                <p>Error al cargar el video</p>
+            </div>
+        `;
+        
+        container.appendChild(errorDiv);
+        
+        setTimeout(() => {
+            if (errorDiv && errorDiv.parentNode) {
+                errorDiv.remove();
+            }
+        }, 3000);
+    }
+
+    setupRegularVideos() {
+        const regularVideos = document.querySelectorAll('.emerald-video');
+        const playButtons = document.querySelectorAll('.play-btn');
+
+        playButtons.forEach((btn, index) => {
+            btn.addEventListener('click', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                
+                const video = regularVideos[index];
+                if (video) {
+                    if (video.paused) {
+                        this.pauseAllVideos();
+                        video.play();
+                        btn.style.display = 'none';
+                    } else {
+                        video.pause();
+                        btn.style.display = 'flex';
+                    }
+                }
+            });
+        });
+
+        regularVideos.forEach((video, index) => {
+            video.addEventListener('click', () => {
+                if (video.paused) {
+                    this.pauseAllVideos();
+                    video.play();
+                    if (playButtons[index]) playButtons[index].style.display = 'none';
+                } else {
+                    video.pause();
+                    if (playButtons[index]) playButtons[index].style.display = 'flex';
+                }
+            });
+
+            video.addEventListener('pause', () => {
+                if (playButtons[index]) playButtons[index].style.display = 'flex';
+            });
+
+            video.addEventListener('ended', () => {
+                if (playButtons[index]) playButtons[index].style.display = 'flex';
+                video.currentTime = 0;
+            });
+        });
+    }
+
+    stopAllPlayback() {
+        this.pauseAllVideos();
+    }
+
+    getActiveVideo() {
+        return this.activeVideo;
+    }
+
+    hasActiveVideo() {
+        return this.activeVideo !== null && !this.activeVideo.paused;
+    }
+}
+
+// Analytics y tracking (placeholder)
 class EmeraldAnalytics {
     static track(event, data = {}) {
         console.log('Analytics Event:', event, data);
@@ -549,9 +751,18 @@ class EmeraldAnalytics {
             slide_index: slideIndex
         });
     }
+
+    static trackVideoInteraction(action, videoElement) {
+        this.track('video_interaction', {
+            action,
+            video_src: videoElement.currentSrc || videoElement.src,
+            duration: videoElement.duration,
+            current_time: videoElement.currentTime
+        });
+    }
 }
 
-// Enhanced carousel with analytics
+// Carrusel mejorado con analytics
 class EnhancedCarousel extends EmeraldElite {
     nextSlide() {
         super.nextSlide();
@@ -569,8 +780,54 @@ class EnhancedCarousel extends EmeraldElite {
     }
 }
 
-// Initialize when DOM is loaded
+// Inicializar cuando DOM esté listo
 document.addEventListener('DOMContentLoaded', () => {
-    // *** FIX: Instantiate the EnhancedCarousel to enable analytics ***
-    const emeraldElite = new EnhancedCarousel();
+    window.emeraldElite = new EnhancedCarousel();
+    
+    // Estilos CSS adicionales para efectos
+    const additionalStyles = `
+        .video-error-message {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(255, 0, 0, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid #ff4444;
+            border-radius: 10px;
+            padding: 1rem;
+            z-index: 1000;
+            animation: errorFade 3s ease-out forwards;
+        }
+        
+        .error-content {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: #ff4444;
+            font-size: 0.9rem;
+        }
+        
+        .video-ended {
+            animation: endPulse 0.5s ease-out;
+        }
+        
+        @keyframes errorFade {
+            0% { opacity: 0; transform: translate(-50%, -50%) scale(0.8); }
+            20% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+            80% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+            100% { opacity: 0; transform: translate(-50%, -50%) scale(0.8); }
+        }
+        
+        @keyframes endPulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.02); }
+            100% { transform: scale(1); }
+        }
+    `;
+
+    // Inyectar estilos adicionales
+    const styleSheet = document.createElement('style');
+    styleSheet.textContent = additionalStyles;
+    document.head.appendChild(styleSheet);
 });

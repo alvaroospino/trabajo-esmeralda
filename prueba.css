@@ -1339,7 +1339,7 @@ body::before {
     margin-right: 4px;
 }
 
-/* TARJETAS DE GALERÍA */
+
 .gallery-card {
     position: relative;
     border-radius: 25px;
@@ -1358,7 +1358,7 @@ body::before {
     scroll-snap-align: center;
 }
 
-/* VARIANTES DE TAMAÑO PARA DESKTOP */
+
 .gallery-card.featured-large {
     min-height: 380px;
     max-height: 420px;
@@ -1473,11 +1473,16 @@ body::before {
     transition: all 0.6s ease;
 }
 
-.gallery-card:hover .gallery-overlay {
-    opacity: 1; /* Se muestra al pasar el cursor */
+/* ESTADO CUANDO SE REPRODUCE VIDEO - OCULTAR INFORMACIÓN */
+.gallery-card.playing .gallery-overlay {
+    opacity: 0;
+    pointer-events: none;
 }
 
-/* BADGE FLOTANTE */
+.gallery-card:hover .gallery-overlay {
+    opacity: 1;
+}
+
 .item-badge {
     align-self: flex-start;
     background: rgba(0, 255, 127, 0.15);
