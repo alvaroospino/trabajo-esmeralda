@@ -10,6 +10,7 @@
             --emerald-glow: rgba(0, 255, 127, 0.4);
             --emerald-light-glow: rgba(50, 205, 50, 0.3);
             --emerald-soft-glow: rgba(0, 255, 127, 0.1);
+            --emerald-video-glow: rgba(0, 255, 127, 0.8);
             --glass-bg: rgba(13, 40, 24, 0.3);
             --glass-border: rgba(0, 255, 127, 0.2);
             --text-primary: #ffffff;
@@ -40,7 +41,6 @@
             position: relative;
             touch-action: manipulation;
         }
-
 
          /* Estilo del botón de regreso con animaciones mejoradas */
         .back-button {
@@ -114,20 +114,10 @@
 
         /* Icono de flecha con animación */
         .back-button .back-button-icon {
-            transform: translateX(0);
-            transition: transform 0.3s ease;
             display: inline-block;
             font-size: 1.2em;
-            animation: bounceLeft 1s infinite;
-        }
-
-        @keyframes bounceLeft {
-            0%, 100% {
-                transform: translateX(0);
-            }
-            50% {
-                transform: translateX(-4px);
-            }
+            transition: transform 0.3s ease;
+            /* Se eliminó la animación de rebote para un look más limpio con el nuevo ícono */
         }
 
         .back-button::before {
@@ -182,14 +172,6 @@
             50% { background-position: 100% 50%; }
         }
 
-        /* Animación de ripple para el clic */
-        @keyframes ripple {
-            to {
-                transform: scale(2);
-                opacity: 0;
-            }
-        }
-
         /* Responsive para móviles */
         @media (max-width: 768px) {
             .back-button {
@@ -200,47 +182,11 @@
                 gap: 8px;
             }
 
+            /* Hacemos el texto "Inicio" siempre visible en móviles para mayor claridad */
             .back-button-text {
-                max-width: 0;
-                opacity: 0;
-                transition: var(--transition-smooth);
-            }
-
-            .back-button:hover .back-button-text {
-                max-width: 100px;
-                opacity: 1;
+                /* El texto ya no se oculta en la vista móvil, mejorando la usabilidad. */
             }
         }
-
-        @media (max-width: 480px) {
-            .back-button {
-                top: 10px;
-                left: 10px;
-                padding: 8px 12px;
-            }
-
-            .back-button-icon {
-                font-size: 1.1rem;
-            }
-        }
-
-        /* Para accesibilidad */
-        .back-button:focus {
-            outline: 2px solid var(--primary-green);
-            outline-offset: 2px;
-        }
-
-        /* Para usuarios que prefieren menos movimiento */
-        @media (prefers-reduced-motion: reduce) {
-            .back-button,
-            .back-button::before,
-            .back-button-icon,
-            .back-button-text {
-                animation: none !important;
-                transition: none !important;
-            }
-        }
-
 
         /* Optimized particles for mobile */
         .particles {
@@ -382,7 +328,7 @@
 
         /* Mobile-first carousel with header margin */
         .carousel-container {
-            margin-top: 120px; /* Espacio para el header fijo */
+            margin-top: 120px;
             padding: 2rem 0;
             background: linear-gradient(135deg, var(--glass-bg), rgba(13, 40, 24, 0.1));
             backdrop-filter: blur(15px);
@@ -393,13 +339,8 @@
 
         @media (max-width: 768px) {
             .carousel-container {
-                margin-top: 100px; /* Ajuste para móviles */
-            }
-        }
-
-        @media (max-width: 480px) {
-            .carousel-container {
-                margin-top: 90px; /* Ajuste para pantallas muy pequeñas */
+                /* Ajustamos el margen para compensar el nuevo tamaño del header en móvil */
+                margin-top: 150px;
             }
         }
 
@@ -456,7 +397,8 @@
             opacity: 1;
         }
 
-        .carousel-item img {
+        .carousel-item img,
+        .carousel-item video {
             width: 100%;
             height: 100%;
             object-fit: cover;
@@ -466,6 +408,36 @@
         .carousel-item.active {
             transform: scale(1.02);
             box-shadow: 0 10px 25px var(--emerald-glow);
+        }
+
+        /* Estilos específicos para videos */
+        .carousel-item.video-item video {
+            pointer-events: none;
+        }
+
+        .carousel-item.video-item::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 50px;
+            height: 50px;
+            background: var(--glass-bg);
+            backdrop-filter: blur(10px);
+            border: 2px solid var(--primary-green);
+            border-radius: 50%;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='%2300ff7f' viewBox='0 0 24 24'%3E%3Cpath d='M8 5v14l11-7z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: center;
+            background-size: 24px 24px;
+            opacity: 0.9;
+            transition: var(--transition-smooth);
+        }
+
+        .carousel-item.video-item:hover::after {
+            transform: translate(-50%, -50%) scale(1.1);
+            box-shadow: 0 5px 15px var(--emerald-glow);
         }
 
         /* Mobile-optimized gallery controls */
@@ -550,6 +522,22 @@
             transform: translateY(0);
         }
 
+        /* Efecto especial para videos que se están reproduciendo */
+        .gallery-item.playing {
+            box-shadow: 0 0 30px var(--emerald-video-glow), 0 0 60px var(--emerald-glow);
+            border: 2px solid var(--primary-green);
+            animation: playingGlow 2s ease-in-out infinite alternate;
+        }
+
+        @keyframes playingGlow {
+            0% {
+                box-shadow: 0 0 30px var(--emerald-video-glow), 0 0 60px var(--emerald-glow);
+            }
+            100% {
+                box-shadow: 0 0 40px var(--emerald-video-glow), 0 0 80px var(--emerald-light-glow);
+            }
+        }
+
         .gallery-item::before {
             content: '';
             position: absolute;
@@ -573,12 +561,55 @@
             opacity: 0.5;
         }
 
-        .gallery-item img {
+        .gallery-item img,
+        .gallery-item video {
             width: 100%;
             height: 100%;
             object-fit: cover;
             transition: var(--transition-smooth);
             border-radius: 18px;
+        }
+
+        /* Controles de video para gallery items */
+        .video-controls {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 5;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .video-play-btn {
+            width: 60px;
+            height: 60px;
+            background: var(--glass-bg);
+            backdrop-filter: blur(15px);
+            border: 2px solid var(--primary-green);
+            border-radius: 50%;
+            color: var(--primary-green);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            transition: var(--transition-smooth);
+            touch-action: manipulation;
+        }
+
+        .video-play-btn:hover,
+        .video-play-btn:active {
+            background: var(--primary-green);
+            color: var(--bg-dark);
+            transform: scale(1.1);
+            box-shadow: 0 5px 20px var(--emerald-glow);
+        }
+
+        .video-play-btn.playing {
+            background: var(--primary-green);
+            color: var(--bg-dark);
         }
 
         .gallery-item-overlay {
@@ -606,106 +637,277 @@
             line-height: 1.3;
         }
 
-        /* Mobile-optimized modal */
+        /* MODAL MEJORADO Y PROFESIONAL */
         .modal {
             display: none;
             position: fixed;
             top: 0;
             left: 0;
-            width: 100%;
+            width: 100vw;
             height: 100vh;
-            height: calc(var(--vh) * 100);
-            background: rgba(0, 0, 0, 0.98);
-            backdrop-filter: blur(20px);
-            z-index: 2000;
-            touch-action: manipulation;
+            background: radial-gradient(circle at center, rgba(0, 20, 10, 0.98) 0%, rgba(0, 0, 0, 0.99) 100%);
+            backdrop-filter: blur(25px);
+            z-index: 3000;
+            touch-action: none;
+            overflow: hidden;
         }
 
         .modal.active {
+            display: block;
+            animation: modalFadeIn 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+        }
+
+        @keyframes modalFadeIn {
+            0% {
+                opacity: 0;
+                transform: scale(1.05);
+            }
+            100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        .modal-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
             display: flex;
             align-items: center;
             justify-content: center;
+            padding: 20px;
+            box-sizing: border-box;
         }
 
         .modal-content {
-            width: 95vw;
-            height: 90vh;
-            height: calc(var(--vh) * 90);
             position: relative;
-            border-radius: 15px;
+            max-width: 95vw;
+            max-height: 90vh;
+            width: auto;
+            height: auto;
+            border-radius: 20px;
             overflow: hidden;
-            box-shadow: 0 0 50px var(--emerald-glow);
-            border: 2px solid var(--primary-green);
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            box-shadow: 
+                0 0 80px rgba(0, 255, 127, 0.3),
+                0 25px 50px rgba(0, 0, 0, 0.8),
+                inset 0 0 0 1px rgba(0, 255, 127, 0.2);
+            border: 2px solid transparent;
+            background: linear-gradient(var(--bg-dark), var(--bg-dark)) padding-box,
+                        linear-gradient(45deg, var(--primary-green), transparent, var(--secondary-green)) border-box;
+            animation: contentSlideIn 0.5s cubic-bezier(0.23, 1, 0.32, 1);
         }
 
-        .modal-content img {
+        @keyframes contentSlideIn {
+            0% {
+                opacity: 0;
+                transform: scale(0.8) translateY(50px);
+            }
+            100% {
+                opacity: 1;
+                transform: scale(1) translateY(0);
+            }
+        }
+
+        .modal-media {
+            display: block;
             max-width: 100%;
-            max-height: 100%;
+            max-height: 90vh;
+            width: auto;
+            height: auto;
             object-fit: contain;
             background: var(--bg-dark);
+            border-radius: 18px;
         }
 
-        /* Mobile-friendly modal controls */
+        /* Barra superior del modal con información */
+        .modal-header {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(180deg, rgba(0, 0, 0, 0.9) 0%, transparent 100%);
+            padding: 20px 25px;
+            z-index: 10;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            backdrop-filter: blur(15px);
+        }
+
+        .modal-info {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .modal-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--primary-green);
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+        }
+
+        .modal-description {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            opacity: 0.8;
+        }
+
+        .modal-counter {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            background: rgba(0, 255, 127, 0.1);
+            padding: 5px 12px;
+            border-radius: 15px;
+            border: 1px solid rgba(0, 255, 127, 0.2);
+            backdrop-filter: blur(10px);
+        }
+
+        /* Botón de cerrar mejorado */
         .modal-close {
             position: absolute;
-            top: 15px;
-            right: 15px;
-            background: var(--card-bg);
-            border: 2px solid var(--primary-green);
-            color: var(--primary-green);
-            width: 45px;
-            height: 45px;
+            top: 20px;
+            right: 20px;
+            width: 50px;
+            height: 50px;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(20px);
+            border: 2px solid rgba(0, 255, 127, 0.3);
             border-radius: 50%;
+            color: var(--text-primary);
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 1.5rem;
-            backdrop-filter: blur(15px);
-            transition: var(--transition-smooth);
-            z-index: 10;
+            font-size: 1.4rem;
+            z-index: 20;
+            transition: all 0.3s cubic-bezier(0.23, 1, 0.32, 1);
             touch-action: manipulation;
         }
 
-        .modal-close:active {
-            background: var(--primary-green);
-            color: var(--bg-dark);
-            transform: scale(0.9);
+        .modal-close:hover {
+            background: rgba(0, 255, 127, 0.1);
+            border-color: var(--primary-green);
+            color: var(--primary-green);
+            transform: scale(1.1);
+            box-shadow: 0 5px 20px rgba(0, 255, 127, 0.3);
         }
 
+        .modal-close:active {
+            transform: scale(0.95);
+        }
+
+        /* Navegación lateral mejorada */
         .modal-nav {
             position: absolute;
             top: 50%;
             transform: translateY(-50%);
-            background: var(--card-bg);
-            border: 2px solid var(--primary-green);
-            color: var(--primary-green);
-            width: 50px;
-            height: 50px;
+            width: 60px;
+            height: 60px;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(20px);
+            border: 2px solid rgba(0, 255, 127, 0.3);
             border-radius: 50%;
+            color: var(--text-primary);
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
             font-size: 1.5rem;
-            backdrop-filter: blur(15px);
-            transition: var(--transition-smooth);
+            z-index: 15;
+            transition: all 0.3s cubic-bezier(0.23, 1, 0.32, 1);
             touch-action: manipulation;
+            opacity: 0.8;
+        }
+
+        .modal-nav:hover {
+            background: rgba(0, 255, 127, 0.1);
+            border-color: var(--primary-green);
+            color: var(--primary-green);
+            transform: translateY(-50%) scale(1.1);
+            box-shadow: 0 8px 25px rgba(0, 255, 127, 0.3);
+            opacity: 1;
         }
 
         .modal-nav:active {
-            background: var(--primary-green);
-            color: var(--bg-dark);
             transform: translateY(-50%) scale(0.9);
         }
 
-        .modal-nav.prev { left: 15px; }
-        .modal-nav.next { right: 15px; }
+        .modal-nav.prev {
+            left: 20px;
+        }
 
-        /* Loading animation */
+        .modal-nav.next {
+            right: 20px;
+        }
+
+        /* Controles de video para modal mejorados */
+        .modal-video-controls {
+            position: absolute;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(20px);
+            border: 2px solid rgba(0, 255, 127, 0.3);
+            border-radius: 50px;
+            padding: 15px 25px;
+            z-index: 10;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        }
+
+        .modal-video-btn {
+            width: 45px;
+            height: 45px;
+            background: rgba(0, 255, 127, 0.1);
+            border: 2px solid rgba(0, 255, 127, 0.3);
+            border-radius: 50%;
+            color: var(--primary-green);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            transition: all 0.3s ease;
+            touch-action: manipulation;
+        }
+
+        .modal-video-btn:hover {
+            background: var(--primary-green);
+            color: var(--bg-dark);
+            transform: scale(1.1);
+            box-shadow: 0 5px 15px rgba(0, 255, 127, 0.4);
+        }
+
+        .modal-video-btn:active {
+            transform: scale(0.95);
+        }
+
+        /* Barra de progreso de video */
+        .modal-progress {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: rgba(0, 255, 127, 0.2);
+            z-index: 5;
+        }
+
+        .modal-progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary-green), var(--secondary-green));
+            width: 0%;
+            transition: width 0.1s ease;
+            box-shadow: 0 0 10px rgba(0, 255, 127, 0.5);
+        }
+
+        /* Loading animation mejorado */
         .loading {
             display: inline-block;
             width: 40px;
@@ -728,161 +930,6 @@
             padding: 0.5rem;
             color: var(--text-muted);
             font-size: 0.8rem;
-        }
-
-        /* Offline indicator */
-        .offline::before {
-            content: 'Sin conexión a internet';
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            background: #ff4444;
-            color: white;
-            text-align: center;
-            padding: 0.5rem;
-            z-index: 3000;
-            font-size: 0.9rem;
-        }
-
-        /* Error state for images */
-        .error {
-            opacity: 0.5;
-            filter: grayscale(100%);
-        }
-
-        /* Low battery optimizations */
-        .low-battery * {
-            animation: none !important;
-            transition: none !important;
-        }
-
-        /* Mobile-specific optimizations */
-        @media (max-width: 768px) {
-            .header {
-                padding: 1.5rem 1rem 1rem;
-            }
-            
-            .header.scrolled {
-                padding: 0.8rem 1rem;
-            }
-            
-            .header h1 {
-                font-size: clamp(1.5rem, 6vw, 2.5rem);
-            }
-            
-            .main-content {
-                padding-top: 100px;
-            }
-            
-            .carousel-item {
-                flex: 0 0 250px;
-                height: 180px;
-            }
-            
-            .gallery-grid {
-                grid-template-columns: 1fr;
-                gap: 1rem;
-            }
-            
-            .gallery-container {
-                padding: 1.5rem 0.5rem;
-            }
-            
-            .control-btn {
-                padding: 0.6rem 1.2rem;
-                font-size: 0.8rem;
-            }
-            .footer .logo-image {
-        width: 45px;
-        height: 45px;
-    }
-        }
-
-        @media (max-width: 480px) {
-            .header {
-                padding: 1.5rem 0.5rem 1rem;
-            }
-            
-            .carousel-item {
-                flex: 0 0 200px;
-                height: 150px;
-            }
-            
-            .gallery-controls {
-                gap: 0.25rem;
-                padding: 0.25rem;
-            }
-            
-            .control-btn {
-                padding: 0.5rem 1rem;
-                font-size: 0.75rem;
-            }
-
-            .modal-content {
-                width: 98vw;
-                height: calc(var(--vh) * 95);
-            }
-
-            .modal-close {
-                width: 40px;
-                height: 40px;
-                font-size: 1.3rem;
-            }
-
-            .modal-nav {
-                width: 45px;
-                height: 45px;
-                font-size: 1.3rem;
-            }
-            .footer .logo-image {
-        width: 40px;
-        height: 40px;
-    }
-        }
-
-        /* iOS Safari specific fixes */
-        @supports (-webkit-touch-callout: none) {
-            .modal-content {
-                height: calc(100vh - env(safe-area-inset-top) - env(safe-area-inset-bottom));
-            }
-            
-            body {
-                height: 100vh;
-                height: -webkit-fill-available;
-            }
-        }
-
-        /* Focus states for accessibility */
-        .control-btn:focus,
-        .modal-close:focus,
-        .modal-nav:focus {
-            outline: 2px solid var(--primary-green);
-            outline-offset: 2px;
-        }
-
-        /* High contrast mode support */
-        @media (prefers-contrast: high) {
-            .gallery-item {
-                border: 3px solid var(--primary-green);
-            }
-            
-            .control-btn {
-                border-width: 3px;
-            }
-        }
-
-        /* Reduce motion for users who prefer it */
-        @media (prefers-reduced-motion: reduce) {
-            * {
-                animation-duration: 0.01ms !important;
-                animation-iteration-count: 1 !important;
-                transition-duration: 0.01ms !important;
-            }
-            
-            .particles {
-                display: none;
-            }
         }
 
         /* Footer mejorado */
@@ -933,4 +980,178 @@
             padding-top: 2rem;
             border-top: 1px solid var(--glass-border);
             color: var(--text-muted);
+        }
+
+        /* Responsivo para móviles */
+        @media (max-width: 768px) {
+            .header {
+                /* Aumentamos el padding superior para que el título no se solape con el botón de inicio */
+                padding: 70px 1rem 1rem;
+            }
+            
+            .header.scrolled {
+                padding: 0.8rem 1rem;
+            }
+            
+            .header h1 {
+                font-size: clamp(1.5rem, 6vw, 2.5rem);
+            }
+
+            .carousel-item {
+                flex: 0 0 250px;
+                height: 180px;
+            }
+            
+            .gallery-grid {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+            
+            .gallery-container {
+                padding: 1.5rem 0.5rem;
+            }
+            
+            .control-btn {
+                padding: 0.6rem 1.2rem;
+                font-size: 0.8rem;
+            }
+            
+            .video-play-btn {
+                width: 50px;
+                height: 50px;
+                font-size: 1.2rem;
+            }
+
+            /* Modal responsivo */
+            .modal-container {
+                padding: 10px;
+            }
+
+            .modal-content {
+                max-width: 98vw;
+                max-height: 95vh;
+                border-radius: 15px;
+            }
+
+            .modal-header {
+                padding: 15px 20px;
+            }
+
+            .modal-title {
+                font-size: 1rem;
+            }
+
+            .modal-description {
+                font-size: 0.8rem;
+            }
+
+            .modal-counter {
+                font-size: 0.75rem;
+                padding: 4px 8px;
+            }
+
+            .modal-close {
+                width: 45px;
+                height: 45px;
+                top: 15px;
+                right: 15px;
+                font-size: 1.2rem;
+            }
+
+            .modal-nav {
+                width: 50px;
+                height: 50px;
+                font-size: 1.3rem;
+            }
+
+            .modal-nav.prev {
+                left: 15px;
+            }
+
+            .modal-nav.next {
+                right: 15px;
+            }
+
+            .modal-video-controls {
+                bottom: 20px;
+                padding: 12px 20px;
+                gap: 10px;
+            }
+
+            .modal-video-btn {
+                width: 40px;
+                height: 40px;
+                font-size: 1.1rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .modal-container {
+                padding: 5px;
+            }
+
+            .modal-content {
+                max-width: 99vw;
+                max-height: 98vh;
+                border-radius: 10px;
+            }
+
+            .modal-close {
+                width: 40px;
+                height: 40px;
+                font-size: 1.1rem;
+            }
+
+            .modal-nav {
+                width: 45px;
+                height: 45px;
+                font-size: 1.2rem;
+            }
+
+            .modal-video-controls {
+                bottom: 15px;
+                padding: 10px 15px;
+                gap: 8px;
+            }
+
+            .modal-video-btn {
+                width: 35px;
+                height: 35px;
+                font-size: 1rem;
+            }
+        }
+
+        /* Focus states para accesibilidad */
+        .modal-close:focus,
+        .modal-nav:focus,
+        .modal-video-btn:focus {
+            outline: 2px solid var(--primary-green);
+            outline-offset: 2px;
+        }
+
+        /* High contrast mode support */
+        @media (prefers-contrast: high) {
+            .modal {
+                background: rgba(0, 0, 0, 0.95);
+            }
+            
+            .modal-content {
+                border: 3px solid var(--primary-green);
+            }
+        }
+
+        /* Reduce motion for users who prefer it */
+        @media (prefers-reduced-motion: reduce) {
+            .modal,
+            .modal-content,
+            .modal-close,
+            .modal-nav,
+            .modal-video-btn {
+                animation: none !important;
+                transition: none !important;
+            }
+            
+            .particles {
+                display: none;
+            }
         }

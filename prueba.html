@@ -3,25 +3,34 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>Galería Interactiva - Import Export Esmeraldas</title>
+    <title>Galería Interactiva</title>
+    <link rel="icon" type="image/png" href="assets/img/logo.png" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        :root {
+         :root {
+            --primary-green: #00ff7f;
             --primary-emerald: #00ff7f;
-            --secondary-emerald: #32cd32;
-            --dark-emerald: #228b22;
-            --deep-emerald: #0a3d1a;
+            --secondary-green: #32cd32;
+            --dark-green: #228b22;
             --darker-emerald: #061a0d;
-            --emerald-glow: rgba(0, 255, 127, 0.6);
-            --emerald-soft-glow: rgba(0, 255, 127, 0.15);
-            --glass-bg: rgba(10, 61, 26, 0.4);
-            --glass-border: rgba(0, 255, 127, 0.3);
+            --emerald-dark: #0d2818;
+            --emerald-darker: #061a0d;
+            --emerald-deep: #0a1f12;
+            --emerald-glow: rgba(0, 255, 127, 0.4);
+            --emerald-light-glow: rgba(50, 205, 50, 0.3);
+            --emerald-soft-glow: rgba(0, 255, 127, 0.1);
+            --emerald-video-glow: rgba(0, 255, 127, 0.8);
+            --glass-bg: rgba(13, 40, 24, 0.3);
+            --glass-border: rgba(0, 255, 127, 0.2);
             --text-primary: #ffffff;
             --text-secondary: rgba(255, 255, 255, 0.9);
             --text-muted: rgba(255, 255, 255, 0.7);
-            --bg-gradient: linear-gradient(135deg, #000000 0%, #0a1f12 30%, #0d2818 70%, #000000 100%);
-            --transition-smooth: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
-            --transition-bounce: all 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            --bg-dark: #000000;
+            --bg-darker: var(--emerald-darker);
+            --card-bg: rgba(13, 40, 24, 0.6);
+            --transition-smooth: all 0.3s ease;
+            --transition-bounce: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+            --vh: 1vh;
         }
 
         * {
@@ -32,15 +41,163 @@
         }
 
         body {
-            background: var(--bg-gradient);
+            background: linear-gradient(135deg, var(--bg-dark) 0%, var(--emerald-darker) 30%, var(--emerald-deep) 70%, var(--bg-dark) 100%);
             color: var(--text-primary);
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
             min-height: 100vh;
+            min-height: calc(var(--vh) * 100);
             overflow-x: hidden;
             position: relative;
+            touch-action: manipulation;
         }
 
-        /* Partículas animadas mejoradas */
+         /* Estilo del botón de regreso con animaciones mejoradas */
+        .back-button {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            z-index: 1500;
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            border: 2px solid var(--glass-border);
+            border-radius: 50px;
+            padding: 12px 20px;
+            color: var(--text-primary);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            font-weight: 600;
+            font-size: 0.9rem;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
+            cursor: pointer;
+            touch-action: manipulation;
+            user-select: none;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            overflow: hidden;
+            animation: pulseButton 2s infinite;
+        }
+
+        /* Animación de pulso suave para indicar interactividad */
+        @keyframes pulseButton {
+            0% {
+                box-shadow: 0 5px 20px rgba(0, 255, 127, 0.2);
+            }
+            50% {
+                box-shadow: 0 5px 30px rgba(0, 255, 127, 0.4);
+            }
+            100% {
+                box-shadow: 0 5px 20px rgba(0, 255, 127, 0.2);
+            }
+        }
+
+        /* Efecto de hover mejorado */
+        .back-button::after {
+            content: '';
+            position: absolute;
+            left: -100%;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(
+                90deg,
+                transparent,
+                rgba(0, 255, 127, 0.2),
+                transparent
+            );
+            animation: shineEffect 3s infinite;
+        }
+
+        @keyframes shineEffect {
+            0% {
+                left: -100%;
+            }
+            20% {
+                left: 100%;
+            }
+            100% {
+                left: 100%;
+            }
+        }
+
+        /* Icono de flecha con animación */
+        .back-button .back-button-icon {
+            display: inline-block;
+            font-size: 1.2em;
+            transition: transform 0.3s ease;
+            /* Se eliminó la animación de rebote para un look más limpio con el nuevo ícono */
+        }
+
+        .back-button::before {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            background: linear-gradient(45deg, var(--primary-green), var(--secondary-green), var(--primary-green));
+            background-size: 300% 300%;
+            border-radius: 52px;
+            z-index: -1;
+            opacity: 0;
+            transition: var(--transition-smooth);
+            animation: shimmerBorder 4s ease-in-out infinite;
+        }
+
+        .back-button:hover::before,
+        .back-button:active::before {
+            opacity: 1;
+        }
+
+        .back-button:hover {
+            transform: translateX(-3px) scale(1.05);
+            box-shadow: 0 8px 30px var(--emerald-glow);
+            color: var(--primary-green);
+        }
+
+        .back-button:active {
+            transform: translateX(-2px) scale(0.98);
+        }
+
+        .back-button-icon {
+            font-size: 1.2rem;
+            transition: var(--transition-smooth);
+        }
+
+        .back-button:hover .back-button-icon {
+            transform: translateX(-2px);
+        }
+
+        .back-button-text {
+            white-space: nowrap;
+            overflow: hidden;
+            transition: var(--transition-smooth);
+        }
+
+        /* Animación del borde */
+        @keyframes shimmerBorder {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+
+        /* Responsive para móviles */
+        @media (max-width: 768px) {
+            .back-button {
+                top: 15px;
+                left: 15px;
+                padding: 10px 15px;
+                font-size: 0.8rem;
+                gap: 8px;
+            }
+
+            /* Hacemos el texto "Inicio" siempre visible en móviles para mayor claridad */
+            .back-button-text {
+                /* El texto ya no se oculta en la vista móvil, mejorando la usabilidad. */
+            }
+        }
+
+        /* Optimized particles for mobile */
         .particles {
             position: fixed;
             top: 0;
@@ -49,252 +206,372 @@
             height: 100%;
             pointer-events: none;
             z-index: 1;
-            overflow: hidden;
         }
 
         .particle {
             position: absolute;
-            background: var(--primary-emerald);
+            background: var(--primary-green);
             border-radius: 50%;
-            opacity: 0.1;
-            animation: floatUp 20s infinite linear;
+            opacity: 0.08;
+            animation: float 25s infinite linear;
         }
 
-        .particle.sparkle {
-            background: linear-gradient(45deg, var(--primary-emerald), #ffffff, var(--secondary-emerald));
-            opacity: 0.3;
-            animation: sparkleFloat 15s infinite ease-in-out;
+        @keyframes float {
+            0% { transform: translateY(100vh) rotate(0deg); }
+            100% { transform: translateY(-100vh) rotate(360deg); }
         }
 
-        @keyframes floatUp {
-            0% { 
-                transform: translateY(100vh) rotate(0deg) scale(0.5);
-                opacity: 0;
-            }
-            10% {
-                opacity: 0.1;
-            }
-            90% {
-                opacity: 0.1;
-            }
-            100% { 
-                transform: translateY(-10vh) rotate(360deg) scale(1);
-                opacity: 0;
-            }
-        }
-
-        @keyframes sparkleFloat {
-            0%, 100% { 
-                transform: translateY(100vh) rotate(0deg) scale(0.3);
-                opacity: 0;
-            }
-            50% { 
-                transform: translateY(50vh) rotate(180deg) scale(0.8);
-                opacity: 0.6;
-            }
-        }
-
-        /* Botón de regreso mejorado */
-        .back-button {
-            position: fixed;
-            top: 20px;
-            left: 20px;
-            z-index: 1500;
-            background: var(--glass-bg);
-            backdrop-filter: blur(25px);
-            border: 2px solid var(--glass-border);
-            border-radius: 60px;
-            padding: 15px 25px;
-            color: var(--text-primary);
-            text-decoration: none;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            transition: var(--transition-bounce);
-            font-weight: 700;
-            font-size: 1rem;
-            box-shadow: 0 8px 32px rgba(0, 255, 127, 0.2);
-            cursor: pointer;
-            overflow: hidden;
-        }
-
-        .back-button::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: conic-gradient(from 0deg, transparent, var(--primary-emerald), transparent);
-            animation: rotate 4s linear infinite;
-            opacity: 0.3;
-            z-index: -1;
-        }
-
-        .back-button:hover {
-            transform: translateX(-5px) scale(1.05);
-            box-shadow: 0 12px 40px var(--emerald-glow);
-            border-color: var(--primary-emerald);
-        }
-
-        @keyframes rotate {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
-        /* Header con efectos de cristal */
+        /* Mobile-optimized header with hide/show scroll effect */
         .header {
+            text-align: center;
+            padding: 2rem 1rem 1.5rem;
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            border-bottom: 2px solid var(--glass-border);
             position: fixed;
             top: 0;
             left: 0;
             right: 0;
             z-index: 100;
-            background: var(--glass-bg);
-            backdrop-filter: blur(30px);
-            border-bottom: 2px solid var(--glass-border);
-            padding: 2rem 1rem 1.5rem;
-            text-align: center;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
-            transition: var(--transition-smooth);
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            height: auto;
+        }
+        
+        .header.scrolled {
+            padding: 0.8rem;
+            height: 60px;
+            background: rgba(10, 61, 26, 0.95);
+            border-bottom: 2px solid var(--primary-green);
+            box-shadow: 0 2px 15px var(--emerald-glow);
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
-        .header.scrolled {
-            padding: 1rem;
-            background: rgba(10, 61, 26, 0.95);
-            border-bottom: 2px solid var(--primary-emerald);
-            box-shadow: 0 4px 20px var(--emerald-glow);
+        .header h1,
+        .header p {
+            transition: opacity 0.3s ease-in-out;
+        }
+
+        .header.scrolled h1,
+        .header.scrolled p {
+            opacity: 0;
+        }
+
+        /* Espaciado para el contenido principal */
+        .main-content {
+            position: relative;
+            z-index: 1;
         }
 
         .header h1 {
-            font-size: clamp(2.5rem, 8vw, 4rem);
-            background: linear-gradient(45deg, var(--primary-emerald), #ffffff, var(--secondary-emerald), var(--primary-emerald));
-            background-size: 300% 300%;
+            font-size: clamp(2rem, 8vw, 3.5rem);
+            background: linear-gradient(45deg, var(--primary-green), var(--secondary-green), var(--primary-green));
+            background-size: 200% 200%;
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
             margin-bottom: 0.5rem;
-            animation: shimmerText 4s ease-in-out infinite;
-            letter-spacing: 2px;
-            text-shadow: 0 0 30px var(--emerald-glow);
+            animation: shimmer 3s ease-in-out infinite;
+            letter-spacing: 1px;
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 20px;
+            gap: 15px;
         }
 
-        .gem-icon {
+        /* Estilos para los iconos */
+        .header-icon {
             font-size: 0.8em;
-            animation: gemRotate 6s infinite ease-in-out;
-            filter: drop-shadow(0 0 10px var(--primary-emerald));
+            animation: rotateGem 3s infinite linear;
         }
 
-        @keyframes gemRotate {
-            0%, 100% { transform: rotate(0deg) scale(1); }
-            25% { transform: rotate(10deg) scale(1.1); }
-            75% { transform: rotate(-10deg) scale(1.1); }
+        @keyframes rotateGem {
+            0% { transform: rotate(0deg); }
+            25% { transform: rotate(15deg); }
+            75% { transform: rotate(-15deg); }
+            100% { transform: rotate(0deg); }
         }
 
-        @keyframes shimmerText {
+        .control-btn i {
+            margin-right: 8px;
+            font-size: 0.9em;
+        }
+
+        .scroll-indicator i {
+            animation: bounceArrow 1.5s infinite;
+            color: var(--primary-green);
+        }
+
+        @keyframes bounceArrow {
+            0%, 100% { transform: translateX(0); }
+            50% { transform: translateX(5px); }
+        }
+
+        .modal-close i {
+            font-size: 1.2em;
+        }
+
+        /* Animación para los iconos de gema en los botones */
+        .control-btn i.fa-gem {
+            animation: shimmerGem 2s infinite;
+        }
+
+        @keyframes shimmerGem {
+            0% { opacity: 0.7; }
+            50% { opacity: 1; }
+            100% { opacity: 0.7; }
+        }
+
+        @keyframes shimmer {
             0%, 100% { background-position: 0% 50%; }
             50% { background-position: 100% 50%; }
         }
 
         .header p {
             color: var(--text-muted);
-            font-size: clamp(1.1rem, 4vw, 1.4rem);
-            font-weight: 300;
-            letter-spacing: 1px;
+            font-size: clamp(1rem, 4vw, 1.2rem);
         }
 
-        /* Sección principal con margen para header fijo */
-        .main-content {
-            margin-top: 140px;
-            position: relative;
-            z-index: 10;
-        }
-
-        /* Carrusel mejorado con efectos 3D */
+        /* Mobile-first carousel with header margin */
         .carousel-container {
-            padding: 3rem 0;
-            background: linear-gradient(135deg, var(--glass-bg), rgba(10, 61, 26, 0.1));
-            backdrop-filter: blur(20px);
-            border: 1px solid var(--glass-border);
-            margin: 2rem 1rem;
-            border-radius: 30px;
-            box-shadow: 0 20px 60px rgba(0, 255, 127, 0.1);
+            margin-top: 120px;
+            padding: 2rem 0;
+            background: linear-gradient(135deg, var(--glass-bg), rgba(13, 40, 24, 0.1));
+            backdrop-filter: blur(15px);
+            border-bottom: 1px solid var(--glass-border);
             position: relative;
             overflow: hidden;
         }
 
-        .carousel-container::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: radial-gradient(circle, var(--emerald-soft-glow) 0%, transparent 70%);
-            animation: pulse 8s ease-in-out infinite;
+        @media (max-width: 768px) {
+            .carousel-container {
+                /* Ajustamos el margen para compensar el nuevo tamaño del header en móvil */
+                margin-top: 150px;
+            }
         }
 
-        @keyframes pulse {
-            0%, 100% { transform: scale(0.8); opacity: 0.3; }
-            50% { transform: scale(1.2); opacity: 0.1; }
+        .carousel-wrapper {
+            position: relative;
+            width: 100%;
+            margin: 0 auto;
         }
 
         .carousel {
             display: flex;
-            gap: 1.5rem;
+            gap: 1rem;
             overflow-x: auto;
             scroll-behavior: smooth;
-            padding: 2rem;
+            padding: 1rem;
             scrollbar-width: none;
+            -ms-overflow-style: none;
             scroll-snap-type: x mandatory;
-            position: relative;
-            z-index: 2;
         }
 
-        .carousel::-webkit-scrollbar { display: none; }
+        .carousel::-webkit-scrollbar {
+            display: none;
+        }
 
         .carousel-item {
-            flex: 0 0 320px;
-            height: 240px;
-            border-radius: 20px;
+            flex: 0 0 280px;
+            height: 200px;
+            border-radius: 15px;
             overflow: hidden;
             cursor: pointer;
-            transition: var(--transition-bounce);
-            position: relative;
-            scroll-snap-align: center;
-            background: var(--glass-bg);
+            transition: var(--transition-smooth);
             border: 2px solid transparent;
+            position: relative;
+            background: var(--card-bg);
+            scroll-snap-align: center;
+            touch-action: manipulation;
         }
 
         .carousel-item::before {
             content: '';
             position: absolute;
-            top: -3px;
-            left: -3px;
-            right: -3px;
-            bottom: -3px;
-            background: linear-gradient(45deg, var(--primary-emerald), var(--secondary-emerald), var(--primary-emerald));
-            border-radius: 23px;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            background: linear-gradient(45deg, var(--primary-green), var(--secondary-green));
+            border-radius: 17px;
             z-index: -1;
             opacity: 0;
             transition: var(--transition-smooth);
         }
 
-        .carousel-item:hover::before,
         .carousel-item.active::before {
             opacity: 1;
-            animation: borderGlow 2s ease-in-out infinite;
         }
 
-        .carousel-item:hover {
-            transform: translateY(-10px) scale(1.05);
-            box-shadow: 0 20px 40px var(--emerald-glow);
+        .carousel-item img,
+        .carousel-item video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: var(--transition-smooth);
         }
 
-        .carousel-item img {
+        .carousel-item.active {
+            transform: scale(1.02);
+            box-shadow: 0 10px 25px var(--emerald-glow);
+        }
+
+        /* Estilos específicos para videos */
+        .carousel-item.video-item video {
+            pointer-events: none;
+        }
+
+        .carousel-item.video-item::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 50px;
+            height: 50px;
+            background: var(--glass-bg);
+            backdrop-filter: blur(10px);
+            border: 2px solid var(--primary-green);
+            border-radius: 50%;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='%2300ff7f' viewBox='0 0 24 24'%3E%3Cpath d='M8 5v14l11-7z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: center;
+            background-size: 24px 24px;
+            opacity: 0.9;
+            transition: var(--transition-smooth);
+        }
+
+        .carousel-item.video-item:hover::after {
+            transform: translate(-50%, -50%) scale(1.1);
+            box-shadow: 0 5px 15px var(--emerald-glow);
+        }
+
+        /* Mobile-optimized gallery controls */
+        .gallery-container {
+            padding: 2rem 1rem;
+            max-width: 100%;
+            margin: 0 auto;
+            position: relative;
+            z-index: 10;
+        }
+
+        .gallery-controls {
+            display: flex;
+            justify-content: flex-start;
+            gap: 0.5rem;
+            margin-bottom: 2rem;
+            overflow-x: auto;
+            padding: 0.5rem;
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+            scroll-snap-type: x mandatory;
+        }
+
+        .gallery-controls::-webkit-scrollbar {
+            display: none;
+        }
+
+        .control-btn {
+            padding: 0.75rem 1.5rem;
+            background: var(--card-bg);
+            border: 2px solid var(--glass-border);
+            border-radius: 20px;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: var(--transition-smooth);
+            backdrop-filter: blur(10px);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-size: 0.9rem;
+            white-space: nowrap;
+            min-width: fit-content;
+            touch-action: manipulation;
+            border: none;
+        }
+
+        .control-btn:active {
+            transform: scale(0.95);
+        }
+
+        .control-btn:hover, .control-btn.active {
+            background: linear-gradient(135deg, var(--primary-green), var(--secondary-green));
+            color: var(--bg-dark);
+            box-shadow: 0 5px 15px var(--emerald-glow);
+        }
+
+        /* Responsive gallery grid */
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1rem;
+        }
+
+        .gallery-item {
+            background: var(--card-bg);
+            border-radius: 20px;
+            overflow: hidden;
+            border: 2px solid transparent;
+            backdrop-filter: blur(15px);
+            transition: var(--transition-smooth);
+            cursor: pointer;
+            position: relative;
+            aspect-ratio: 1.2;
+            touch-action: manipulation;
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        .gallery-item.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Efecto especial para videos que se están reproduciendo */
+        .gallery-item.playing {
+            box-shadow: 0 0 30px var(--emerald-video-glow), 0 0 60px var(--emerald-glow);
+            border: 2px solid var(--primary-green);
+            animation: playingGlow 2s ease-in-out infinite alternate;
+        }
+
+        @keyframes playingGlow {
+            0% {
+                box-shadow: 0 0 30px var(--emerald-video-glow), 0 0 60px var(--emerald-glow);
+            }
+            100% {
+                box-shadow: 0 0 40px var(--emerald-video-glow), 0 0 80px var(--emerald-light-glow);
+            }
+        }
+
+        .gallery-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, var(--emerald-glow), transparent, var(--emerald-light-glow));
+            opacity: 0;
+            transition: var(--transition-smooth);
+            z-index: 2;
+            border-radius: 20px;
+        }
+
+        .gallery-item.touching {
+            opacity: 0.8;
+            transform: scale(0.98);
+        }
+
+        .gallery-item.touching::before {
+            opacity: 0.5;
+        }
+
+        .gallery-item img,
+        .gallery-item video {
             width: 100%;
             height: 100%;
             object-fit: cover;
@@ -302,156 +579,46 @@
             border-radius: 18px;
         }
 
-        .carousel-item:hover img {
-            transform: scale(1.1);
-        }
-
-        @keyframes borderGlow {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.5; }
-        }
-
-        /* Controles de galería mejorados */
-        .gallery-container {
-            padding: 3rem 1rem;
-            max-width: 1400px;
-            margin: 0 auto;
-        }
-
-        .gallery-controls {
-            display: flex;
-            justify-content: center;
-            gap: 1rem;
-            margin-bottom: 3rem;
-            flex-wrap: wrap;
-            padding: 1rem;
-        }
-
-        .control-btn {
-            padding: 1rem 2rem;
-            background: var(--glass-bg);
-            border: 2px solid var(--glass-border);
-            border-radius: 50px;
-            color: var(--text-secondary);
-            cursor: pointer;
-            transition: var(--transition-bounce);
-            backdrop-filter: blur(15px);
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            font-size: 0.9rem;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .control-btn::before {
-            content: '';
+        /* Controles de video para gallery items */
+        .video-controls {
             position: absolute;
             top: 50%;
             left: 50%;
-            width: 0;
-            height: 0;
-            background: radial-gradient(circle, var(--primary-emerald), var(--secondary-emerald));
-            transition: var(--transition-smooth);
-            border-radius: 50%;
             transform: translate(-50%, -50%);
-            z-index: -1;
+            z-index: 5;
+            display: flex;
+            align-items: center;
+            gap: 10px;
         }
 
-        .control-btn:hover::before,
-        .control-btn.active::before {
-            width: 300%;
-            height: 300%;
-        }
-
-        .control-btn:hover,
-        .control-btn.active {
-            color: var(--darker-emerald);
-            border-color: var(--primary-emerald);
-            box-shadow: 0 8px 25px var(--emerald-glow);
-            transform: translateY(-3px);
-        }
-
-        /* Grid de galería mejorado */
-        .gallery-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
-            gap: 2rem;
-            margin-top: 2rem;
-        }
-
-        .gallery-item {
+        .video-play-btn {
+            width: 60px;
+            height: 60px;
             background: var(--glass-bg);
-            border-radius: 25px;
-            overflow: hidden;
-            border: 2px solid transparent;
-            backdrop-filter: blur(20px);
-            transition: var(--transition-bounce);
+            backdrop-filter: blur(15px);
+            border: 2px solid var(--primary-green);
+            border-radius: 50%;
+            color: var(--primary-green);
             cursor: pointer;
-            position: relative;
-            aspect-ratio: 1.2;
-            opacity: 0;
-            transform: translateY(30px);
-        }
-
-        .gallery-item.visible {
-            opacity: 1;
-            transform: translateY(0);
-            animation: slideInUp 0.6s ease-out forwards;
-        }
-
-        @keyframes slideInUp {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .gallery-item::before {
-            content: '';
-            position: absolute;
-            top: -2px;
-            left: -2px;
-            right: -2px;
-            bottom: -2px;
-            background: linear-gradient(45deg, var(--primary-emerald), var(--secondary-emerald), var(--primary-emerald));
-            background-size: 300% 300%;
-            border-radius: 27px;
-            z-index: -1;
-            opacity: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
             transition: var(--transition-smooth);
-            animation: gradientShift 6s ease-in-out infinite;
+            touch-action: manipulation;
         }
 
-        .gallery-item:hover::before {
-            opacity: 1;
+        .video-play-btn:hover,
+        .video-play-btn:active {
+            background: var(--primary-green);
+            color: var(--bg-dark);
+            transform: scale(1.1);
+            box-shadow: 0 5px 20px var(--emerald-glow);
         }
 
-        @keyframes gradientShift {
-            0%, 100% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-        }
-
-        .gallery-item:hover {
-            transform: translateY(-15px) scale(1.02);
-            box-shadow: 0 25px 50px var(--emerald-glow);
-            border-color: var(--primary-emerald);
-        }
-
-        .gallery-item img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            transition: var(--transition-smooth);
-            border-radius: 23px;
-        }
-
-        .gallery-item:hover img {
-            transform: scale(1.05);
+        .video-play-btn.playing {
+            background: var(--primary-green);
+            color: var(--bg-dark);
         }
 
         .gallery-item-overlay {
@@ -459,129 +626,306 @@
             bottom: 0;
             left: 0;
             right: 0;
-            background: linear-gradient(transparent, rgba(0, 0, 0, 0.9));
+            background: linear-gradient(transparent, var(--bg-dark));
             color: var(--text-primary);
-            padding: 2rem 1.5rem 1.5rem;
-            transform: translateY(100%);
-            transition: var(--transition-smooth);
-        }
-
-        .gallery-item:hover .gallery-item-overlay {
-            transform: translateY(0);
+            padding: 1.5rem 1rem 1rem;
+            z-index: 3;
+            opacity: 0.9;
         }
 
         .overlay-title {
-            font-size: 1.2rem;
+            font-size: 1.1rem;
             font-weight: bold;
-            margin-bottom: 0.5rem;
-            color: var(--primary-emerald);
-            text-shadow: 0 0 10px var(--emerald-glow);
+            margin-bottom: 0.25rem;
+            color: var(--primary-green);
         }
 
-        /* Modal mejorado */
+        .overlay-description {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            line-height: 1.3;
+        }
+
+        /* MODAL MEJORADO Y PROFESIONAL */
         .modal {
             display: none;
             position: fixed;
             top: 0;
             left: 0;
-            width: 100%;
+            width: 100vw;
             height: 100vh;
-            background: rgba(0, 0, 0, 0.95);
-            backdrop-filter: blur(30px);
-            z-index: 2000;
-            animation: fadeIn 0.3s ease-out;
+            background: radial-gradient(circle at center, rgba(0, 20, 10, 0.98) 0%, rgba(0, 0, 0, 0.99) 100%);
+            backdrop-filter: blur(25px);
+            z-index: 3000;
+            touch-action: none;
+            overflow: hidden;
         }
 
         .modal.active {
+            display: block;
+            animation: modalFadeIn 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+        }
+
+        @keyframes modalFadeIn {
+            0% {
+                opacity: 0;
+                transform: scale(1.05);
+            }
+            100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        .modal-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
             display: flex;
             align-items: center;
             justify-content: center;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
+            padding: 20px;
+            box-sizing: border-box;
         }
 
         .modal-content {
-            width: 90vw;
-            height: 85vh;
             position: relative;
+            max-width: 95vw;
+            max-height: 90vh;
+            width: auto;
+            height: auto;
             border-radius: 20px;
             overflow: hidden;
-            box-shadow: 0 0 100px var(--emerald-glow);
-            border: 3px solid var(--primary-emerald);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: var(--deeper-emerald);
+            box-shadow: 
+                0 0 80px rgba(0, 255, 127, 0.3),
+                0 25px 50px rgba(0, 0, 0, 0.8),
+                inset 0 0 0 1px rgba(0, 255, 127, 0.2);
+            border: 2px solid transparent;
+            background: linear-gradient(var(--bg-dark), var(--bg-dark)) padding-box,
+                        linear-gradient(45deg, var(--primary-green), transparent, var(--secondary-green)) border-box;
+            animation: contentSlideIn 0.5s cubic-bezier(0.23, 1, 0.32, 1);
         }
 
-        .modal-content img {
+        @keyframes contentSlideIn {
+            0% {
+                opacity: 0;
+                transform: scale(0.8) translateY(50px);
+            }
+            100% {
+                opacity: 1;
+                transform: scale(1) translateY(0);
+            }
+        }
+
+        .modal-media {
+            display: block;
             max-width: 100%;
-            max-height: 100%;
+            max-height: 90vh;
+            width: auto;
+            height: auto;
             object-fit: contain;
-            border-radius: 17px;
+            background: var(--bg-dark);
+            border-radius: 18px;
         }
 
-        .modal-close,
-        .modal-nav {
+        /* Barra superior del modal con información */
+        .modal-header {
             position: absolute;
-            background: var(--glass-bg);
-            border: 2px solid var(--primary-emerald);
-            color: var(--primary-emerald);
-            border-radius: 50%;
-            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(180deg, rgba(0, 0, 0, 0.9) 0%, transparent 100%);
+            padding: 20px 25px;
+            z-index: 10;
             display: flex;
             align-items: center;
-            justify-content: center;
-            backdrop-filter: blur(20px);
-            transition: var(--transition-smooth);
-            z-index: 10;
+            justify-content: space-between;
+            backdrop-filter: blur(15px);
         }
 
+        .modal-info {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .modal-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--primary-green);
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+        }
+
+        .modal-description {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            opacity: 0.8;
+        }
+
+        .modal-counter {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            background: rgba(0, 255, 127, 0.1);
+            padding: 5px 12px;
+            border-radius: 15px;
+            border: 1px solid rgba(0, 255, 127, 0.2);
+            backdrop-filter: blur(10px);
+        }
+
+        /* Botón de cerrar mejorado */
         .modal-close {
+            position: absolute;
             top: 20px;
             right: 20px;
             width: 50px;
             height: 50px;
-            font-size: 1.5rem;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(20px);
+            border: 2px solid rgba(0, 255, 127, 0.3);
+            border-radius: 50%;
+            color: var(--text-primary);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.4rem;
+            z-index: 20;
+            transition: all 0.3s cubic-bezier(0.23, 1, 0.32, 1);
+            touch-action: manipulation;
         }
 
+        .modal-close:hover {
+            background: rgba(0, 255, 127, 0.1);
+            border-color: var(--primary-green);
+            color: var(--primary-green);
+            transform: scale(1.1);
+            box-shadow: 0 5px 20px rgba(0, 255, 127, 0.3);
+        }
+
+        .modal-close:active {
+            transform: scale(0.95);
+        }
+
+        /* Navegación lateral mejorada */
         .modal-nav {
+            position: absolute;
             top: 50%;
             transform: translateY(-50%);
             width: 60px;
             height: 60px;
-            font-size: 1.8rem;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(20px);
+            border: 2px solid rgba(0, 255, 127, 0.3);
+            border-radius: 50%;
+            color: var(--text-primary);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            z-index: 15;
+            transition: all 0.3s cubic-bezier(0.23, 1, 0.32, 1);
+            touch-action: manipulation;
+            opacity: 0.8;
         }
 
-        .modal-nav.prev { left: 20px; }
-        .modal-nav.next { right: 20px; }
-
-        .modal-close:hover,
         .modal-nav:hover {
-            background: var(--primary-emerald);
-            color: var(--darker-emerald);
-            box-shadow: 0 0 25px var(--emerald-glow);
-            transform: scale(1.1);
-        }
-
-        .modal-nav:hover {
+            background: rgba(0, 255, 127, 0.1);
+            border-color: var(--primary-green);
+            color: var(--primary-green);
             transform: translateY(-50%) scale(1.1);
+            box-shadow: 0 8px 25px rgba(0, 255, 127, 0.3);
+            opacity: 1;
         }
 
-        /* Indicador de carga mejorado */
+        .modal-nav:active {
+            transform: translateY(-50%) scale(0.9);
+        }
+
+        .modal-nav.prev {
+            left: 20px;
+        }
+
+        .modal-nav.next {
+            right: 20px;
+        }
+
+        /* Controles de video para modal mejorados */
+        .modal-video-controls {
+            position: absolute;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(20px);
+            border: 2px solid rgba(0, 255, 127, 0.3);
+            border-radius: 50px;
+            padding: 15px 25px;
+            z-index: 10;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        }
+
+        .modal-video-btn {
+            width: 45px;
+            height: 45px;
+            background: rgba(0, 255, 127, 0.1);
+            border: 2px solid rgba(0, 255, 127, 0.3);
+            border-radius: 50%;
+            color: var(--primary-green);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            transition: all 0.3s ease;
+            touch-action: manipulation;
+        }
+
+        .modal-video-btn:hover {
+            background: var(--primary-green);
+            color: var(--bg-dark);
+            transform: scale(1.1);
+            box-shadow: 0 5px 15px rgba(0, 255, 127, 0.4);
+        }
+
+        .modal-video-btn:active {
+            transform: scale(0.95);
+        }
+
+        /* Barra de progreso de video */
+        .modal-progress {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: rgba(0, 255, 127, 0.2);
+            z-index: 5;
+        }
+
+        .modal-progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary-green), var(--secondary-green));
+            width: 0%;
+            transition: width 0.1s ease;
+            box-shadow: 0 0 10px rgba(0, 255, 127, 0.5);
+        }
+
+        /* Loading animation mejorado */
         .loading {
             display: inline-block;
-            width: 50px;
-            height: 50px;
-            border: 4px solid var(--glass-border);
+            width: 40px;
+            height: 40px;
+            border: 3px solid var(--glass-border);
             border-radius: 50%;
-            border-top: 4px solid var(--primary-emerald);
-            animation: spin 1s linear infinite;
-            margin: 3rem auto;
-            box-shadow: 0 0 20px var(--emerald-glow);
+            border-top: 3px solid var(--primary-green);
+            animation: spin 1s ease-in-out infinite;
+            margin: 2rem auto;
         }
 
         @keyframes spin {
@@ -589,18 +933,12 @@
             100% { transform: rotate(360deg); }
         }
 
-        /* Indicador de scroll para el carrusel */
+        /* Scroll indicator for carousel */
         .scroll-indicator {
             text-align: center;
-            padding: 1rem;
+            padding: 0.5rem;
             color: var(--text-muted);
-            font-size: 0.9rem;
-            animation: bounce 2s infinite;
-        }
-
-        @keyframes bounce {
-            0%, 100% { transform: translateX(0); }
-            50% { transform: translateX(10px); }
+            font-size: 0.8rem;
         }
 
         /* Footer mejorado */
@@ -653,140 +991,275 @@
             color: var(--text-muted);
         }
 
-        /* Responsive mejorado */
+        /* Responsivo para móviles */
         @media (max-width: 768px) {
-            .header h1 { font-size: clamp(2rem, 8vw, 3rem); }
-            .main-content { margin-top: 120px; }
-            .carousel-item { flex: 0 0 280px; height: 200px; }
-            .gallery-grid { 
-                grid-template-columns: 1fr; 
-                gap: 1.5rem;
+            .header {
+                /* Aumentamos el padding superior para que el título no se solape con el botón de inicio */
+                padding: 70px 1rem 1rem;
             }
-            .gallery-controls {
-                gap: 0.5rem;
-                overflow-x: auto;
-                justify-content: flex-start;
+            
+            .header.scrolled {
+                padding: 0.8rem 1rem;
             }
+            
+            .header h1 {
+                font-size: clamp(1.5rem, 6vw, 2.5rem);
+            }
+
+            .carousel-item {
+                flex: 0 0 250px;
+                height: 180px;
+            }
+            
+            .gallery-grid {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+            
+            .gallery-container {
+                padding: 1.5rem 0.5rem;
+            }
+            
             .control-btn {
-                padding: 0.8rem 1.5rem;
+                padding: 0.6rem 1.2rem;
                 font-size: 0.8rem;
-                white-space: nowrap;
+            }
+            
+            .video-play-btn {
+                width: 50px;
+                height: 50px;
+                font-size: 1.2rem;
+            }
+
+            /* Modal responsivo */
+            .modal-container {
+                padding: 10px;
+            }
+
+            .modal-content {
+                max-width: 98vw;
+                max-height: 95vh;
+                border-radius: 15px;
+            }
+
+            .modal-header {
+                padding: 15px 20px;
+            }
+
+            .modal-title {
+                font-size: 1rem;
+            }
+
+            .modal-description {
+                font-size: 0.8rem;
+            }
+
+            .modal-counter {
+                font-size: 0.75rem;
+                padding: 4px 8px;
+            }
+
+            .modal-close {
+                width: 45px;
+                height: 45px;
+                top: 15px;
+                right: 15px;
+                font-size: 1.2rem;
+            }
+
+            .modal-nav {
+                width: 50px;
+                height: 50px;
+                font-size: 1.3rem;
+            }
+
+            .modal-nav.prev {
+                left: 15px;
+            }
+
+            .modal-nav.next {
+                right: 15px;
+            }
+
+            .modal-video-controls {
+                bottom: 20px;
+                padding: 12px 20px;
+                gap: 10px;
+            }
+
+            .modal-video-btn {
+                width: 40px;
+                height: 40px;
+                font-size: 1.1rem;
             }
         }
 
         @media (max-width: 480px) {
-            .back-button {
-                padding: 12px 20px;
-                font-size: 0.9rem;
+            .modal-container {
+                padding: 5px;
             }
-            .back-button-text { display: none; }
-            .carousel-item { flex: 0 0 240px; height: 180px; }
-            .modal-content { width: 95vw; height: 90vh; }
+
+            .modal-content {
+                max-width: 99vw;
+                max-height: 98vh;
+                border-radius: 10px;
+            }
+
+            .modal-close {
+                width: 40px;
+                height: 40px;
+                font-size: 1.1rem;
+            }
+
+            .modal-nav {
+                width: 45px;
+                height: 45px;
+                font-size: 1.2rem;
+            }
+
+            .modal-video-controls {
+                bottom: 15px;
+                padding: 10px 15px;
+                gap: 8px;
+            }
+
+            .modal-video-btn {
+                width: 35px;
+                height: 35px;
+                font-size: 1rem;
+            }
         }
 
-        /* Efectos de accesibilidad */
-        @media (prefers-reduced-motion: reduce) {
-            * {
-                animation-duration: 0.01ms !important;
-                animation-iteration-count: 1 !important;
-                transition-duration: 0.01ms !important;
-            }
-            .particles { display: none; }
+        /* Focus states para accesibilidad */
+        .modal-close:focus,
+        .modal-nav:focus,
+        .modal-video-btn:focus {
+            outline: 2px solid var(--primary-green);
+            outline-offset: 2px;
         }
 
+        /* High contrast mode support */
         @media (prefers-contrast: high) {
-            .gallery-item, .carousel-item {
-                border: 3px solid var(--primary-emerald);
+            .modal {
+                background: rgba(0, 0, 0, 0.95);
+            }
+            
+            .modal-content {
+                border: 3px solid var(--primary-green);
             }
         }
 
-        /* Estados de interacción táctil */
-        .gallery-item.touching {
-            opacity: 0.8;
-            transform: scale(0.98);
+        /* Reduce motion for users who prefer it */
+        @media (prefers-reduced-motion: reduce) {
+            .modal,
+            .modal-content,
+            .modal-close,
+            .modal-nav,
+            .modal-video-btn {
+                animation: none !important;
+                transition: none !important;
+            }
+            
+            .particles {
+                display: none;
+            }
         }
 
-        .gallery-item.touching::before {
-            opacity: 0.7;
-        }
     </style>
 </head>
 <body>
-    <!-- Partículas mejoradas -->
+    <!-- Reduced particles for better mobile performance -->
     <div class="particles" id="particles"></div>
-
-    <!-- Botón de navegación mejorado -->
-    <a href="index.html" class="back-button" id="backButton">
-        <span class="back-button-icon">←</span>
+    
+    <!-- BOTÓN DE NAVEGACIÓN -->
+    <a href="index.html" class="back-button" id="backButton" title="Regresar a la página de inicio">
+        <i class="fas fa-home back-button-icon"></i>
         <span class="back-button-text">Inicio</span>
     </a>
-
-    <!-- Header con efectos mejorados -->
-    <header class="header" id="header">
-        <h1>
-            <i class="fas fa-gem gem-icon"></i>
-            GALERÍA IMPORT EXPORT
-            <i class="fas fa-gem gem-icon"></i>
-        </h1>
-        <p>Nuestra Exclusiva Colección de Esmeraldas</p>
+    
+    <!-- Header -->
+    <header class="header">
+        <h1><i class="fas fa-gem header-icon"></i> GALERÍA IMPORT EXPORT <i class="fas fa-gem header-icon"></i></h1>
+        <p>Nuestra Galería de Esmeralda</p>
     </header>
 
-    <!-- Contenido principal -->
-    <div class="main-content">
-        <!-- Carrusel interactivo mejorado -->
-        <section class="carousel-container">
-            <div class="carousel-wrapper">
-                <div class="carousel" id="carousel">
-                    <div class="loading"></div>
-                </div>
-                <div class="scroll-indicator">
-                    <i class="fas fa-arrow-right"></i> Desliza para explorar <i class="fas fa-arrow-left"></i>
-                </div>
-            </div>
-        </section>
-
-        <!-- Controles y galería -->
-        <section class="gallery-container">
-            <div class="gallery-controls">
-                <button class="control-btn active" onclick="filterGallery('all', this)">
-                    <i class="fas fa-th"></i> Todas
-                </button>
-                <button class="control-btn" onclick="filterGallery('coleccion1', this)">
-                    <i class="fas fa-gem"></i> Colección 1
-                </button>
-                <button class="control-btn" onclick="filterGallery('coleccion2', this)">
-                    <i class="fas fa-gem"></i> Colección 2
-                </button>
-                <button class="control-btn" onclick="filterGallery('coleccion3', this)">
-                    <i class="fas fa-gem"></i> Colección 3
-                </button>
-                <button class="control-btn" onclick="shuffleGallery(this)">
-                    <i class="fas fa-random"></i> Mezclar
-                </button>
-            </div>
-            
-            <div class="gallery-grid" id="galleryGrid">
+    <!-- Interactive carousel -->
+    <section class="carousel-container">
+        <div class="carousel-wrapper">
+            <div class="carousel" id="carousel">
                 <div class="loading"></div>
             </div>
-        </section>
-    </div>
+            <div class="scroll-indicator"><i class="fas fa-chevron-left"></i> Desliza para ver más <i class="fas fa-chevron-right"></i></div>
+        </div>
+    </section>
 
-    <!-- Modal mejorado -->
-    <div class="modal" id="modal" onclick="closeModal()">
-        <div class="modal-content" onclick="event.stopPropagation()">
-            <button class="modal-close" onclick="closeModal()">
+    <!-- Gallery controls -->
+    <section class="gallery-container">
+        <div class="gallery-controls">
+            <button class="control-btn active" onclick="filterGallery('all', this)"><i class="fas fa-images"></i> Todas</button>
+            <button class="control-btn" onclick="filterGallery('videos', this)"><i class="fas fa-film"></i> Videos</button>
+            <button class="control-btn" onclick="filterGallery('coleccion1', this)"><i class="fas fa-gem"></i> Colección 1</button>
+            <button class="control-btn" onclick="filterGallery('coleccion2', this)"><i class="fas fa-gem"></i> Colección 2</button>
+            <button class="control-btn" onclick="filterGallery('coleccion3', this)"><i class="fas fa-gem"></i> Colección 3</button>
+            <button class="control-btn" onclick="shuffleGallery(this)"><i class="fas fa-random"></i> Mezclar</button>
+        </div>
+        
+        <div class="gallery-grid" id="galleryGrid">
+            <div class="loading"></div>
+        </div>
+    </section>
+
+    <!-- MODAL MEJORADO Y PROFESIONAL -->
+    <div class="modal" id="modal">
+        <div class="modal-container">
+            <!-- Header con información -->
+            <div class="modal-header">
+                <div class="modal-info">
+                    <div class="modal-title" id="modalTitle">Título del medio</div>
+                    <div class="modal-description" id="modalDescription">Descripción del medio</div>
+                </div>
+                <div class="modal-counter" id="modalCounter">1 / 20</div>
+            </div>
+
+            <!-- Botón de cerrar -->
+            <button class="modal-close" id="modalClose">
                 <i class="fas fa-times"></i>
             </button>
-            <button class="modal-nav prev" onclick="navigateModal(-1)">
+
+            <!-- Navegación lateral -->
+            <button class="modal-nav prev" id="modalPrev">
                 <i class="fas fa-chevron-left"></i>
             </button>
-            <button class="modal-nav next" onclick="navigateModal(1)">
+            <button class="modal-nav next" id="modalNext">
                 <i class="fas fa-chevron-right"></i>
             </button>
-            <img id="modalImage" src="" alt="">
+
+            <!-- Contenido principal -->
+            <div class="modal-content">
+                <img id="modalImage" class="modal-media" src="" alt="" style="display: none;">
+                <video id="modalVideo" class="modal-media" style="display: none;" muted></video>
+                
+                <!-- Barra de progreso para video -->
+                <div class="modal-progress" id="modalProgress" style="display: none;">
+                    <div class="modal-progress-bar" id="modalProgressBar"></div>
+                </div>
+            </div>
+
+            <!-- Controles de video -->
+            <div class="modal-video-controls" id="modalVideoControls" style="display: none;">
+                <button class="modal-video-btn" id="modalPlayPauseBtn">
+                    <i class="fas fa-play"></i>
+                </button>
+                <button class="modal-video-btn" id="modalMuteBtn">
+                    <i class="fas fa-volume-up"></i>
+                </button>
+                <button class="modal-video-btn" id="modalFullscreenBtn">
+                    <i class="fas fa-expand"></i>
+                </button>
+            </div>
         </div>
     </div>
-
+    
     <!-- Footer mejorado -->
     <footer class="footer">
         <div class="footer-content">
@@ -799,677 +1272,790 @@
             </div>
         </div>
         <div class="footer-bottom">
-            <p>&copy; <span id="date">2024</span> Import Export. Todos los derechos reservados.</p>
+            <p>&copy; <span id="date"></span> Import Export. Todos los derechos reservados.</p>
         </div>
     </footer>
+   
+   <script>
+    // NUEVO: Función para actualizar el año
+    function updateYear() {
+        const dateElement = document.getElementById("date");
+        if (dateElement) {
+            dateElement.textContent = new Date().getFullYear();
+        }
+    }
+    updateYear();
 
-    <script>
-        // Datos de imágenes optimizados
-        const images = [
-            { src: 'assets/img/eralda11.jpg', category: 'coleccion1', title: 'Esmeralda Premium', desc: 'Gema excepcional de origen colombiano' },
-            { src: 'assets/img/gema1.jpg', category: 'coleccion2', title: 'Esmeralda Clásica', desc: 'Belleza natural incomparable' },
-            { src: 'assets/img/gema2.jpg', category: 'coleccion3', title: 'Esmeralda Única', desc: 'Pieza de colección exclusiva' },
-            { src: 'assets/img/gema3.jpg', category: 'coleccion1', title: 'Esmeralda Brillante', desc: 'Corte perfecto y brillo excepcional' },
-            { src: 'assets/img/gema4.jpg', category: 'coleccion2', title: 'Esmeralda Verde', desc: 'Color verde intenso natural' },
-            { src: 'assets/img/gema5.jpg', category: 'coleccion3', title: 'Esmeralda Radiante', desc: 'Luminosidad extraordinaria' },
-            { src: 'assets/img/gema6.jpg', category: 'coleccion1', title: 'Esmeralda Imperial', desc: 'Máxima calidad y pureza' },
-            { src: 'assets/img/gema9.jpg', category: 'coleccion2', title: 'Esmeralda Real', desc: 'Dignidad y elegancia' },
-            { src: 'assets/img/gema11.jpg', category: 'coleccion3', title: 'Esmeralda Noble', desc: 'Tradición y exclusividad' },
-            { src: 'assets/img/gema12.jpg', category: 'coleccion1', title: 'Esmeralda Divina', desc: 'Perfección en cada faceta' },
-            { src: 'assets/img/gema13.jpg', category: 'coleccion2', title: 'Esmeralda Celestial', desc: 'Belleza celestial capturada' },
-            { src: 'assets/img/gema16.jpg', category: 'coleccion3', title: 'Esmeralda Mística', desc: 'Magia y misterio verde' },
-            { src: 'assets/img/gema15.jpg', category: 'coleccion1', title: 'Esmeralda Aurora', desc: 'Luminosidad como el amanecer' },
-            { src: 'assets/img/gema17.jpg', category: 'coleccion2', title: 'Esmeralda Serenidad', desc: 'Paz y tranquilidad verde' },
-            { src: 'assets/img/gema18.jpg', category: 'coleccion3', title: 'Esmeralda Infinita', desc: 'Belleza sin límites' },
-            { src: 'assets/img/gema19.jpg', category: 'coleccion1', title: 'Esmeralda Eternal', desc: 'Eternidad en cada destello' },
-            { src: 'assets/img/gema20.jpg', category: 'coleccion2', title: 'Esmeralda Sublime', desc: 'Sublimidad cristalizada' },
-            { src: 'assets/img/gema21.jpg', category: 'coleccion3', title: 'Esmeralda Majestuosa', desc: 'Majestuosidad natural' },
-            { src: 'assets/img/gema22.jpg', category: 'coleccion1', title: 'Esmeralda Perfecta', desc: 'Perfección hecha realidad' },
-            { src: 'assets/img/gema23.jpg', category: 'coleccion2', title: 'Esmeralda Suprema', desc: 'La supremacía del verde' }
-        ];
+    // Datos de medios optimizados (imágenes y videos)
+    const mediaItems = [
+        { src: 'assets/img/eralda11.jpg', type: 'image', category: 'coleccion1', title: 'Esmeralda Premium', desc: 'Gema de alta calidad' },
+        { src: 'assets/img/gema1.jpg', type: 'image', category: 'coleccion2', title: 'Esmeralda Natural', desc: 'Piedra preciosa colombiana' },
+        { src: 'assets/video/esmeralda.mp4', type: 'video', category: 'videos', title: 'Video Esmeralda', desc: 'Presentación de nuestra colección' },
+        { src: 'assets/img/gema2.jpg', type: 'image', category: 'coleccion3', title: 'Esmeralda Exclusiva', desc: 'Calidad excepcional' },
+        { src: 'assets/img/gema3.jpg', type: 'image', category: 'coleccion1', title: 'Esmeralda Brillante', desc: 'Corte perfecto' },
+        { src: 'assets/video/esmeralda01.mp4', type: 'video', category: 'videos', title: 'Presentación', desc: 'Esmeralda de alta calidad' },
+        { src: 'assets/img/gema4.jpg', type: 'image', category: 'coleccion2', title: 'Esmeralda Verde', desc: 'Color intenso' },
+        { src: 'assets/img/gema5.jpg', type: 'image', category: 'coleccion3', title: 'Esmeralda Pura', desc: 'Sin tratamientos' },
+        { src: 'assets/img/gema6.jpg', type: 'image', category: 'coleccion1', title: 'Esmeralda Única', desc: 'Pieza especial' },
+        { src: 'assets/video/esmeralda6.mp4', type: 'video', category: 'videos', title: 'Presentación', desc: 'Colores vivos y luz natural' },
+        { src: 'assets/img/gema9.jpg', type: 'image', category: 'coleccion2', title: 'Esmeralda Transparente', desc: 'Claridad excepcional' },
+        { src: 'assets/img/gema11.jpg', type: 'image', category: 'coleccion3', title: 'Esmeralda Facetada', desc: 'Múltiples caras' },
+        { src: 'assets/img/gema12.jpg', type: 'image', category: 'coleccion1', title: 'Esmeralda Cabujón', desc: 'Forma redondeada' },
+        { src: 'assets/img/gema13.jpg', type: 'image', category: 'coleccion2', title: 'Esmeralda Oval', desc: 'Corte tradicional' },
+        { src: 'assets/img/gema16.jpg', type: 'image', category: 'coleccion3', title: 'Esmeralda Rectangular', desc: 'Forma geométrica' },
+        { src: 'assets/img/gema15.jpg', type: 'image', category: 'coleccion1', title: 'Esmeralda Redonda', desc: 'Corte circular' },
+        { src: 'assets/img/gema17.jpg', type: 'image', category: 'coleccion2', title: 'Esmeralda Marquise', desc: 'Corte elegante' },
+        { src: 'assets/img/gema18.jpg', type: 'image', category: 'coleccion3', title: 'Esmeralda Pera', desc: 'Forma de lágrima' },
+        { src: 'assets/img/gema19.jpg', type: 'image', category: 'coleccion1', title: 'Esmeralda Corazón', desc: 'Corte romántico' },
+        { src: 'assets/img/gema20.jpg', type: 'image', category: 'coleccion2', title: 'Esmeralda Princesa', desc: 'Corte cuadrado' }
+    ];
 
-        let currentImageIndex = 0;
-        let filteredImages = [...images];
+    let currentMediaIndex = 0;
+    let filteredMedia = [...mediaItems];
+    let playingVideos = new Set();
+
+    // Create fewer particles for mobile performance
+    function createParticles() {
+        const particlesContainer = document.getElementById('particles');
+        const particleCount = window.innerWidth < 768 ? 15 : 30;
+
+        for (let i = 0; i < particleCount; i++) {
+            const particle = document.createElement('div');
+            particle.className = 'particle';
+            particle.style.left = Math.random() * 100 + '%';
+            particle.style.width = Math.random() * 3 + 1 + 'px';
+            particle.style.height = particle.style.width;
+            particle.style.animationDelay = Math.random() * 25 + 's';
+            particle.style.animationDuration = (Math.random() * 15 + 15) + 's';
+            particlesContainer.appendChild(particle);
+        }
+    }
+
+    // Efectos del botón de regreso
+    document.addEventListener('DOMContentLoaded', function() {
+        const backButton = document.getElementById('backButton');
+
+        backButton.addEventListener('click', function(e) {
+            const ripple = document.createElement('span');
+            const rect = this.getBoundingClientRect();
+            const size = Math.max(rect.width, rect.height);
+            const x = e.clientX - rect.left - size / 2;
+            const y = e.clientY - rect.top - size / 2;
+
+            ripple.style.cssText = `
+                position: absolute;
+                width: ${size}px;
+                height: ${size}px;
+                left: ${x}px;
+                top: ${y}px;
+                background: var(--emerald-glow);
+                border-radius: 50%;
+                transform: scale(0);
+                animation: ripple 0.6s ease-out;
+                pointer-events: none;
+                z-index: 0;
+            `;
+
+            this.appendChild(ripple);
+
+            setTimeout(() => {
+                ripple.remove();
+            }, 600);
+        });
+    });
+
+    // Mobile-optimized carousel
+    function populateCarousel() {
+        const carousel = document.getElementById('carousel');
+
+        setTimeout(() => {
+            carousel.innerHTML = '';
+
+            mediaItems.slice(0, 12).forEach((media, index) => {
+                const item = document.createElement('div');
+                item.className = 'carousel-item';
+                
+                if (media.type === 'video') {
+                    item.classList.add('video-item');
+                    item.innerHTML = `<video src="${media.src}" muted loop preload="metadata"></video>`;
+                } else {
+                    item.innerHTML = `<img src="${media.src}" alt="${media.title}" loading="lazy">`;
+                }
+                
+                item.addEventListener('click', () => openModal(index));
+                carousel.appendChild(item);
+            });
+
+            setupCarouselScrolling();
+        }, 500);
+    }
+
+    function setupCarouselScrolling() {
+        const carousel = document.getElementById('carousel');
+        if (!carousel) return;
+        
         let isScrolling = false;
-        let lastScroll = 0;
 
-        // Crear partículas mejoradas con efectos especiales
-        function createEnhancedParticles() {
-            const particlesContainer = document.getElementById('particles');
-            const particleCount = window.innerWidth < 768 ? 20 : 40;
-            const sparkleCount = window.innerWidth < 768 ? 5 : 10;
-
-            // Limpiar partículas existentes
-            particlesContainer.innerHTML = '';
-
-            // Crear partículas normales
-            for (let i = 0; i < particleCount; i++) {
-                const particle = document.createElement('div');
-                particle.className = 'particle';
-                particle.style.left = Math.random() * 100 + '%';
-                particle.style.width = Math.random() * 4 + 2 + 'px';
-                particle.style.height = particle.style.width;
-                particle.style.animationDelay = Math.random() * 20 + 's';
-                particle.style.animationDuration = (Math.random() * 10 + 15) + 's';
-                particlesContainer.appendChild(particle);
+        carousel.addEventListener('scroll', () => {
+            if (!isScrolling) {
+                window.requestAnimationFrame(() => {
+                    updateCarouselActiveItem();
+                    isScrolling = false;
+                });
+                isScrolling = true;
             }
+        });
+    }
 
-            // Crear partículas especiales (sparkles)
-            for (let i = 0; i < sparkleCount; i++) {
-                const sparkle = document.createElement('div');
-                sparkle.className = 'particle sparkle';
-                sparkle.style.left = Math.random() * 100 + '%';
-                sparkle.style.width = Math.random() * 6 + 3 + 'px';
-                sparkle.style.height = sparkle.style.width;
-                sparkle.style.animationDelay = Math.random() * 15 + 's';
-                sparkle.style.animationDuration = (Math.random() * 8 + 12) + 's';
-                particlesContainer.appendChild(sparkle);
-            }
-        }
+    function updateCarouselActiveItem() {
+        const carousel = document.getElementById('carousel');
+        if (!carousel) return;
+        
+        const items = carousel.querySelectorAll('.carousel-item');
+        const scrollLeft = carousel.scrollLeft;
+        const itemWidth = items[0].offsetWidth + 16;
 
-        // Efecto ripple mejorado para el botón de regreso
-        function addRippleEffect() {
-            const backButton = document.getElementById('backButton');
+        const activeIndex = Math.round(scrollLeft / itemWidth);
 
-            backButton.addEventListener('click', function(e) {
-                const ripple = document.createElement('span');
-                const rect = this.getBoundingClientRect();
-                const size = Math.max(rect.width, rect.height);
-                const x = e.clientX - rect.left - size / 2;
-                const y = e.clientY - rect.top - size / 2;
+        items.forEach((item, index) => {
+            item.classList.toggle('active', index === activeIndex);
+        });
+    }
 
-                ripple.style.cssText = `
-                    position: absolute;
-                    width: ${size}px;
-                    height: ${size}px;
-                    left: ${x}px;
-                    top: ${y}px;
-                    background: radial-gradient(circle, var(--emerald-glow), transparent);
-                    border-radius: 50%;
-                    transform: scale(0);
-                    animation: ripple 0.8s ease-out;
-                    pointer-events: none;
-                    z-index: 0;
-                `;
+    // Gallery con soporte para videos
+    function populateGallery(mediaToShow = mediaItems) {
+        const gallery = document.getElementById('galleryGrid');
 
-                const style = document.createElement('style');
-                style.textContent = `
-                    @keyframes ripple {
-                        to {
-                            transform: scale(2);
-                            opacity: 0;
-                        }
-                    }
-                `;
-                document.head.appendChild(style);
+        setTimeout(() => {
+            gallery.innerHTML = '';
 
-                this.appendChild(ripple);
+            mediaToShow.forEach((media, index) => {
+                const item = document.createElement('div');
+                item.className = 'gallery-item';
+                item.dataset.category = media.category;
+                item.dataset.index = index;
 
-                setTimeout(() => {
-                    ripple.remove();
-                    style.remove();
-                }, 800);
-            });
-        }
+                let mediaElement = '';
+                let controls = '';
 
-        // Carrusel mejorado con indicadores visuales
-        function populateEnhancedCarousel() {
-            const carousel = document.getElementById('carousel');
-
-            setTimeout(() => {
-                carousel.innerHTML = '';
-
-                images.slice(0, 15).forEach((img, index) => {
-                    const item = document.createElement('div');
-                    item.className = 'carousel-item';
-                    item.innerHTML = `
-                        <img src="${img.src}" alt="${img.title}" loading="lazy" onerror="handleImageError(this)">
-                        <div style="position: absolute; bottom: 10px; left: 10px; background: var(--glass-bg); backdrop-filter: blur(10px); padding: 0.5rem 1rem; border-radius: 20px; color: var(--text-primary); font-size: 0.8rem; border: 1px solid var(--glass-border);">
-                            ${img.title}
+                if (media.type === 'video') {
+                    mediaElement = `<video src="${media.src}" muted loop preload="metadata" onerror="handleMediaError(this)"></video>`;
+                    controls = `
+                        <div class="video-controls">
+                            <button class="video-play-btn" onclick="toggleVideo(event, this, '${media.src}')">
+                                <i class="fas fa-play"></i>
+                            </button>
                         </div>
                     `;
-                    
-                    item.addEventListener('click', () => {
-                        openEnhancedModal(index);
-                        // Efecto de feedback visual
-                        item.style.transform = 'scale(0.95)';
-                        setTimeout(() => {
-                            item.style.transform = '';
-                        }, 150);
-                    });
-                    
-                    carousel.appendChild(item);
-                });
-
-                setupEnhancedCarouselScrolling();
-            }, 500);
-        }
-
-        // Sistema de scroll mejorado para el carrusel
-        function setupEnhancedCarouselScrolling() {
-            const carousel = document.getElementById('carousel');
-            if (!carousel) return;
-            
-            let scrollTimeout;
-
-            carousel.addEventListener('scroll', () => {
-                if (!isScrolling) {
-                    window.requestAnimationFrame(() => {
-                        updateCarouselActiveItem();
-                        isScrolling = false;
-                    });
-                    isScrolling = true;
+                } else {
+                    mediaElement = `<img src="${media.src}" alt="${media.title}" loading="lazy" onerror="handleMediaError(this)">`;
                 }
 
-                // Limpiar timeout previo
-                clearTimeout(scrollTimeout);
-                
-                // Auto-snap después de que termine el scroll
-                scrollTimeout = setTimeout(() => {
-                    const items = carousel.querySelectorAll('.carousel-item');
-                    const scrollLeft = carousel.scrollLeft;
-                    const itemWidth = items[0].offsetWidth + 24; // width + gap
-                    const targetIndex = Math.round(scrollLeft / itemWidth);
-                    const targetScroll = targetIndex * itemWidth;
-                    
-                    carousel.scrollTo({
-                        left: targetScroll,
-                        behavior: 'smooth'
-                    });
-                }, 150);
+                item.innerHTML = `
+                    ${mediaElement}
+                    ${controls}
+                    <div class="gallery-item-overlay">
+                        <div class="overlay-title">${media.title}</div>
+                        <div class="overlay-description">${media.desc}</div>
+                    </div>
+                `;
+
+                addTouchHandlers(item, media, index);
+                gallery.appendChild(item);
             });
-        }
-
-        function updateCarouselActiveItem() {
-            const carousel = document.getElementById('carousel');
-            if (!carousel) return;
-            
-            const items = carousel.querySelectorAll('.carousel-item');
-            const scrollLeft = carousel.scrollLeft;
-            const itemWidth = items[0].offsetWidth + 24; // width + gap
-
-            const activeIndex = Math.round(scrollLeft / itemWidth);
-
-            items.forEach((item, index) => {
-                item.classList.toggle('active', index === activeIndex);
-            });
-        }
-
-        // Galería mejorada con animaciones escalonadas
-        function populateEnhancedGallery(imagesToShow = images) {
-            const gallery = document.getElementById('galleryGrid');
 
             setTimeout(() => {
-                gallery.innerHTML = '';
-
-                imagesToShow.forEach((img, index) => {
-                    const item = document.createElement('div');
-                    item.className = 'gallery-item';
-                    item.dataset.category = img.category;
-                    item.style.animationDelay = `${index * 0.1}s`;
-
-                    item.innerHTML = `
-                        <img src="${img.src}" alt="${img.title}" loading="lazy" onerror="handleImageError(this)">
-                        <div class="gallery-item-overlay">
-                            <div class="overlay-title">${img.title}</div>
-                            <div class="overlay-description">${img.desc}</div>
-                        </div>
-                    `;
-
-                    addEnhancedTouchHandlers(item, img, index);
-                    gallery.appendChild(item);
+                document.querySelectorAll('.gallery-item').forEach(item => {
+                    observer.observe(item);
                 });
+            }, 100);
+        }, 300);
+    }
 
-                // Activar intersection observer con delay escalonado
-                setTimeout(() => {
-                    document.querySelectorAll('.gallery-item').forEach((item, index) => {
-                        setTimeout(() => {
-                            observer.observe(item);
-                        }, index * 50);
-                    });
-                }, 200);
-            }, 300);
-        }
-
-        // Manejo táctil mejorado con feedback visual
-        function addEnhancedTouchHandlers(item, img, index) {
-            let touchStartTime = 0;
-            let touchStartPos = { x: 0, y: 0 };
-            let longPressTimer;
-
-            item.addEventListener('touchstart', function(e) {
-                touchStartTime = Date.now();
-                touchStartPos = {
-                    x: e.touches[0].clientX,
-                    y: e.touches[0].clientY
-                };
-                this.classList.add('touching');
-
-                // Long press para preview
-                longPressTimer = setTimeout(() => {
-                    navigator.vibrate && navigator.vibrate(50);
-                    this.style.transform = 'scale(1.05)';
-                    setTimeout(() => {
-                        this.style.transform = '';
-                    }, 200);
-                }, 500);
-
-            }, { passive: true });
-
-            item.addEventListener('touchmove', function(e) {
-                const currentPos = {
-                    x: e.touches[0].clientX,
-                    y: e.touches[0].clientY
-                };
-                
-                const moveDistance = Math.sqrt(
-                    Math.pow(currentPos.x - touchStartPos.x, 2) + 
-                    Math.pow(currentPos.y - touchStartPos.y, 2)
-                );
-
-                if (moveDistance > 10) {
-                    clearTimeout(longPressTimer);
-                }
-            }, { passive: true });
-
-            item.addEventListener('touchend', function(e) {
-                const touchEndTime = Date.now();
-                const touchDuration = touchEndTime - touchStartTime;
-                const touchEndPos = {
-                    x: e.changedTouches[0].clientX,
-                    y: e.changedTouches[0].clientY
-                };
-                
-                const moveDistance = Math.sqrt(
-                    Math.pow(touchEndPos.x - touchStartPos.x, 2) + 
-                    Math.pow(touchEndPos.y - touchStartPos.y, 2)
-                );
-
-                clearTimeout(longPressTimer);
-
-                if (touchDuration < 300 && moveDistance < 15) {
-                    const imageIndex = images.findIndex(image => image.src === img.src);
-                    openEnhancedModal(imageIndex);
-                    
-                    // Feedback táctil
-                    navigator.vibrate && navigator.vibrate(30);
-                }
-
-                this.classList.remove('touching');
-            }, { passive: true });
-
-            item.addEventListener('touchcancel', function() {
-                clearTimeout(longPressTimer);
-                this.classList.remove('touching');
-            }, { passive: true });
-        }
-
-        // Filtrado mejorado con animaciones
-        function filterGallery(category, button) {
-            // Actualizar botón activo con animación
-            document.querySelectorAll('.control-btn').forEach(btn => {
-                btn.classList.remove('active');
-                btn.style.transform = 'scale(1)';
-            });
-            button.classList.add('active');
-            button.style.transform = 'scale(1.05)';
-            setTimeout(() => {
-                button.style.transform = '';
-            }, 200);
-
-            // Filtrar imágenes
-            filteredImages = category === 'all' ? [...images] : images.filter(img => img.category === category);
-
-            // Animación de salida
-            const currentItems = document.querySelectorAll('.gallery-item');
-            currentItems.forEach((item, index) => {
-                setTimeout(() => {
-                    item.style.opacity = '0';
-                    item.style.transform = 'translateY(-20px) scale(0.9)';
-                }, index * 30);
-            });
-
-            // Mostrar loading y recargar
-            setTimeout(() => {
-                document.getElementById('galleryGrid').innerHTML = '<div class="loading"></div>';
-                populateEnhancedGallery(filteredImages);
-            }, currentItems.length * 30 + 200);
-
-            // Anuncio para accesibilidad
-            announceToScreenReader(`Mostrando ${filteredImages.length} imágenes de ${getCategoryName(category)}`);
-        }
-
-        // Función shuffle mejorada
-        function shuffleGallery(button) {
-            document.querySelectorAll('.control-btn').forEach(btn => btn.classList.remove('active'));
-            button.classList.add('active');
-
-            // Animación especial para shuffle
-            button.style.animation = 'spin 0.5s ease-in-out';
-            setTimeout(() => {
-                button.style.animation = '';
-            }, 500);
-
-            const currentItems = document.querySelectorAll('.gallery-item');
+    function toggleVideo(event, button, videoSrc) {
+        event.stopPropagation();
+        
+        const galleryItem = button.closest('.gallery-item');
+        const video = galleryItem.querySelector('video');
+        const icon = button.querySelector('i');
+        
+        if (video.paused) {
+            pauseAllVideos();
             
-            // Animación de mezcla
-            currentItems.forEach((item, index) => {
-                setTimeout(() => {
-                    item.style.transform = `translateX(${Math.random() * 200 - 100}px) rotate(${Math.random() * 360}deg) scale(0)`;
-                    item.style.opacity = '0';
-                }, index * 20);
+            video.play().then(() => {
+                icon.className = 'fas fa-pause';
+                button.classList.add('playing');
+                galleryItem.classList.add('playing');
+                playingVideos.add(videoSrc);
+            }).catch(err => {
+                console.error('Error playing video:', err);
             });
-
-            setTimeout(() => {
-                filteredImages = [...images].sort(() => Math.random() - 0.5);
-                document.getElementById('galleryGrid').innerHTML = '<div class="loading"></div>';
-                populateEnhancedGallery(filteredImages);
-            }, currentItems.length * 20 + 300);
+        } else {
+            video.pause();
+            icon.className = 'fas fa-play';
+            button.classList.remove('playing');
+            galleryItem.classList.remove('playing');
+            playingVideos.delete(videoSrc);
         }
+    }
 
-        // Modal mejorado con transiciones suaves
-        function openEnhancedModal(index) {
-            currentImageIndex = index;
-            const modal = document.getElementById('modal');
-            const modalImage = document.getElementById('modalImage');
-
-            modal.style.display = 'flex';
-            modal.style.opacity = '0';
-            
-            // Precargar imagen
-            const img = new Image();
-            img.onload = function() {
-                modalImage.src = images[index].src;
-                modalImage.alt = images[index].title;
+    function pauseAllVideos() {
+        document.querySelectorAll('.gallery-item video').forEach(video => {
+            if (!video.paused) {
+                video.pause();
+                const button = video.parentElement.querySelector('.video-play-btn');
+                const icon = button.querySelector('i');
+                const galleryItem = button.closest('.gallery-item');
                 
-                // Animación de entrada
-                requestAnimationFrame(() => {
-                    modal.style.opacity = '1';
-                    modal.classList.add('active');
-                });
+                icon.className = 'fas fa-play';
+                button.classList.remove('playing');
+                galleryItem.classList.remove('playing');
+            }
+        });
+        playingVideos.clear();
+    }
+
+    function addTouchHandlers(item, media, mediaIndex) {
+        let touchStartTime = 0;
+        let touchStartPos = { x: 0, y: 0 };
+
+        item.addEventListener('touchstart', function(e) {
+            touchStartTime = Date.now();
+            touchStartPos = {
+                x: e.touches[0].clientX,
+                y: e.touches[0].clientY
             };
-            img.src = images[index].src;
+            this.classList.add('touching');
+        }, { passive: true });
 
-            document.body.style.overflow = 'hidden';
-            document.addEventListener('touchmove', preventScroll, { passive: false });
+        item.addEventListener('touchend', function(e) {
+            const touchEndTime = Date.now();
+            const touchDuration = touchEndTime - touchStartTime;
+            const touchEndPos = {
+                x: e.changedTouches[0].clientX,
+                y: e.changedTouches[0].clientY
+            };
+            
+            const moveDistance = Math.sqrt(
+                Math.pow(touchEndPos.x - touchStartPos.x, 2) + 
+                Math.pow(touchEndPos.y - touchStartPos.y, 2)
+            );
 
-            // Precargar imágenes adyacentes
-            preloadAdjacentImages(index);
+            if (touchDuration < 300 && moveDistance < 10) {
+                if (!e.target.closest('.video-controls')) {
+                    openModal(mediaIndex);
+                }
+            }
+
+            this.classList.remove('touching');
+        }, { passive: true });
+
+        item.addEventListener('touchcancel', function() {
+            this.classList.remove('touching');
+        }, { passive: true });
+    }
+
+    function filterGallery(category, button) {
+        document.querySelectorAll('.control-btn').forEach(btn => btn.classList.remove('active'));
+        button.classList.add('active');
+
+        pauseAllVideos();
+
+        filteredMedia = category === 'all' ? [...mediaItems] : mediaItems.filter(media => media.category === category);
+
+        document.getElementById('galleryGrid').innerHTML = '<div class="loading"></div>';
+        populateGallery(filteredMedia);
+    }
+
+    function shuffleGallery(button) {
+        document.querySelectorAll('.control-btn').forEach(btn => btn.classList.remove('active'));
+        button.classList.add('active');
+
+        pauseAllVideos();
+        
+        filteredMedia = [...mediaItems].sort(() => Math.random() - 0.5);
+        document.getElementById('galleryGrid').innerHTML = '<div class="loading"></div>';
+        populateGallery(filteredMedia);
+    }
+
+    // MODAL MEJORADO CON NAVEGACIÓN ARREGLADA
+    function openModal(index) {
+        currentMediaIndex = index;
+        const modal = document.getElementById('modal');
+        const modalImage = document.getElementById('modalImage');
+        const modalVideo = document.getElementById('modalVideo');
+        const modalVideoControls = document.getElementById('modalVideoControls');
+        const modalProgress = document.getElementById('modalProgress');
+        const currentMedia = mediaItems[index];
+
+        pauseAllVideos();
+
+        // Actualizar información del header
+        updateModalInfo();
+
+        if (currentMedia.type === 'video') {
+            modalImage.style.display = 'none';
+            modalVideo.style.display = 'block';
+            modalVideoControls.style.display = 'flex';
+            modalProgress.style.display = 'block';
+            
+            modalVideo.src = currentMedia.src;
+            modalVideo.load();
+            updateModalVideoControls();
+        } else {
+            modalVideo.style.display = 'none';
+            modalVideoControls.style.display = 'none';
+            modalProgress.style.display = 'none';
+            modalImage.style.display = 'block';
+            
+            modalImage.src = currentMedia.src;
+            modalImage.alt = currentMedia.title;
         }
 
-        function closeModal() {
-            const modal = document.getElementById('modal');
-            modal.style.opacity = '0';
-            
-            setTimeout(() => {
-                modal.classList.remove('active');
-                modal.style.display = 'none';
-            }, 300);
-            
-            document.body.style.overflow = 'auto';
-            document.removeEventListener('touchmove', preventScroll);
+        modal.classList.add('active');
+        document.body.style.overflow = 'hidden';
+        document.addEventListener('touchmove', preventScroll, { passive: false });
+    }
+
+    function updateModalInfo() {
+        const currentMedia = mediaItems[currentMediaIndex];
+        document.getElementById('modalTitle').textContent = currentMedia.title;
+        document.getElementById('modalDescription').textContent = currentMedia.desc;
+        document.getElementById('modalCounter').textContent = `${currentMediaIndex + 1} / ${mediaItems.length}`;
+    }
+
+    function closeModal() {
+        const modal = document.getElementById('modal');
+        const modalVideo = document.getElementById('modalVideo');
+        
+        if (modalVideo && !modalVideo.paused) {
+            modalVideo.pause();
+        }
+        
+        modal.classList.remove('active');
+        document.body.style.overflow = 'auto';
+        document.removeEventListener('touchmove', preventScroll);
+    }
+
+    function preventScroll(e) {
+        if (!e.target.closest('.modal-container')) {
+            e.preventDefault();
+        }
+    }
+
+    function navigateModal(direction) {
+        currentMediaIndex += direction;
+
+        if (currentMediaIndex < 0) currentMediaIndex = mediaItems.length - 1;
+        if (currentMediaIndex >= mediaItems.length) currentMediaIndex = 0;
+
+        const modalImage = document.getElementById('modalImage');
+        const modalVideo = document.getElementById('modalVideo');
+        const modalVideoControls = document.getElementById('modalVideoControls');
+        const modalProgress = document.getElementById('modalProgress');
+        const currentMedia = mediaItems[currentMediaIndex];
+
+        // Pausar video actual
+        if (modalVideo && !modalVideo.paused) {
+            modalVideo.pause();
         }
 
-        function navigateModal(direction) {
-            const modalImage = document.getElementById('modalImage');
+        // Actualizar información
+        updateModalInfo();
+
+        // Transición suave
+        modalImage.style.opacity = '0.5';
+        modalVideo.style.opacity = '0.5';
+
+        setTimeout(() => {
+            if (currentMedia.type === 'video') {
+                modalImage.style.display = 'none';
+                modalVideo.style.display = 'block';
+                modalVideoControls.style.display = 'flex';
+                modalProgress.style.display = 'block';
+                modalVideo.src = currentMedia.src;
+                modalVideo.load();
+                updateModalVideoControls();
+            } else {
+                modalVideo.style.display = 'none';
+                modalVideoControls.style.display = 'none';
+                modalProgress.style.display = 'none';
+                modalImage.style.display = 'block';
+                modalImage.src = currentMedia.src;
+                modalImage.alt = currentMedia.title;
+            }
             
-            currentImageIndex += direction;
-            if (currentImageIndex < 0) currentImageIndex = images.length - 1;
-            if (currentImageIndex >= images.length) currentImageIndex = 0;
+            modalImage.style.opacity = '1';
+            modalVideo.style.opacity = '1';
+        }, 150);
+    }
 
-            // Animación de transición
-            modalImage.style.transform = 'scale(0.8)';
-            modalImage.style.opacity = '0.5';
+    // Controles de video del modal
+    function toggleModalVideo() {
+        const modalVideo = document.getElementById('modalVideo');
+        const playPauseBtn = document.getElementById('modalPlayPauseBtn');
+        const icon = playPauseBtn.querySelector('i');
 
-            setTimeout(() => {
-                modalImage.src = images[currentImageIndex].src;
-                modalImage.alt = images[currentImageIndex].title;
-                modalImage.style.transform = 'scale(1)';
-                modalImage.style.opacity = '1';
-            }, 200);
-
-            preloadAdjacentImages(currentImageIndex);
+        if (modalVideo.paused) {
+            modalVideo.play();
+            icon.className = 'fas fa-pause';
+        } else {
+            modalVideo.pause();
+            icon.className = 'fas fa-play';
         }
+    }
 
-        // Precargar imágenes adyacentes para mejor rendimiento
-        function preloadAdjacentImages(index) {
-            const prevIndex = index > 0 ? index - 1 : images.length - 1;
-            const nextIndex = index < images.length - 1 ? index + 1 : 0;
+    function muteModalVideo() {
+        const modalVideo = document.getElementById('modalVideo');
+        const muteIcon = document.getElementById('modalMuteBtn').querySelector('i');
 
-            [prevIndex, nextIndex].forEach(i => {
-                const img = new Image();
-                img.src = images[i].src;
+        modalVideo.muted = !modalVideo.muted;
+        muteIcon.className = modalVideo.muted ? 'fas fa-volume-mute' : 'fas fa-volume-up';
+    }
+
+    function toggleFullscreen() {
+        const modalVideo = document.getElementById('modalVideo');
+        
+        if (!document.fullscreenElement) {
+            modalVideo.requestFullscreen().catch(err => {
+                console.error('Error attempting to enable fullscreen:', err);
             });
+        } else {
+            document.exitFullscreen();
         }
+    }
 
-        // Gestos de swipe mejorados
-        let touchStartX = 0;
-        let touchStartY = 0;
-        let touchEndX = 0;
-        let touchEndY = 0;
+    function updateModalVideoControls() {
+        const modalVideo = document.getElementById('modalVideo');
+        const playPauseBtn = document.getElementById('modalPlayPauseBtn');
+        const icon = playPauseBtn.querySelector('i');
+        const muteIcon = document.getElementById('modalMuteBtn').querySelector('i');
 
-        document.addEventListener('touchstart', function(e) {
-            touchStartX = e.touches[0].clientX;
-            touchStartY = e.touches[0].clientY;
-        }, { passive: true });
+        icon.className = modalVideo.paused ? 'fas fa-play' : 'fas fa-pause';
+        muteIcon.className = modalVideo.muted ? 'fas fa-volume-mute' : 'fas fa-volume-up';
+    }
 
-        document.addEventListener('touchmove', function(e) {
-            touchEndX = e.touches[0].clientX;
-            touchEndY = e.touches[0].clientY;
-        }, { passive: true });
+    function updateProgress() {
+        const modalVideo = document.getElementById('modalVideo');
+        const progressBar = document.getElementById('modalProgressBar');
+        
+        if (modalVideo.duration > 0) {
+            const progress = (modalVideo.currentTime / modalVideo.duration) * 100;
+            progressBar.style.width = progress + '%';
+        }
+    }
 
-        document.addEventListener('touchend', function(e) {
-            if (!document.getElementById('modal').classList.contains('active')) return;
+    // Event listeners para el modal
+    document.addEventListener('DOMContentLoaded', function() {
+        const modalVideo = document.getElementById('modalVideo');
+        const modalClose = document.getElementById('modalClose');
+        const modalPrev = document.getElementById('modalPrev');
+        const modalNext = document.getElementById('modalNext');
+        const modalPlayPauseBtn = document.getElementById('modalPlayPauseBtn');
+        const modalMuteBtn = document.getElementById('modalMuteBtn');
+        const modalFullscreenBtn = document.getElementById('modalFullscreenBtn');
+        
+        // Event listeners con prevención de propagación
+        modalClose.addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            closeModal();
+        });
 
-            const diffX = touchStartX - touchEndX;
-            const diffY = touchStartY - touchEndY;
-            const minSwipeDistance = 80;
-            const maxVerticalDistance = 100;
+        modalPrev.addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            navigateModal(-1);
+        });
 
-            if (Math.abs(diffX) > Math.abs(diffY) && Math.abs(diffX) > minSwipeDistance && Math.abs(diffY) < maxVerticalDistance) {
+        modalNext.addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            navigateModal(1);
+        });
+
+        modalPlayPauseBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            toggleModalVideo();
+        });
+
+        modalMuteBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            muteModalVideo();
+        });
+
+        modalFullscreenBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            toggleFullscreen();
+        });
+
+        // Event listeners para el modal background
+        const modal = document.getElementById('modal');
+        modal.addEventListener('click', function(e) {
+            if (e.target === modal) {
+                closeModal();
+            }
+        });
+
+        // Event listeners para el video
+        if (modalVideo) {
+            modalVideo.addEventListener('play', updateModalVideoControls);
+            modalVideo.addEventListener('pause', updateModalVideoControls);
+            modalVideo.addEventListener('volumechange', updateModalVideoControls);
+            modalVideo.addEventListener('timeupdate', updateProgress);
+            modalVideo.addEventListener('loadedmetadata', updateModalVideoControls);
+        }
+    });
+
+    // Navegación por teclado y touch mejorada
+    let touchStartX = 0;
+    let touchStartY = 0;
+    let touchEndX = 0;
+    let touchEndY = 0;
+
+    document.addEventListener('touchstart', function(e) {
+        if (!document.getElementById('modal').classList.contains('active')) return;
+        
+        touchStartX = e.touches[0].clientX;
+        touchStartY = e.touches[0].clientY;
+    }, { passive: true });
+
+    document.addEventListener('touchmove', function(e) {
+        if (!document.getElementById('modal').classList.contains('active')) return;
+        
+        touchEndX = e.touches[0].clientX;
+        touchEndY = e.touches[0].clientY;
+    }, { passive: true });
+
+    document.addEventListener('touchend', function(e) {
+        if (!document.getElementById('modal').classList.contains('active')) return;
+
+        const diffX = touchStartX - touchEndX;
+        const diffY = touchStartY - touchEndY;
+        const minSwipeDistance = 50;
+
+        // Solo procesar swipes horizontales que no interfieran con controles
+        if (Math.abs(diffX) > Math.abs(diffY) && Math.abs(diffX) > minSwipeDistance) {
+            // Verificar que no se haya tocado un control del modal
+            if (!e.target.closest('.modal-video-controls') && 
+                !e.target.closest('.modal-close') && 
+                !e.target.closest('.modal-nav')) {
+                
                 if (diffX > 0) {
                     navigateModal(1); // Swipe left = next
                 } else {
                     navigateModal(-1); // Swipe right = previous
                 }
-                
-                // Feedback táctil
-                navigator.vibrate && navigator.vibrate(25);
-            } else if (Math.abs(diffY) > minSwipeDistance && Math.abs(diffX) < maxVerticalDistance && diffY > 0) {
-                // Swipe up = close modal
-                closeModal();
+            }
+        }
+    }, { passive: true });
+
+    document.addEventListener('keydown', function(e) {
+        const modal = document.getElementById('modal');
+
+        if (modal.classList.contains('active')) {
+            switch(e.key) {
+                case 'Escape':
+                    closeModal();
+                    break;
+                case 'ArrowLeft':
+                    e.preventDefault();
+                    navigateModal(-1);
+                    break;
+                case 'ArrowRight':
+                    e.preventDefault();
+                    navigateModal(1);
+                    break;
+                case ' ':
+                    e.preventDefault();
+                    if (document.getElementById('modalVideo').style.display !== 'none') {
+                        toggleModalVideo();
+                    }
+                    break;
+                case 'f':
+                case 'F':
+                    e.preventDefault();
+                    if (document.getElementById('modalVideo').style.display !== 'none') {
+                        toggleFullscreen();
+                    }
+                    break;
+                case 'm':
+                case 'M':
+                    e.preventDefault();
+                    if (document.getElementById('modalVideo').style.display !== 'none') {
+                        muteModalVideo();
+                    }
+                    break;
+            }
+        }
+    });
+
+    // Intersection Observer
+    const observerOptions = {
+        threshold: 0.1,
+        rootMargin: '50px'
+    };
+
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('visible');
+                observer.unobserve(entry.target);
+            }
+        });
+    }, observerOptions);
+
+    // Error handling
+    function handleMediaError(element) {
+        if (element.tagName === 'VIDEO') {
+            const placeholder = document.createElement('div');
+            placeholder.style.cssText = `
+                width: 100%;
+                height: 100%;
+                background: #333;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                color: #666;
+                font-size: 14px;
+                text-align: center;
+            `;
+            placeholder.innerHTML = 'Video no disponible';
+            element.parentNode.replaceChild(placeholder, element);
+        } else {
+            element.src = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAwIiBoZWlnaHQ9IjMwMCIgdmlld0JveD0iMCAwIDQwMCAzMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSI0MDAiIGhlaWdodD0iMzAwIiBmaWxsPSIjMzMzIi8+Cjx0ZXh0IHg9IjIwMCIgeT0iMTUwIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMTQiIGZpbGw9IiM2NjYiIHRleHQtYW5jaG9yPSJtaWRkbGUiPkltYWdlbiBubyBkaXNwb25ibGU8L3RleHQ+Cjwvc3ZnPg==';
+            element.classList.add('error');
+        }
+    }
+
+    // Optimizaciones de rendimiento
+    function optimizeForBattery() {
+        if ('getBattery' in navigator) {
+            navigator.getBattery().then(function(battery) {
+                if (battery.level < 0.2) {
+                    document.getElementById('particles').style.display = 'none';
+                    document.body.classList.add('low-battery');
+                    pauseAllVideos();
+                }
+            });
+        }
+    }
+
+    function checkPerformance() {
+        if ('connection' in navigator) {
+            const connection = navigator.connection;
+            if (connection.effectiveType === 'slow-2g' || connection.effectiveType === '2g') {
+                document.getElementById('particles').style.display = 'none';
+                document.documentElement.style.setProperty('--transition-smooth', 'none');
+                document.documentElement.style.setProperty('--transition-bounce', 'none');
+                pauseAllVideos();
+            }
+        }
+    }
+
+    function optimizeViewport() {
+        const vh = window.innerHeight * 0.01;
+        document.documentElement.style.setProperty('--vh', `${vh}px`);
+    }
+
+    function handleOrientationChange() {
+        setTimeout(() => {
+            optimizeViewport();
+            const carousel = document.getElementById('carousel');
+            if (carousel) {
+                carousel.scrollLeft = 0;
+            }
+            pauseAllVideos();
+        }, 100);
+    }
+
+    function preloadMedia() {
+        const criticalMedia = mediaItems.slice(0, 6);
+        
+        criticalMedia.forEach(media => {
+            if (media.type === 'image') {
+                const image = new Image();
+                image.src = media.src;
+            } else if (media.type === 'video') {
+                const video = document.createElement('video');
+                video.src = media.src;
+                video.preload = 'metadata';
+            }
+        });
+    }
+
+    function handleNetworkChange() {
+        if (!navigator.onLine) {
+            document.body.classList.add('offline');
+            pauseAllVideos();
+        } else {
+            document.body.classList.remove('offline');
+        }
+    }
+
+    // Header scroll effect
+    function handleHeaderScroll() {
+        const header = document.querySelector('.header');
+        // Umbral de desplazamiento en píxeles para ocultar el header.
+        // El header se mostrará solo cuando el scroll esté casi en la parte superior.
+        const scrollThreshold = 10; 
+
+        window.addEventListener('scroll', () => {
+            const currentScroll = window.pageYOffset || document.documentElement.scrollTop;
+            
+            if (currentScroll > scrollThreshold) {
+                header.classList.add('scrolled');
+            } else {
+                header.classList.remove('scrolled');
             }
         }, { passive: true });
+    }
 
-        // Navegación por teclado mejorada
-        document.addEventListener('keydown', function(e) {
-            const modal = document.getElementById('modal');
+    // Inicialización
+    window.addEventListener('load', () => {
+        preloadMedia();
+        checkPerformance();
+        optimizeForBattery();
+        optimizeViewport();
+    });
 
-            if (modal.classList.contains('active')) {
-                switch(e.key) {
-                    case 'Escape':
-                        closeModal();
-                        break;
-                    case 'ArrowLeft':
-                        e.preventDefault();
-                        navigateModal(-1);
-                        break;
-                    case 'ArrowRight':
-                        e.preventDefault();
-                        navigateModal(1);
-                        break;
-                    case ' ':
-                        e.preventDefault();
-                        // Spacebar para zoom toggle
-                        const img = document.getElementById('modalImage');
-                        if (img.style.transform.includes('scale(1.5)')) {
-                            img.style.transform = 'scale(1)';
-                        } else {
-                            img.style.transform = 'scale(1.5)';
-                        }
-                        break;
-                }
+    window.addEventListener('orientationchange', handleOrientationChange);
+    window.addEventListener('resize', optimizeViewport);
+    window.addEventListener('online', handleNetworkChange);
+    window.addEventListener('offline', handleNetworkChange);
+
+    document.addEventListener('DOMContentLoaded', function() {
+        createParticles();
+        populateCarousel();
+        populateGallery();
+        handleHeaderScroll();
+        handleNetworkChange();
+    });
+
+    // Cleanup
+    let resizeTimeout;
+    let lastWidth = window.innerWidth;
+
+    window.addEventListener('resize', function() {
+        clearTimeout(resizeTimeout);
+        resizeTimeout = setTimeout(() => {
+            if (window.innerWidth !== lastWidth) {
+                document.getElementById('particles').innerHTML = '';
+                createParticles();
+                lastWidth = window.innerWidth;
             }
-        });
+        }, 250);
+    });
 
-        // Intersection Observer mejorado
-        const observerOptions = {
-            threshold: 0.2,
-            rootMargin: '50px'
-        };
+    window.addEventListener('beforeunload', function() {
+        observer.disconnect();
+        document.removeEventListener('touchmove', preventScroll);
+        pauseAllVideos();
+    });
 
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add('visible');
-                    observer.unobserve(entry.target);
-                }
-            });
-        }, observerOptions);
-
-        // Manejo de errores mejorado
-        function handleImageError(img) {
-            img.style.background = 'var(--glass-bg)';
-            img.style.display = 'flex';
-            img.style.alignItems = 'center';
-            img.style.justifyContent = 'center';
-            img.style.color = 'var(--text-muted)';
-            img.style.fontSize = '0.9rem';
-            img.innerHTML = '<div><i class="fas fa-image" style="font-size: 2rem; margin-bottom: 1rem;"></i><br>Imagen no disponible</div>';
-            img.classList.add('error');
-        }
-
-        // Funciones utilitarias mejoradas
-        function getCategoryName(category) {
-            const names = {
-                'all': 'todas las colecciones',
-                'coleccion1': 'la Colección 1',
-                'coleccion2': 'la Colección 2',
-                'coleccion3': 'la Colección 3'
-            };
-            return names[category] || category;
-        }
-
-        function announceToScreenReader(message) {
-            const announcement = document.createElement('div');
-            announcement.setAttribute('aria-live', 'polite');
-            announcement.setAttribute('aria-atomic', 'true');
-            announcement.style.cssText = 'position: absolute; left: -10000px; width: 1px; height: 1px; overflow: hidden;';
-            announcement.textContent = message;
-            
-            document.body.appendChild(announcement);
-            setTimeout(() => document.body.removeChild(announcement), 1000);
-        }
-
-        function preventScroll(e) {
-            if (!e.target.closest('.modal-content')) {
-                e.preventDefault();
-            }
-        }
-
-        // Sistema de header inteligente
-        function setupIntelligentHeader() {
-            const header = document.getElementById('header');
-            let scrollDirection = 0;
-            const scrollThreshold = 100;
-
-            window.addEventListener('scroll', () => {
-                const currentScroll = window.scrollY;
-                
-                if (currentScroll <= 0) {
-                    header.classList.remove('scrolled');
-                    return;
-                }
-
-                if (currentScroll > lastScroll && currentScroll > scrollThreshold) {
-                    // Scrolling down
-                    if (scrollDirection !== 1) {
-                        scrollDirection = 1;
-                        header.classList.add('scrolled');
-                    }
-                } else if (currentScroll < lastScroll) {
-                    // Scrolling up
-                    if (scrollDirection !== -1) {
-                        scrollDirection = -1;
-                        header.classList.remove('scrolled');
-                    }
-                }
-
-                lastScroll = currentScroll;
-            }, { passive: true });
-        }
-
-        // Optimizaciones de rendimiento
-        function setupPerformanceOptimizations() {
-            // Reducir partículas en dispositivos lentos
-            if (navigator.hardwareConcurrency && navigator.hardwareConcurrency < 4) {
-                document.documentElement.style.setProperty('--particles-count', '15');
-            }
-
-            // Detectar conexión lenta
-            if ('connection' in navigator) {
-                const connection = navigator.connection;
-                if (connection.effectiveType === 'slow-2g' || connection.effectiveType === '2g') {
-                    document.getElementById('particles').style.display = 'none';
-                    document.documentElement.style.setProperty('--transition-smooth', 'all 0.1s ease');
-                }
-            }
-
-            // Optimizar para batería baja
-            if ('getBattery' in navigator) {
-                navigator.getBattery().then(function(battery) {
-                    if (battery.level < 0.15) {
-                        document.getElementById('particles').style.display = 'none';
-                        document.body.classList.add('low-battery');
-                    }
-                });
-            }
-        }
-
-        // Inicialización mejorada
-        document.addEventListener('DOMContentLoaded', function() {
-            // Configurar fecha actual
-            document.getElementById('date').textContent = new Date().getFullYear();
-            
-            // Inicializar componentes
-            createEnhancedParticles();
-            addRippleEffect();
-            populateEnhancedCarousel();
-            populateEnhancedGallery();
-            setupIntelligentHeader();
-            setupPerformanceOptimizations();
-
-            // Configurar viewport height para móviles
-            const setVH = () => {
-                const vh = window.innerHeight * 0.01;
-                document.documentElement.style.setProperty('--vh', `${vh}px`);
-            };
-            
-            setVH();
-            window.addEventListener('resize', setVH);
-            window.addEventListener('orientationchange', () => setTimeout(setVH, 100));
-
-            // Precargar imágenes críticas
-            setTimeout(() => {
-                images.slice(0, 8).forEach(img => {
-                    const image = new Image();
-                    image.src = img.src;
-                });
-            }, 1000);
-        });
-
-        // Cleanup y optimizaciones de memoria
-        window.addEventListener('beforeunload', function() {
-            observer.disconnect();
-            document.removeEventListener('touchmove', preventScroll);
-        });
-
-        // Soporte PWA básico
-        if ('serviceWorker' in navigator) {
-            window.addEventListener('load', function() {
-                console.log('Service Worker disponible para funcionalidad offline');
-            });
-        }
-    </script>
+   </script>
 </body>
 </html>

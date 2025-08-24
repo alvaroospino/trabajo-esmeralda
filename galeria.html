@@ -4,21 +4,23 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <title>Galería Interactiva</title>
-        <link rel="icon" type="image/png" href="assets/img/logo.png" />
+    <link rel="icon" type="image/png" href="assets/img/logo.png" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="assets/css/gallery.css">
+    <link rel="stylesheet" href="./assets/css/gallery.css">
 </head>
 <body>
     <!-- Reduced particles for better mobile performance -->
     <div class="particles" id="particles"></div>
-    <!-- BOTÓN DE NAVEGACIÓN - Copia este código a tu galería -->
-    <a href="index.html" class="back-button" id="backButton">
-        <span class="back-button-icon">←</span>
+    
+    <!-- BOTÓN DE NAVEGACIÓN -->
+    <a href="index.html" class="back-button" id="backButton" title="Regresar a la página de inicio">
+        <i class="fas fa-home back-button-icon"></i>
         <span class="back-button-text">Inicio</span>
     </a>
+    
     <!-- Header -->
     <header class="header">
-        <h1>GALERÍA IMPORT EXPORT</h1>
+        <h1><i class="fas fa-gem header-icon"></i> GALERÍA IMPORT EXPORT <i class="fas fa-gem header-icon"></i></h1>
         <p>Nuestra Galería de Esmeralda</p>
     </header>
 
@@ -28,18 +30,19 @@
             <div class="carousel" id="carousel">
                 <div class="loading"></div>
             </div>
-            <div class="scroll-indicator">← Desliza para ver más →</div>
+            <div class="scroll-indicator"><i class="fas fa-chevron-left"></i> Desliza para ver más <i class="fas fa-chevron-right"></i></div>
         </div>
     </section>
 
     <!-- Gallery controls -->
     <section class="gallery-container">
         <div class="gallery-controls">
-            <button class="control-btn active" onclick="filterGallery('all', this)">Todas</button>
-            <button class="control-btn" onclick="filterGallery('coleccion1', this)">Colección 1</button>
-            <button class="control-btn" onclick="filterGallery('coleccion2', this)">Colección 2</button>
-            <button class="control-btn" onclick="filterGallery('coleccion3', this)">Colección 3</button>
-            <button class="control-btn" onclick="shuffleGallery(this)">🎲 Mezclar</button>
+            <button class="control-btn active" onclick="filterGallery('all', this)"><i class="fas fa-images"></i> Todas</button>
+            <button class="control-btn" onclick="filterGallery('videos', this)"><i class="fas fa-film"></i> Videos</button>
+            <button class="control-btn" onclick="filterGallery('coleccion1', this)"><i class="fas fa-gem"></i> Colección 1</button>
+            <button class="control-btn" onclick="filterGallery('coleccion2', this)"><i class="fas fa-gem"></i> Colección 2</button>
+            <button class="control-btn" onclick="filterGallery('coleccion3', this)"><i class="fas fa-gem"></i> Colección 3</button>
+            <button class="control-btn" onclick="shuffleGallery(this)"><i class="fas fa-random"></i> Mezclar</button>
         </div>
         
         <div class="gallery-grid" id="galleryGrid">
@@ -47,15 +50,57 @@
         </div>
     </section>
 
-    <!-- Epic modal -->
-    <div class="modal" id="modal" onclick="closeModal()">
-        <div class="modal-content" onclick="event.stopPropagation()">
-            <button class="modal-close" onclick="closeModal()"><i class="fas fa-times"></i></button>
-            <button class="modal-nav prev" onclick="navigateModal(-1)"><i class="fas fa-chevron-left"></i></button>
-            <button class="modal-nav next" onclick="navigateModal(1)"><i class="fas fa-chevron-right"></i></button>
-            <img id="modalImage" src="" alt="">
+    <!-- MODAL MEJORADO Y PROFESIONAL -->
+    <div class="modal" id="modal">
+        <div class="modal-container">
+            <!-- Header con información -->
+            <div class="modal-header">
+                <div class="modal-info">
+                    <div class="modal-title" id="modalTitle">Título del medio</div>
+                    <div class="modal-description" id="modalDescription">Descripción del medio</div>
+                </div>
+                <div class="modal-counter" id="modalCounter">1 / 20</div>
+            </div>
+
+            <!-- Botón de cerrar -->
+            <button class="modal-close" id="modalClose">
+                <i class="fas fa-times"></i>
+            </button>
+
+            <!-- Navegación lateral -->
+            <button class="modal-nav prev" id="modalPrev">
+                <i class="fas fa-chevron-left"></i>
+            </button>
+            <button class="modal-nav next" id="modalNext">
+                <i class="fas fa-chevron-right"></i>
+            </button>
+
+            <!-- Contenido principal -->
+            <div class="modal-content">
+                <img id="modalImage" class="modal-media" src="" alt="" style="display: none;">
+                <video id="modalVideo" class="modal-media" style="display: none;" muted></video>
+                
+                <!-- Barra de progreso para video -->
+                <div class="modal-progress" id="modalProgress" style="display: none;">
+                    <div class="modal-progress-bar" id="modalProgressBar"></div>
+                </div>
+            </div>
+
+            <!-- Controles de video -->
+            <div class="modal-video-controls" id="modalVideoControls" style="display: none;">
+                <button class="modal-video-btn" id="modalPlayPauseBtn">
+                    <i class="fas fa-play"></i>
+                </button>
+                <button class="modal-video-btn" id="modalMuteBtn">
+                    <i class="fas fa-volume-up"></i>
+                </button>
+                <button class="modal-video-btn" id="modalFullscreenBtn">
+                    <i class="fas fa-expand"></i>
+                </button>
+            </div>
         </div>
     </div>
+    
     <!-- Footer mejorado -->
     <footer class="footer">
         <div class="footer-content">
@@ -71,17 +116,6 @@
             <p>&copy; <span id="date"></span> Import Export. Todos los derechos reservados.</p>
         </div>
     </footer>
-   <script src="assets/js/gallery.js.js"></script>
-   <script>
-    // NUEVO: Función para actualizar el año
-function updateYear() {
-    const dateElement = document.getElementById("date");
-    if (dateElement) {
-        dateElement.textContent = new Date().getFullYear();
-    }
-}
-
-updateYear()
-   </script>
+   <script src="./assets/js/gallery.js.js"></script>
 </body>
 </html>
