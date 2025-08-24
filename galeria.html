@@ -272,17 +272,45 @@
             100% { transform: translateY(-100vh) rotate(360deg); }
         }
 
-        /* Mobile-optimized header */
+        /* Mobile-optimized header with hide/show scroll effect */
         .header {
             text-align: center;
             padding: 2rem 1rem 1.5rem;
             background: var(--glass-bg);
             backdrop-filter: blur(20px);
             border-bottom: 2px solid var(--glass-border);
-            position: sticky;
+            position: fixed;
             top: 0;
+            left: 0;
+            right: 0;
             z-index: 100;
             box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            height: auto;
+        }
+        
+        .header.scrolled {
+            padding: 0;
+            height: 0;
+            background: rgba(13, 40, 24, 0.98);
+            border-bottom-color: var(--primary-green);
+            overflow: hidden;
+        }
+
+        .header h1,
+        .header p {
+            transition: opacity 0.3s ease-in-out;
+        }
+
+        .header.scrolled h1,
+        .header.scrolled p {
+            opacity: 0;
+        }
+
+        /* Espaciado para el contenido principal */
+        .main-content {
+            position: relative;
+            z-index: 1;
         }
 
         .header h1 {
@@ -354,14 +382,27 @@
             font-size: clamp(1rem, 4vw, 1.2rem);
         }
 
-        /* Mobile-first carousel */
+        /* Mobile-first carousel with header margin */
         .carousel-container {
+            margin-top: 120px; /* Espacio para el header fijo */
             padding: 2rem 0;
             background: linear-gradient(135deg, var(--glass-bg), rgba(13, 40, 24, 0.1));
             backdrop-filter: blur(15px);
             border-bottom: 1px solid var(--glass-border);
             position: relative;
             overflow: hidden;
+        }
+
+        @media (max-width: 768px) {
+            .carousel-container {
+                margin-top: 100px; /* Ajuste para móviles */
+            }
+        }
+
+        @media (max-width: 480px) {
+            .carousel-container {
+                margin-top: 90px; /* Ajuste para pantallas muy pequeñas */
+            }
         }
 
         .carousel-wrapper {
@@ -720,6 +761,22 @@
 
         /* Mobile-specific optimizations */
         @media (max-width: 768px) {
+            .header {
+                padding: 1.5rem 1rem 1rem;
+            }
+            
+            .header.scrolled {
+                padding: 0.8rem 1rem;
+            }
+            
+            .header h1 {
+                font-size: clamp(1.5rem, 6vw, 2.5rem);
+            }
+            
+            .main-content {
+                padding-top: 100px;
+            }
+            
             .carousel-item {
                 flex: 0 0 250px;
                 height: 180px;
@@ -889,7 +946,7 @@
 <body>
     <!-- Reduced particles for better mobile performance -->
     <div class="particles" id="particles"></div>
-     <!-- BOTÓN DE NAVEGACIÓN - Copia este código a tu galería -->
+    <!-- BOTÓN DE NAVEGACIÓN - Copia este código a tu galería -->
     <a href="index.html" class="back-button" id="backButton">
         <span class="back-button-icon">←</span>
         <span class="back-button-text">Inicio</span>
@@ -1378,11 +1435,42 @@ window.addEventListener('resize', optimizeViewport);
 window.addEventListener('online', handleNetworkChange);
 window.addEventListener('offline', handleNetworkChange);
 
+// Header scroll effect with direction detection
+function handleHeaderScroll() {
+    const header = document.querySelector('.header');
+    let lastScroll = 0;
+    const scrollThreshold = 50;
+    let isScrollingUp = false;
+
+    window.addEventListener('scroll', () => {
+        const currentScroll = window.scrollY;
+        
+        if (currentScroll <= 0) {
+            // Si estamos en la parte superior, siempre mostrar el header
+            header.classList.remove('scrolled');
+            return;
+        }
+
+        if (currentScroll > lastScroll && !header.classList.contains('scrolled') && currentScroll > scrollThreshold) {
+            // Scrolling hacia abajo y el header está visible
+            header.classList.add('scrolled');
+            isScrollingUp = false;
+        } else if (currentScroll < lastScroll && header.classList.contains('scrolled')) {
+            // Scrolling hacia arriba y el header está oculto
+            header.classList.remove('scrolled');
+            isScrollingUp = true;
+        }
+
+        lastScroll = currentScroll;
+    }, { passive: true }); // Optimización de rendimiento
+}
+
 // Initialize everything
 document.addEventListener('DOMContentLoaded', function() {
     createParticles();
     populateCarousel();
     populateGallery();
+    handleHeaderScroll();
     
     // Check initial network status
     handleNetworkChange();
