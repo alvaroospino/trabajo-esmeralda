@@ -19,6 +19,40 @@
     --transition-smooth: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
     --transition-bounce: all 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
 }
+
+html {
+    scroll-behavior: smooth;
+}
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    background: #000000;
+    color: var(--text-primary);
+    overflow-x: hidden;
+    width: 100%;
+    min-height: 100vh;
+    margin: 0;
+    padding: 0;
+}
+
+body::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(ellipse at top, var(--emerald-soft-glow) 0%, transparent 70%),
+        radial-gradient(ellipse at bottom right, var(--emerald-light-glow) 0%, transparent 60%),
+        radial-gradient(ellipse at bottom left, var(--emerald-glow) 0%, transparent 50%);
+    pointer-events: none;
+    z-index: -1;
+}
 /* Estilos para la tarjeta especial "Ver más" */
 .view-more-card {
     background: linear-gradient(135deg, var(--emerald-dark), var(--emerald-deeper));
@@ -75,40 +109,6 @@
     color: var(--secondary-green);
 }
 
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
-
-html {
-    scroll-behavior: smooth;
-}
-
-body {
-    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-    background: #000000;
-    color: var(--text-primary);
-    overflow-x: hidden;
-    width: 100%;
-    min-height: 100vh;
-    margin: 0;
-    padding: 0;
-}
-
-body::before {
-    content: '';
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: radial-gradient(ellipse at top, var(--emerald-soft-glow) 0%, transparent 70%),
-        radial-gradient(ellipse at bottom right, var(--emerald-light-glow) 0%, transparent 60%),
-        radial-gradient(ellipse at bottom left, var(--emerald-glow) 0%, transparent 50%);
-    pointer-events: none;
-    z-index: -1;
-}
 
 /* Loading Screen */
 .loading-screen {

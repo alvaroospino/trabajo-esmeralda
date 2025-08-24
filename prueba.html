@@ -1,0 +1,1475 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Galería Interactiva - Import Export Esmeraldas</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-emerald: #00ff7f;
+            --secondary-emerald: #32cd32;
+            --dark-emerald: #228b22;
+            --deep-emerald: #0a3d1a;
+            --darker-emerald: #061a0d;
+            --emerald-glow: rgba(0, 255, 127, 0.6);
+            --emerald-soft-glow: rgba(0, 255, 127, 0.15);
+            --glass-bg: rgba(10, 61, 26, 0.4);
+            --glass-border: rgba(0, 255, 127, 0.3);
+            --text-primary: #ffffff;
+            --text-secondary: rgba(255, 255, 255, 0.9);
+            --text-muted: rgba(255, 255, 255, 0.7);
+            --bg-gradient: linear-gradient(135deg, #000000 0%, #0a1f12 30%, #0d2818 70%, #000000 100%);
+            --transition-smooth: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+            --transition-bounce: all 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            background: var(--bg-gradient);
+            color: var(--text-primary);
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* Partículas animadas mejoradas */
+        .particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+            overflow: hidden;
+        }
+
+        .particle {
+            position: absolute;
+            background: var(--primary-emerald);
+            border-radius: 50%;
+            opacity: 0.1;
+            animation: floatUp 20s infinite linear;
+        }
+
+        .particle.sparkle {
+            background: linear-gradient(45deg, var(--primary-emerald), #ffffff, var(--secondary-emerald));
+            opacity: 0.3;
+            animation: sparkleFloat 15s infinite ease-in-out;
+        }
+
+        @keyframes floatUp {
+            0% { 
+                transform: translateY(100vh) rotate(0deg) scale(0.5);
+                opacity: 0;
+            }
+            10% {
+                opacity: 0.1;
+            }
+            90% {
+                opacity: 0.1;
+            }
+            100% { 
+                transform: translateY(-10vh) rotate(360deg) scale(1);
+                opacity: 0;
+            }
+        }
+
+        @keyframes sparkleFloat {
+            0%, 100% { 
+                transform: translateY(100vh) rotate(0deg) scale(0.3);
+                opacity: 0;
+            }
+            50% { 
+                transform: translateY(50vh) rotate(180deg) scale(0.8);
+                opacity: 0.6;
+            }
+        }
+
+        /* Botón de regreso mejorado */
+        .back-button {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            z-index: 1500;
+            background: var(--glass-bg);
+            backdrop-filter: blur(25px);
+            border: 2px solid var(--glass-border);
+            border-radius: 60px;
+            padding: 15px 25px;
+            color: var(--text-primary);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            transition: var(--transition-bounce);
+            font-weight: 700;
+            font-size: 1rem;
+            box-shadow: 0 8px 32px rgba(0, 255, 127, 0.2);
+            cursor: pointer;
+            overflow: hidden;
+        }
+
+        .back-button::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: conic-gradient(from 0deg, transparent, var(--primary-emerald), transparent);
+            animation: rotate 4s linear infinite;
+            opacity: 0.3;
+            z-index: -1;
+        }
+
+        .back-button:hover {
+            transform: translateX(-5px) scale(1.05);
+            box-shadow: 0 12px 40px var(--emerald-glow);
+            border-color: var(--primary-emerald);
+        }
+
+        @keyframes rotate {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Header con efectos de cristal */
+        .header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 100;
+            background: var(--glass-bg);
+            backdrop-filter: blur(30px);
+            border-bottom: 2px solid var(--glass-border);
+            padding: 2rem 1rem 1.5rem;
+            text-align: center;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            transition: var(--transition-smooth);
+        }
+
+        .header.scrolled {
+            padding: 1rem;
+            background: rgba(10, 61, 26, 0.95);
+            border-bottom: 2px solid var(--primary-emerald);
+            box-shadow: 0 4px 20px var(--emerald-glow);
+        }
+
+        .header h1 {
+            font-size: clamp(2.5rem, 8vw, 4rem);
+            background: linear-gradient(45deg, var(--primary-emerald), #ffffff, var(--secondary-emerald), var(--primary-emerald));
+            background-size: 300% 300%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 0.5rem;
+            animation: shimmerText 4s ease-in-out infinite;
+            letter-spacing: 2px;
+            text-shadow: 0 0 30px var(--emerald-glow);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+        }
+
+        .gem-icon {
+            font-size: 0.8em;
+            animation: gemRotate 6s infinite ease-in-out;
+            filter: drop-shadow(0 0 10px var(--primary-emerald));
+        }
+
+        @keyframes gemRotate {
+            0%, 100% { transform: rotate(0deg) scale(1); }
+            25% { transform: rotate(10deg) scale(1.1); }
+            75% { transform: rotate(-10deg) scale(1.1); }
+        }
+
+        @keyframes shimmerText {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+
+        .header p {
+            color: var(--text-muted);
+            font-size: clamp(1.1rem, 4vw, 1.4rem);
+            font-weight: 300;
+            letter-spacing: 1px;
+        }
+
+        /* Sección principal con margen para header fijo */
+        .main-content {
+            margin-top: 140px;
+            position: relative;
+            z-index: 10;
+        }
+
+        /* Carrusel mejorado con efectos 3D */
+        .carousel-container {
+            padding: 3rem 0;
+            background: linear-gradient(135deg, var(--glass-bg), rgba(10, 61, 26, 0.1));
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            margin: 2rem 1rem;
+            border-radius: 30px;
+            box-shadow: 0 20px 60px rgba(0, 255, 127, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .carousel-container::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, var(--emerald-soft-glow) 0%, transparent 70%);
+            animation: pulse 8s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(0.8); opacity: 0.3; }
+            50% { transform: scale(1.2); opacity: 0.1; }
+        }
+
+        .carousel {
+            display: flex;
+            gap: 1.5rem;
+            overflow-x: auto;
+            scroll-behavior: smooth;
+            padding: 2rem;
+            scrollbar-width: none;
+            scroll-snap-type: x mandatory;
+            position: relative;
+            z-index: 2;
+        }
+
+        .carousel::-webkit-scrollbar { display: none; }
+
+        .carousel-item {
+            flex: 0 0 320px;
+            height: 240px;
+            border-radius: 20px;
+            overflow: hidden;
+            cursor: pointer;
+            transition: var(--transition-bounce);
+            position: relative;
+            scroll-snap-align: center;
+            background: var(--glass-bg);
+            border: 2px solid transparent;
+        }
+
+        .carousel-item::before {
+            content: '';
+            position: absolute;
+            top: -3px;
+            left: -3px;
+            right: -3px;
+            bottom: -3px;
+            background: linear-gradient(45deg, var(--primary-emerald), var(--secondary-emerald), var(--primary-emerald));
+            border-radius: 23px;
+            z-index: -1;
+            opacity: 0;
+            transition: var(--transition-smooth);
+        }
+
+        .carousel-item:hover::before,
+        .carousel-item.active::before {
+            opacity: 1;
+            animation: borderGlow 2s ease-in-out infinite;
+        }
+
+        .carousel-item:hover {
+            transform: translateY(-10px) scale(1.05);
+            box-shadow: 0 20px 40px var(--emerald-glow);
+        }
+
+        .carousel-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: var(--transition-smooth);
+            border-radius: 18px;
+        }
+
+        .carousel-item:hover img {
+            transform: scale(1.1);
+        }
+
+        @keyframes borderGlow {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        /* Controles de galería mejorados */
+        .gallery-container {
+            padding: 3rem 1rem;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .gallery-controls {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-bottom: 3rem;
+            flex-wrap: wrap;
+            padding: 1rem;
+        }
+
+        .control-btn {
+            padding: 1rem 2rem;
+            background: var(--glass-bg);
+            border: 2px solid var(--glass-border);
+            border-radius: 50px;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: var(--transition-bounce);
+            backdrop-filter: blur(15px);
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-size: 0.9rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .control-btn::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            background: radial-gradient(circle, var(--primary-emerald), var(--secondary-emerald));
+            transition: var(--transition-smooth);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            z-index: -1;
+        }
+
+        .control-btn:hover::before,
+        .control-btn.active::before {
+            width: 300%;
+            height: 300%;
+        }
+
+        .control-btn:hover,
+        .control-btn.active {
+            color: var(--darker-emerald);
+            border-color: var(--primary-emerald);
+            box-shadow: 0 8px 25px var(--emerald-glow);
+            transform: translateY(-3px);
+        }
+
+        /* Grid de galería mejorado */
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .gallery-item {
+            background: var(--glass-bg);
+            border-radius: 25px;
+            overflow: hidden;
+            border: 2px solid transparent;
+            backdrop-filter: blur(20px);
+            transition: var(--transition-bounce);
+            cursor: pointer;
+            position: relative;
+            aspect-ratio: 1.2;
+            opacity: 0;
+            transform: translateY(30px);
+        }
+
+        .gallery-item.visible {
+            opacity: 1;
+            transform: translateY(0);
+            animation: slideInUp 0.6s ease-out forwards;
+        }
+
+        @keyframes slideInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .gallery-item::before {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            background: linear-gradient(45deg, var(--primary-emerald), var(--secondary-emerald), var(--primary-emerald));
+            background-size: 300% 300%;
+            border-radius: 27px;
+            z-index: -1;
+            opacity: 0;
+            transition: var(--transition-smooth);
+            animation: gradientShift 6s ease-in-out infinite;
+        }
+
+        .gallery-item:hover::before {
+            opacity: 1;
+        }
+
+        @keyframes gradientShift {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+
+        .gallery-item:hover {
+            transform: translateY(-15px) scale(1.02);
+            box-shadow: 0 25px 50px var(--emerald-glow);
+            border-color: var(--primary-emerald);
+        }
+
+        .gallery-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: var(--transition-smooth);
+            border-radius: 23px;
+        }
+
+        .gallery-item:hover img {
+            transform: scale(1.05);
+        }
+
+        .gallery-item-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(transparent, rgba(0, 0, 0, 0.9));
+            color: var(--text-primary);
+            padding: 2rem 1.5rem 1.5rem;
+            transform: translateY(100%);
+            transition: var(--transition-smooth);
+        }
+
+        .gallery-item:hover .gallery-item-overlay {
+            transform: translateY(0);
+        }
+
+        .overlay-title {
+            font-size: 1.2rem;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+            color: var(--primary-emerald);
+            text-shadow: 0 0 10px var(--emerald-glow);
+        }
+
+        /* Modal mejorado */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            background: rgba(0, 0, 0, 0.95);
+            backdrop-filter: blur(30px);
+            z-index: 2000;
+            animation: fadeIn 0.3s ease-out;
+        }
+
+        .modal.active {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .modal-content {
+            width: 90vw;
+            height: 85vh;
+            position: relative;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 0 100px var(--emerald-glow);
+            border: 3px solid var(--primary-emerald);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--deeper-emerald);
+        }
+
+        .modal-content img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+            border-radius: 17px;
+        }
+
+        .modal-close,
+        .modal-nav {
+            position: absolute;
+            background: var(--glass-bg);
+            border: 2px solid var(--primary-emerald);
+            color: var(--primary-emerald);
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(20px);
+            transition: var(--transition-smooth);
+            z-index: 10;
+        }
+
+        .modal-close {
+            top: 20px;
+            right: 20px;
+            width: 50px;
+            height: 50px;
+            font-size: 1.5rem;
+        }
+
+        .modal-nav {
+            top: 50%;
+            transform: translateY(-50%);
+            width: 60px;
+            height: 60px;
+            font-size: 1.8rem;
+        }
+
+        .modal-nav.prev { left: 20px; }
+        .modal-nav.next { right: 20px; }
+
+        .modal-close:hover,
+        .modal-nav:hover {
+            background: var(--primary-emerald);
+            color: var(--darker-emerald);
+            box-shadow: 0 0 25px var(--emerald-glow);
+            transform: scale(1.1);
+        }
+
+        .modal-nav:hover {
+            transform: translateY(-50%) scale(1.1);
+        }
+
+        /* Indicador de carga mejorado */
+        .loading {
+            display: inline-block;
+            width: 50px;
+            height: 50px;
+            border: 4px solid var(--glass-border);
+            border-radius: 50%;
+            border-top: 4px solid var(--primary-emerald);
+            animation: spin 1s linear infinite;
+            margin: 3rem auto;
+            box-shadow: 0 0 20px var(--emerald-glow);
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Indicador de scroll para el carrusel */
+        .scroll-indicator {
+            text-align: center;
+            padding: 1rem;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            animation: bounce 2s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateX(0); }
+            50% { transform: translateX(10px); }
+        }
+
+        /* Footer mejorado */
+        .footer {
+            background: var(--darker-emerald);
+            padding: 4rem 2rem;
+            text-align: center;
+            border-top: 2px solid var(--glass-border);
+            margin-top: 3rem;
+            position: relative;
+        }
+
+        .footer::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--primary-emerald), transparent);
+        }
+
+        .footer-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .footer-brand .logo {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 1rem;
+        }
+
+        .logo-text {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--primary-emerald);
+            text-shadow: 0 0 10px var(--emerald-glow);
+        }
+
+        .footer-bottom {
+            margin-top: 2rem;
+            padding-top: 2rem;
+            border-top: 1px solid var(--glass-border);
+            color: var(--text-muted);
+        }
+
+        /* Responsive mejorado */
+        @media (max-width: 768px) {
+            .header h1 { font-size: clamp(2rem, 8vw, 3rem); }
+            .main-content { margin-top: 120px; }
+            .carousel-item { flex: 0 0 280px; height: 200px; }
+            .gallery-grid { 
+                grid-template-columns: 1fr; 
+                gap: 1.5rem;
+            }
+            .gallery-controls {
+                gap: 0.5rem;
+                overflow-x: auto;
+                justify-content: flex-start;
+            }
+            .control-btn {
+                padding: 0.8rem 1.5rem;
+                font-size: 0.8rem;
+                white-space: nowrap;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .back-button {
+                padding: 12px 20px;
+                font-size: 0.9rem;
+            }
+            .back-button-text { display: none; }
+            .carousel-item { flex: 0 0 240px; height: 180px; }
+            .modal-content { width: 95vw; height: 90vh; }
+        }
+
+        /* Efectos de accesibilidad */
+        @media (prefers-reduced-motion: reduce) {
+            * {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+            .particles { display: none; }
+        }
+
+        @media (prefers-contrast: high) {
+            .gallery-item, .carousel-item {
+                border: 3px solid var(--primary-emerald);
+            }
+        }
+
+        /* Estados de interacción táctil */
+        .gallery-item.touching {
+            opacity: 0.8;
+            transform: scale(0.98);
+        }
+
+        .gallery-item.touching::before {
+            opacity: 0.7;
+        }
+    </style>
+</head>
+<body>
+    <!-- Partículas mejoradas -->
+    <div class="particles" id="particles"></div>
+
+    <!-- Botón de navegación mejorado -->
+    <a href="index.html" class="back-button" id="backButton">
+        <span class="back-button-icon">←</span>
+        <span class="back-button-text">Inicio</span>
+    </a>
+
+    <!-- Header con efectos mejorados -->
+    <header class="header" id="header">
+        <h1>
+            <i class="fas fa-gem gem-icon"></i>
+            GALERÍA IMPORT EXPORT
+            <i class="fas fa-gem gem-icon"></i>
+        </h1>
+        <p>Nuestra Exclusiva Colección de Esmeraldas</p>
+    </header>
+
+    <!-- Contenido principal -->
+    <div class="main-content">
+        <!-- Carrusel interactivo mejorado -->
+        <section class="carousel-container">
+            <div class="carousel-wrapper">
+                <div class="carousel" id="carousel">
+                    <div class="loading"></div>
+                </div>
+                <div class="scroll-indicator">
+                    <i class="fas fa-arrow-right"></i> Desliza para explorar <i class="fas fa-arrow-left"></i>
+                </div>
+            </div>
+        </section>
+
+        <!-- Controles y galería -->
+        <section class="gallery-container">
+            <div class="gallery-controls">
+                <button class="control-btn active" onclick="filterGallery('all', this)">
+                    <i class="fas fa-th"></i> Todas
+                </button>
+                <button class="control-btn" onclick="filterGallery('coleccion1', this)">
+                    <i class="fas fa-gem"></i> Colección 1
+                </button>
+                <button class="control-btn" onclick="filterGallery('coleccion2', this)">
+                    <i class="fas fa-gem"></i> Colección 2
+                </button>
+                <button class="control-btn" onclick="filterGallery('coleccion3', this)">
+                    <i class="fas fa-gem"></i> Colección 3
+                </button>
+                <button class="control-btn" onclick="shuffleGallery(this)">
+                    <i class="fas fa-random"></i> Mezclar
+                </button>
+            </div>
+            
+            <div class="gallery-grid" id="galleryGrid">
+                <div class="loading"></div>
+            </div>
+        </section>
+    </div>
+
+    <!-- Modal mejorado -->
+    <div class="modal" id="modal" onclick="closeModal()">
+        <div class="modal-content" onclick="event.stopPropagation()">
+            <button class="modal-close" onclick="closeModal()">
+                <i class="fas fa-times"></i>
+            </button>
+            <button class="modal-nav prev" onclick="navigateModal(-1)">
+                <i class="fas fa-chevron-left"></i>
+            </button>
+            <button class="modal-nav next" onclick="navigateModal(1)">
+                <i class="fas fa-chevron-right"></i>
+            </button>
+            <img id="modalImage" src="" alt="">
+        </div>
+    </div>
+
+    <!-- Footer mejorado -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-brand">
+                <div class="logo">
+                    <i class="fas fa-gem" style="font-size: 2rem; color: var(--primary-emerald);"></i>
+                    <span class="logo-text">IMPORT EXPORT</span>
+                </div>
+                <p>Excelencia en gemas colombianas de lujo</p>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; <span id="date">2024</span> Import Export. Todos los derechos reservados.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Datos de imágenes optimizados
+        const images = [
+            { src: 'assets/img/eralda11.jpg', category: 'coleccion1', title: 'Esmeralda Premium', desc: 'Gema excepcional de origen colombiano' },
+            { src: 'assets/img/gema1.jpg', category: 'coleccion2', title: 'Esmeralda Clásica', desc: 'Belleza natural incomparable' },
+            { src: 'assets/img/gema2.jpg', category: 'coleccion3', title: 'Esmeralda Única', desc: 'Pieza de colección exclusiva' },
+            { src: 'assets/img/gema3.jpg', category: 'coleccion1', title: 'Esmeralda Brillante', desc: 'Corte perfecto y brillo excepcional' },
+            { src: 'assets/img/gema4.jpg', category: 'coleccion2', title: 'Esmeralda Verde', desc: 'Color verde intenso natural' },
+            { src: 'assets/img/gema5.jpg', category: 'coleccion3', title: 'Esmeralda Radiante', desc: 'Luminosidad extraordinaria' },
+            { src: 'assets/img/gema6.jpg', category: 'coleccion1', title: 'Esmeralda Imperial', desc: 'Máxima calidad y pureza' },
+            { src: 'assets/img/gema9.jpg', category: 'coleccion2', title: 'Esmeralda Real', desc: 'Dignidad y elegancia' },
+            { src: 'assets/img/gema11.jpg', category: 'coleccion3', title: 'Esmeralda Noble', desc: 'Tradición y exclusividad' },
+            { src: 'assets/img/gema12.jpg', category: 'coleccion1', title: 'Esmeralda Divina', desc: 'Perfección en cada faceta' },
+            { src: 'assets/img/gema13.jpg', category: 'coleccion2', title: 'Esmeralda Celestial', desc: 'Belleza celestial capturada' },
+            { src: 'assets/img/gema16.jpg', category: 'coleccion3', title: 'Esmeralda Mística', desc: 'Magia y misterio verde' },
+            { src: 'assets/img/gema15.jpg', category: 'coleccion1', title: 'Esmeralda Aurora', desc: 'Luminosidad como el amanecer' },
+            { src: 'assets/img/gema17.jpg', category: 'coleccion2', title: 'Esmeralda Serenidad', desc: 'Paz y tranquilidad verde' },
+            { src: 'assets/img/gema18.jpg', category: 'coleccion3', title: 'Esmeralda Infinita', desc: 'Belleza sin límites' },
+            { src: 'assets/img/gema19.jpg', category: 'coleccion1', title: 'Esmeralda Eternal', desc: 'Eternidad en cada destello' },
+            { src: 'assets/img/gema20.jpg', category: 'coleccion2', title: 'Esmeralda Sublime', desc: 'Sublimidad cristalizada' },
+            { src: 'assets/img/gema21.jpg', category: 'coleccion3', title: 'Esmeralda Majestuosa', desc: 'Majestuosidad natural' },
+            { src: 'assets/img/gema22.jpg', category: 'coleccion1', title: 'Esmeralda Perfecta', desc: 'Perfección hecha realidad' },
+            { src: 'assets/img/gema23.jpg', category: 'coleccion2', title: 'Esmeralda Suprema', desc: 'La supremacía del verde' }
+        ];
+
+        let currentImageIndex = 0;
+        let filteredImages = [...images];
+        let isScrolling = false;
+        let lastScroll = 0;
+
+        // Crear partículas mejoradas con efectos especiales
+        function createEnhancedParticles() {
+            const particlesContainer = document.getElementById('particles');
+            const particleCount = window.innerWidth < 768 ? 20 : 40;
+            const sparkleCount = window.innerWidth < 768 ? 5 : 10;
+
+            // Limpiar partículas existentes
+            particlesContainer.innerHTML = '';
+
+            // Crear partículas normales
+            for (let i = 0; i < particleCount; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.width = Math.random() * 4 + 2 + 'px';
+                particle.style.height = particle.style.width;
+                particle.style.animationDelay = Math.random() * 20 + 's';
+                particle.style.animationDuration = (Math.random() * 10 + 15) + 's';
+                particlesContainer.appendChild(particle);
+            }
+
+            // Crear partículas especiales (sparkles)
+            for (let i = 0; i < sparkleCount; i++) {
+                const sparkle = document.createElement('div');
+                sparkle.className = 'particle sparkle';
+                sparkle.style.left = Math.random() * 100 + '%';
+                sparkle.style.width = Math.random() * 6 + 3 + 'px';
+                sparkle.style.height = sparkle.style.width;
+                sparkle.style.animationDelay = Math.random() * 15 + 's';
+                sparkle.style.animationDuration = (Math.random() * 8 + 12) + 's';
+                particlesContainer.appendChild(sparkle);
+            }
+        }
+
+        // Efecto ripple mejorado para el botón de regreso
+        function addRippleEffect() {
+            const backButton = document.getElementById('backButton');
+
+            backButton.addEventListener('click', function(e) {
+                const ripple = document.createElement('span');
+                const rect = this.getBoundingClientRect();
+                const size = Math.max(rect.width, rect.height);
+                const x = e.clientX - rect.left - size / 2;
+                const y = e.clientY - rect.top - size / 2;
+
+                ripple.style.cssText = `
+                    position: absolute;
+                    width: ${size}px;
+                    height: ${size}px;
+                    left: ${x}px;
+                    top: ${y}px;
+                    background: radial-gradient(circle, var(--emerald-glow), transparent);
+                    border-radius: 50%;
+                    transform: scale(0);
+                    animation: ripple 0.8s ease-out;
+                    pointer-events: none;
+                    z-index: 0;
+                `;
+
+                const style = document.createElement('style');
+                style.textContent = `
+                    @keyframes ripple {
+                        to {
+                            transform: scale(2);
+                            opacity: 0;
+                        }
+                    }
+                `;
+                document.head.appendChild(style);
+
+                this.appendChild(ripple);
+
+                setTimeout(() => {
+                    ripple.remove();
+                    style.remove();
+                }, 800);
+            });
+        }
+
+        // Carrusel mejorado con indicadores visuales
+        function populateEnhancedCarousel() {
+            const carousel = document.getElementById('carousel');
+
+            setTimeout(() => {
+                carousel.innerHTML = '';
+
+                images.slice(0, 15).forEach((img, index) => {
+                    const item = document.createElement('div');
+                    item.className = 'carousel-item';
+                    item.innerHTML = `
+                        <img src="${img.src}" alt="${img.title}" loading="lazy" onerror="handleImageError(this)">
+                        <div style="position: absolute; bottom: 10px; left: 10px; background: var(--glass-bg); backdrop-filter: blur(10px); padding: 0.5rem 1rem; border-radius: 20px; color: var(--text-primary); font-size: 0.8rem; border: 1px solid var(--glass-border);">
+                            ${img.title}
+                        </div>
+                    `;
+                    
+                    item.addEventListener('click', () => {
+                        openEnhancedModal(index);
+                        // Efecto de feedback visual
+                        item.style.transform = 'scale(0.95)';
+                        setTimeout(() => {
+                            item.style.transform = '';
+                        }, 150);
+                    });
+                    
+                    carousel.appendChild(item);
+                });
+
+                setupEnhancedCarouselScrolling();
+            }, 500);
+        }
+
+        // Sistema de scroll mejorado para el carrusel
+        function setupEnhancedCarouselScrolling() {
+            const carousel = document.getElementById('carousel');
+            if (!carousel) return;
+            
+            let scrollTimeout;
+
+            carousel.addEventListener('scroll', () => {
+                if (!isScrolling) {
+                    window.requestAnimationFrame(() => {
+                        updateCarouselActiveItem();
+                        isScrolling = false;
+                    });
+                    isScrolling = true;
+                }
+
+                // Limpiar timeout previo
+                clearTimeout(scrollTimeout);
+                
+                // Auto-snap después de que termine el scroll
+                scrollTimeout = setTimeout(() => {
+                    const items = carousel.querySelectorAll('.carousel-item');
+                    const scrollLeft = carousel.scrollLeft;
+                    const itemWidth = items[0].offsetWidth + 24; // width + gap
+                    const targetIndex = Math.round(scrollLeft / itemWidth);
+                    const targetScroll = targetIndex * itemWidth;
+                    
+                    carousel.scrollTo({
+                        left: targetScroll,
+                        behavior: 'smooth'
+                    });
+                }, 150);
+            });
+        }
+
+        function updateCarouselActiveItem() {
+            const carousel = document.getElementById('carousel');
+            if (!carousel) return;
+            
+            const items = carousel.querySelectorAll('.carousel-item');
+            const scrollLeft = carousel.scrollLeft;
+            const itemWidth = items[0].offsetWidth + 24; // width + gap
+
+            const activeIndex = Math.round(scrollLeft / itemWidth);
+
+            items.forEach((item, index) => {
+                item.classList.toggle('active', index === activeIndex);
+            });
+        }
+
+        // Galería mejorada con animaciones escalonadas
+        function populateEnhancedGallery(imagesToShow = images) {
+            const gallery = document.getElementById('galleryGrid');
+
+            setTimeout(() => {
+                gallery.innerHTML = '';
+
+                imagesToShow.forEach((img, index) => {
+                    const item = document.createElement('div');
+                    item.className = 'gallery-item';
+                    item.dataset.category = img.category;
+                    item.style.animationDelay = `${index * 0.1}s`;
+
+                    item.innerHTML = `
+                        <img src="${img.src}" alt="${img.title}" loading="lazy" onerror="handleImageError(this)">
+                        <div class="gallery-item-overlay">
+                            <div class="overlay-title">${img.title}</div>
+                            <div class="overlay-description">${img.desc}</div>
+                        </div>
+                    `;
+
+                    addEnhancedTouchHandlers(item, img, index);
+                    gallery.appendChild(item);
+                });
+
+                // Activar intersection observer con delay escalonado
+                setTimeout(() => {
+                    document.querySelectorAll('.gallery-item').forEach((item, index) => {
+                        setTimeout(() => {
+                            observer.observe(item);
+                        }, index * 50);
+                    });
+                }, 200);
+            }, 300);
+        }
+
+        // Manejo táctil mejorado con feedback visual
+        function addEnhancedTouchHandlers(item, img, index) {
+            let touchStartTime = 0;
+            let touchStartPos = { x: 0, y: 0 };
+            let longPressTimer;
+
+            item.addEventListener('touchstart', function(e) {
+                touchStartTime = Date.now();
+                touchStartPos = {
+                    x: e.touches[0].clientX,
+                    y: e.touches[0].clientY
+                };
+                this.classList.add('touching');
+
+                // Long press para preview
+                longPressTimer = setTimeout(() => {
+                    navigator.vibrate && navigator.vibrate(50);
+                    this.style.transform = 'scale(1.05)';
+                    setTimeout(() => {
+                        this.style.transform = '';
+                    }, 200);
+                }, 500);
+
+            }, { passive: true });
+
+            item.addEventListener('touchmove', function(e) {
+                const currentPos = {
+                    x: e.touches[0].clientX,
+                    y: e.touches[0].clientY
+                };
+                
+                const moveDistance = Math.sqrt(
+                    Math.pow(currentPos.x - touchStartPos.x, 2) + 
+                    Math.pow(currentPos.y - touchStartPos.y, 2)
+                );
+
+                if (moveDistance > 10) {
+                    clearTimeout(longPressTimer);
+                }
+            }, { passive: true });
+
+            item.addEventListener('touchend', function(e) {
+                const touchEndTime = Date.now();
+                const touchDuration = touchEndTime - touchStartTime;
+                const touchEndPos = {
+                    x: e.changedTouches[0].clientX,
+                    y: e.changedTouches[0].clientY
+                };
+                
+                const moveDistance = Math.sqrt(
+                    Math.pow(touchEndPos.x - touchStartPos.x, 2) + 
+                    Math.pow(touchEndPos.y - touchStartPos.y, 2)
+                );
+
+                clearTimeout(longPressTimer);
+
+                if (touchDuration < 300 && moveDistance < 15) {
+                    const imageIndex = images.findIndex(image => image.src === img.src);
+                    openEnhancedModal(imageIndex);
+                    
+                    // Feedback táctil
+                    navigator.vibrate && navigator.vibrate(30);
+                }
+
+                this.classList.remove('touching');
+            }, { passive: true });
+
+            item.addEventListener('touchcancel', function() {
+                clearTimeout(longPressTimer);
+                this.classList.remove('touching');
+            }, { passive: true });
+        }
+
+        // Filtrado mejorado con animaciones
+        function filterGallery(category, button) {
+            // Actualizar botón activo con animación
+            document.querySelectorAll('.control-btn').forEach(btn => {
+                btn.classList.remove('active');
+                btn.style.transform = 'scale(1)';
+            });
+            button.classList.add('active');
+            button.style.transform = 'scale(1.05)';
+            setTimeout(() => {
+                button.style.transform = '';
+            }, 200);
+
+            // Filtrar imágenes
+            filteredImages = category === 'all' ? [...images] : images.filter(img => img.category === category);
+
+            // Animación de salida
+            const currentItems = document.querySelectorAll('.gallery-item');
+            currentItems.forEach((item, index) => {
+                setTimeout(() => {
+                    item.style.opacity = '0';
+                    item.style.transform = 'translateY(-20px) scale(0.9)';
+                }, index * 30);
+            });
+
+            // Mostrar loading y recargar
+            setTimeout(() => {
+                document.getElementById('galleryGrid').innerHTML = '<div class="loading"></div>';
+                populateEnhancedGallery(filteredImages);
+            }, currentItems.length * 30 + 200);
+
+            // Anuncio para accesibilidad
+            announceToScreenReader(`Mostrando ${filteredImages.length} imágenes de ${getCategoryName(category)}`);
+        }
+
+        // Función shuffle mejorada
+        function shuffleGallery(button) {
+            document.querySelectorAll('.control-btn').forEach(btn => btn.classList.remove('active'));
+            button.classList.add('active');
+
+            // Animación especial para shuffle
+            button.style.animation = 'spin 0.5s ease-in-out';
+            setTimeout(() => {
+                button.style.animation = '';
+            }, 500);
+
+            const currentItems = document.querySelectorAll('.gallery-item');
+            
+            // Animación de mezcla
+            currentItems.forEach((item, index) => {
+                setTimeout(() => {
+                    item.style.transform = `translateX(${Math.random() * 200 - 100}px) rotate(${Math.random() * 360}deg) scale(0)`;
+                    item.style.opacity = '0';
+                }, index * 20);
+            });
+
+            setTimeout(() => {
+                filteredImages = [...images].sort(() => Math.random() - 0.5);
+                document.getElementById('galleryGrid').innerHTML = '<div class="loading"></div>';
+                populateEnhancedGallery(filteredImages);
+            }, currentItems.length * 20 + 300);
+        }
+
+        // Modal mejorado con transiciones suaves
+        function openEnhancedModal(index) {
+            currentImageIndex = index;
+            const modal = document.getElementById('modal');
+            const modalImage = document.getElementById('modalImage');
+
+            modal.style.display = 'flex';
+            modal.style.opacity = '0';
+            
+            // Precargar imagen
+            const img = new Image();
+            img.onload = function() {
+                modalImage.src = images[index].src;
+                modalImage.alt = images[index].title;
+                
+                // Animación de entrada
+                requestAnimationFrame(() => {
+                    modal.style.opacity = '1';
+                    modal.classList.add('active');
+                });
+            };
+            img.src = images[index].src;
+
+            document.body.style.overflow = 'hidden';
+            document.addEventListener('touchmove', preventScroll, { passive: false });
+
+            // Precargar imágenes adyacentes
+            preloadAdjacentImages(index);
+        }
+
+        function closeModal() {
+            const modal = document.getElementById('modal');
+            modal.style.opacity = '0';
+            
+            setTimeout(() => {
+                modal.classList.remove('active');
+                modal.style.display = 'none';
+            }, 300);
+            
+            document.body.style.overflow = 'auto';
+            document.removeEventListener('touchmove', preventScroll);
+        }
+
+        function navigateModal(direction) {
+            const modalImage = document.getElementById('modalImage');
+            
+            currentImageIndex += direction;
+            if (currentImageIndex < 0) currentImageIndex = images.length - 1;
+            if (currentImageIndex >= images.length) currentImageIndex = 0;
+
+            // Animación de transición
+            modalImage.style.transform = 'scale(0.8)';
+            modalImage.style.opacity = '0.5';
+
+            setTimeout(() => {
+                modalImage.src = images[currentImageIndex].src;
+                modalImage.alt = images[currentImageIndex].title;
+                modalImage.style.transform = 'scale(1)';
+                modalImage.style.opacity = '1';
+            }, 200);
+
+            preloadAdjacentImages(currentImageIndex);
+        }
+
+        // Precargar imágenes adyacentes para mejor rendimiento
+        function preloadAdjacentImages(index) {
+            const prevIndex = index > 0 ? index - 1 : images.length - 1;
+            const nextIndex = index < images.length - 1 ? index + 1 : 0;
+
+            [prevIndex, nextIndex].forEach(i => {
+                const img = new Image();
+                img.src = images[i].src;
+            });
+        }
+
+        // Gestos de swipe mejorados
+        let touchStartX = 0;
+        let touchStartY = 0;
+        let touchEndX = 0;
+        let touchEndY = 0;
+
+        document.addEventListener('touchstart', function(e) {
+            touchStartX = e.touches[0].clientX;
+            touchStartY = e.touches[0].clientY;
+        }, { passive: true });
+
+        document.addEventListener('touchmove', function(e) {
+            touchEndX = e.touches[0].clientX;
+            touchEndY = e.touches[0].clientY;
+        }, { passive: true });
+
+        document.addEventListener('touchend', function(e) {
+            if (!document.getElementById('modal').classList.contains('active')) return;
+
+            const diffX = touchStartX - touchEndX;
+            const diffY = touchStartY - touchEndY;
+            const minSwipeDistance = 80;
+            const maxVerticalDistance = 100;
+
+            if (Math.abs(diffX) > Math.abs(diffY) && Math.abs(diffX) > minSwipeDistance && Math.abs(diffY) < maxVerticalDistance) {
+                if (diffX > 0) {
+                    navigateModal(1); // Swipe left = next
+                } else {
+                    navigateModal(-1); // Swipe right = previous
+                }
+                
+                // Feedback táctil
+                navigator.vibrate && navigator.vibrate(25);
+            } else if (Math.abs(diffY) > minSwipeDistance && Math.abs(diffX) < maxVerticalDistance && diffY > 0) {
+                // Swipe up = close modal
+                closeModal();
+            }
+        }, { passive: true });
+
+        // Navegación por teclado mejorada
+        document.addEventListener('keydown', function(e) {
+            const modal = document.getElementById('modal');
+
+            if (modal.classList.contains('active')) {
+                switch(e.key) {
+                    case 'Escape':
+                        closeModal();
+                        break;
+                    case 'ArrowLeft':
+                        e.preventDefault();
+                        navigateModal(-1);
+                        break;
+                    case 'ArrowRight':
+                        e.preventDefault();
+                        navigateModal(1);
+                        break;
+                    case ' ':
+                        e.preventDefault();
+                        // Spacebar para zoom toggle
+                        const img = document.getElementById('modalImage');
+                        if (img.style.transform.includes('scale(1.5)')) {
+                            img.style.transform = 'scale(1)';
+                        } else {
+                            img.style.transform = 'scale(1.5)';
+                        }
+                        break;
+                }
+            }
+        });
+
+        // Intersection Observer mejorado
+        const observerOptions = {
+            threshold: 0.2,
+            rootMargin: '50px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, observerOptions);
+
+        // Manejo de errores mejorado
+        function handleImageError(img) {
+            img.style.background = 'var(--glass-bg)';
+            img.style.display = 'flex';
+            img.style.alignItems = 'center';
+            img.style.justifyContent = 'center';
+            img.style.color = 'var(--text-muted)';
+            img.style.fontSize = '0.9rem';
+            img.innerHTML = '<div><i class="fas fa-image" style="font-size: 2rem; margin-bottom: 1rem;"></i><br>Imagen no disponible</div>';
+            img.classList.add('error');
+        }
+
+        // Funciones utilitarias mejoradas
+        function getCategoryName(category) {
+            const names = {
+                'all': 'todas las colecciones',
+                'coleccion1': 'la Colección 1',
+                'coleccion2': 'la Colección 2',
+                'coleccion3': 'la Colección 3'
+            };
+            return names[category] || category;
+        }
+
+        function announceToScreenReader(message) {
+            const announcement = document.createElement('div');
+            announcement.setAttribute('aria-live', 'polite');
+            announcement.setAttribute('aria-atomic', 'true');
+            announcement.style.cssText = 'position: absolute; left: -10000px; width: 1px; height: 1px; overflow: hidden;';
+            announcement.textContent = message;
+            
+            document.body.appendChild(announcement);
+            setTimeout(() => document.body.removeChild(announcement), 1000);
+        }
+
+        function preventScroll(e) {
+            if (!e.target.closest('.modal-content')) {
+                e.preventDefault();
+            }
+        }
+
+        // Sistema de header inteligente
+        function setupIntelligentHeader() {
+            const header = document.getElementById('header');
+            let scrollDirection = 0;
+            const scrollThreshold = 100;
+
+            window.addEventListener('scroll', () => {
+                const currentScroll = window.scrollY;
+                
+                if (currentScroll <= 0) {
+                    header.classList.remove('scrolled');
+                    return;
+                }
+
+                if (currentScroll > lastScroll && currentScroll > scrollThreshold) {
+                    // Scrolling down
+                    if (scrollDirection !== 1) {
+                        scrollDirection = 1;
+                        header.classList.add('scrolled');
+                    }
+                } else if (currentScroll < lastScroll) {
+                    // Scrolling up
+                    if (scrollDirection !== -1) {
+                        scrollDirection = -1;
+                        header.classList.remove('scrolled');
+                    }
+                }
+
+                lastScroll = currentScroll;
+            }, { passive: true });
+        }
+
+        // Optimizaciones de rendimiento
+        function setupPerformanceOptimizations() {
+            // Reducir partículas en dispositivos lentos
+            if (navigator.hardwareConcurrency && navigator.hardwareConcurrency < 4) {
+                document.documentElement.style.setProperty('--particles-count', '15');
+            }
+
+            // Detectar conexión lenta
+            if ('connection' in navigator) {
+                const connection = navigator.connection;
+                if (connection.effectiveType === 'slow-2g' || connection.effectiveType === '2g') {
+                    document.getElementById('particles').style.display = 'none';
+                    document.documentElement.style.setProperty('--transition-smooth', 'all 0.1s ease');
+                }
+            }
+
+            // Optimizar para batería baja
+            if ('getBattery' in navigator) {
+                navigator.getBattery().then(function(battery) {
+                    if (battery.level < 0.15) {
+                        document.getElementById('particles').style.display = 'none';
+                        document.body.classList.add('low-battery');
+                    }
+                });
+            }
+        }
+
+        // Inicialización mejorada
+        document.addEventListener('DOMContentLoaded', function() {
+            // Configurar fecha actual
+            document.getElementById('date').textContent = new Date().getFullYear();
+            
+            // Inicializar componentes
+            createEnhancedParticles();
+            addRippleEffect();
+            populateEnhancedCarousel();
+            populateEnhancedGallery();
+            setupIntelligentHeader();
+            setupPerformanceOptimizations();
+
+            // Configurar viewport height para móviles
+            const setVH = () => {
+                const vh = window.innerHeight * 0.01;
+                document.documentElement.style.setProperty('--vh', `${vh}px`);
+            };
+            
+            setVH();
+            window.addEventListener('resize', setVH);
+            window.addEventListener('orientationchange', () => setTimeout(setVH, 100));
+
+            // Precargar imágenes críticas
+            setTimeout(() => {
+                images.slice(0, 8).forEach(img => {
+                    const image = new Image();
+                    image.src = img.src;
+                });
+            }, 1000);
+        });
+
+        // Cleanup y optimizaciones de memoria
+        window.addEventListener('beforeunload', function() {
+            observer.disconnect();
+            document.removeEventListener('touchmove', preventScroll);
+        });
+
+        // Soporte PWA básico
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', function() {
+                console.log('Service Worker disponible para funcionalidad offline');
+            });
+        }
+    </script>
+</body>
+</html>
