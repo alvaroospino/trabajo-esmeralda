@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <title>Galería Interactiva</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
             --primary-green: #00ff7f;
@@ -47,7 +48,7 @@
         }
 
 
-         /* Estilo del botón de regreso */
+         /* Estilo del botón de regreso con animaciones mejoradas */
         .back-button {
             position: fixed;
             top: 20px;
@@ -63,7 +64,7 @@
             display: flex;
             align-items: center;
             gap: 10px;
-            transition: var(--transition-smooth);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             font-weight: 600;
             font-size: 0.9rem;
             box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
@@ -71,6 +72,68 @@
             touch-action: manipulation;
             user-select: none;
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            overflow: hidden;
+            animation: pulseButton 2s infinite;
+        }
+
+        /* Animación de pulso suave para indicar interactividad */
+        @keyframes pulseButton {
+            0% {
+                box-shadow: 0 5px 20px rgba(0, 255, 127, 0.2);
+            }
+            50% {
+                box-shadow: 0 5px 30px rgba(0, 255, 127, 0.4);
+            }
+            100% {
+                box-shadow: 0 5px 20px rgba(0, 255, 127, 0.2);
+            }
+        }
+
+        /* Efecto de hover mejorado */
+        .back-button::after {
+            content: '';
+            position: absolute;
+            left: -100%;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(
+                90deg,
+                transparent,
+                rgba(0, 255, 127, 0.2),
+                transparent
+            );
+            animation: shineEffect 3s infinite;
+        }
+
+        @keyframes shineEffect {
+            0% {
+                left: -100%;
+            }
+            20% {
+                left: 100%;
+            }
+            100% {
+                left: 100%;
+            }
+        }
+
+        /* Icono de flecha con animación */
+        .back-button .back-button-icon {
+            transform: translateX(0);
+            transition: transform 0.3s ease;
+            display: inline-block;
+            font-size: 1.2em;
+            animation: bounceLeft 1s infinite;
+        }
+
+        @keyframes bounceLeft {
+            0%, 100% {
+                transform: translateX(0);
+            }
+            50% {
+                transform: translateX(-4px);
+            }
         }
 
         .back-button::before {
@@ -232,6 +295,53 @@
             margin-bottom: 0.5rem;
             animation: shimmer 3s ease-in-out infinite;
             letter-spacing: 1px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+        }
+
+        /* Estilos para los iconos */
+        .header-icon {
+            font-size: 0.8em;
+            animation: rotateGem 3s infinite linear;
+        }
+
+        @keyframes rotateGem {
+            0% { transform: rotate(0deg); }
+            25% { transform: rotate(15deg); }
+            75% { transform: rotate(-15deg); }
+            100% { transform: rotate(0deg); }
+        }
+
+        .control-btn i {
+            margin-right: 8px;
+            font-size: 0.9em;
+        }
+
+        .scroll-indicator i {
+            animation: bounceArrow 1.5s infinite;
+            color: var(--primary-green);
+        }
+
+        @keyframes bounceArrow {
+            0%, 100% { transform: translateX(0); }
+            50% { transform: translateX(5px); }
+        }
+
+        .modal-close i {
+            font-size: 1.2em;
+        }
+
+        /* Animación para los iconos de gema en los botones */
+        .control-btn i.fa-gem {
+            animation: shimmerGem 2s infinite;
+        }
+
+        @keyframes shimmerGem {
+            0% { opacity: 0.7; }
+            50% { opacity: 1; }
+            100% { opacity: 0.7; }
         }
 
         @keyframes shimmer {
@@ -818,9 +928,9 @@
     <!-- Epic modal -->
     <div class="modal" id="modal" onclick="closeModal()">
         <div class="modal-content" onclick="event.stopPropagation()">
-            <button class="modal-close" onclick="closeModal()">×</button>
-            <button class="modal-nav prev" onclick="navigateModal(-1)">‹</button>
-            <button class="modal-nav next" onclick="navigateModal(1)">›</button>
+            <button class="modal-close" onclick="closeModal()"><i class="fas fa-times"></i></button>
+            <button class="modal-nav prev" onclick="navigateModal(-1)"><i class="fas fa-chevron-left"></i></button>
+            <button class="modal-nav next" onclick="navigateModal(1)"><i class="fas fa-chevron-right"></i></button>
             <img id="modalImage" src="" alt="">
         </div>
     </div>
@@ -1025,9 +1135,19 @@ function addTouchHandlers(item, img) {
     item.addEventListener('touchend', function(e) {
         const touchEndTime = Date.now();
         const touchDuration = touchEndTime - touchStartTime;
+        const touchEndPos = {
+            x: e.changedTouches[0].clientX,
+            y: e.changedTouches[0].clientY
+        };
+        
+        // Calcular la distancia del movimiento
+        const moveDistance = Math.sqrt(
+            Math.pow(touchEndPos.x - touchStartPos.x, 2) + 
+            Math.pow(touchEndPos.y - touchStartPos.y, 2)
+        );
 
-        // Only trigger if it was a quick tap (not a scroll)
-        if (touchDuration < 300) {
+        // Solo activar si fue un toque rápido y el movimiento fue mínimo (menos de 10px)
+        if (touchDuration < 300 && moveDistance < 10) {
             const imageIndex = images.findIndex(image => image.src === img.src);
             openModal(imageIndex);
         }
