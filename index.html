@@ -13,434 +13,154 @@
         href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap"
         rel="stylesheet" />
     <style>
-        /* Variables CSS */
+        /* --- ESTILOS ESENCIALES --- */
         :root {
+            /* Paleta de colores y variables para personalización */
             --primary-green: #00ff7f;
             --secondary-green: #32cd32;
             --emerald-dark: #0d2818;
-            --emerald-darker: #061a0d;
             --emerald-glow: rgba(0, 255, 127, 0.4);
-            --emerald-light-glow: rgba(50, 205, 50, 0.3);
-            --emerald-soft-glow: rgba(0, 255, 127, 0.1);
+            --card-bg: rgba(13, 40, 24, 0.6);
             --glass-bg: rgba(13, 40, 24, 0.3);
             --glass-border: rgba(0, 255, 127, 0.2);
             --text-primary: #ffffff;
-            --text-secondary: rgba(255, 255, 255, 0.9);
-            --text-muted: rgba(255, 255, 255, 0.7);
+            --bg-dark: #000000;
+            
+            /* Transiciones para animaciones suaves */
             --transition-smooth: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+            --transition-bounce: all 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
         }
 
-        /* Carrusel de esmeraldas */
-        .emerald-gallery-section {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 2rem 1rem;
-        }
+        
 
-        .gallery-header {
-            text-align: center;
-            margin-bottom: 2rem;
-        }
-
-        .gallery-title {
-            font-family: "Playfair Display", serif;
-            font-size: 1.8rem;
-            font-weight: 600;
-            margin-bottom: 1rem;
-            background: linear-gradient(135deg,
-                    var(--primary-green),
-                    var(--secondary-green));
-            -webkit-background-clip: text;
-            background-clip: text;
-            -webkit-text-fill-color: transparent;
-            line-height: 1.2;
-        }
-
-        .gallery-subtitle {
-            font-size: 0.9rem;
-            color: var(--text-muted);
-            line-height: 1.5;
-        }
-
-        .emerald-carousel {
-            position: relative;
-            overflow-x: hidden;
-            overflow-y: visible;
-            border-radius: 20px;
-            background: var(--glass-bg);
+        /* --- ESTILOS DEL CARRUSEL --- */
+        .carousel-container {
+            background: linear-gradient(135deg, var(--bg-dark) 0%, var(--emerald-darker) 30%, var(--emerald-deep) 70%, var(--bg-dark) 100%);
+            padding: 3rem 1rem;
+            background: linear-gradient(135deg, var(--glass-bg), rgba(13, 40, 24, 0.1));
             backdrop-filter: blur(20px);
             border: 1px solid var(--glass-border);
-            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4),
-                0 0 30px var(--emerald-soft-glow);
-            margin-bottom: 1rem;
-        }
-
-        .carousel-container {
-            display: flex;
-            transition: transform 0.8s cubic-bezier(0.25, 0.8, 0.25, 1);
-            will-change: transform;
-            overflow: visible;
-        }
-
-        .carousel-slide {
-            min-width: 100%;
+            border-radius: 25px; /* Bordes redondeados para el contenedor */
             position: relative;
-            height: 320px;
-            background: linear-gradient(135deg,
-                    var(--emerald-darker),
-                    var(--emerald-dark));
-        }
-
-        .carousel-slide img {
+            overflow: hidden;
             width: 100%;
-            height: 100%;
-            object-fit: cover;
-            filter: brightness(0.9) contrast(1.3) saturate(1.4);
-            transition: all 0.6s ease;
+            max-width: 1200px; /* Ancho máximo del carrusel */
         }
 
-        .slide-overlay {
-            position: absolute;
-            inset: 0;
-            background: linear-gradient(180deg,
-                    rgba(0, 0, 0, 0.1) 0%,
-                    rgba(6, 26, 13, 0.3) 40%,
-                    rgba(6, 26, 13, 0.8) 80%,
-                    rgba(6, 26, 13, 0.95) 100%);
+        .carousel-wrapper {
+            position: relative;
+            width: 90%; /* Ajuste para dar espacio a los botones */
+            margin: 0 auto;
+        }
+
+        .carousel {
             display: flex;
-            flex-direction: column;
-            justify-content: flex-end;
-            padding: 2rem 1.5rem;
-            opacity: 0;
-            transition: all 0.6s ease;
+            gap: 1.5rem; /* Espacio entre imágenes */
+            overflow-x: auto; /* Permite el desplazamiento horizontal */
+            scroll-behavior: smooth; /* Desplazamiento suave */
+            padding: 1.5rem 0;
+            scrollbar-width: none; /* Oculta la barra de scroll en Firefox */
+            -ms-overflow-style: none; /* Oculta la barra de scroll en IE/Edge */
         }
 
-        .carousel-slide.active .slide-overlay {
+        .carousel::-webkit-scrollbar {
+            display: none; /* Oculta la barra de scroll en Chrome/Safari */
+        }
+
+        .carousel-item {
+            flex: 0 0 250px; /* Ancho fijo para cada item */
+            height: 180px; /* Altura fija */
+            border-radius: 20px;
+            overflow: hidden;
+            cursor: pointer;
+            transition: var(--transition-bounce);
+            border: 3px solid transparent;
+            position: relative;
+            background: var(--card-bg);
+        }
+
+        /* Efecto de borde brillante al pasar el mouse */
+        .carousel-item::before {
+            content: '';
+            position: absolute;
+            top: -2px; left: -2px; right: -2px; bottom: -2px;
+            background: linear-gradient(45deg, var(--primary-green), var(--secondary-green));
+            border-radius: 22px;
+            z-index: -1;
+            opacity: 0;
+            transition: var(--transition-smooth);
+        }
+
+        .carousel-item:hover::before {
             opacity: 1;
         }
 
-        .slide-badge {
-            position: absolute;
-            top: 1.5rem;
-            left: 1.5rem;
-            background: rgba(0, 255, 127, 0.2);
-            backdrop-filter: blur(15px);
-            border: 1px solid var(--primary-green);
-            color: var(--primary-green);
-            font-size: 0.7rem;
-            font-weight: 700;
-            padding: 0.5rem 1rem;
-            border-radius: 20px;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            box-shadow: 0 0 15px var(--emerald-soft-glow);
-            transform: translateY(-20px);
-            transition: all 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        /* Animación al pasar el mouse sobre un item */
+        .carousel-item:hover {
+            transform: scale(1.1) translateY(-10px);
+            box-shadow: 0 20px 40px var(--emerald-glow);
         }
 
-        .carousel-slide.active .slide-badge {
-            transform: translateY(0);
-        }
-
-        .slide-content h3 {
-            font-family: "Playfair Display", serif;
-            font-size: 1.5rem;
-            font-weight: 700;
-            color: white;
-            margin-bottom: 0.5rem;
-            background: linear-gradient(135deg, var(--primary-green), #90ee90);
-            -webkit-background-clip: text;
-            background-clip: text;
-            -webkit-text-fill-color: transparent;
-            line-height: 1.2;
-            transform: translateY(20px);
-            transition: all 0.7s cubic-bezier(0.25, 0.8, 0.25, 1);
-        }
-
-        .carousel-slide.active .slide-content h3 {
-            transform: translateY(0);
-        }
-
-        .slide-content p {
-            color: rgba(255, 255, 255, 0.9);
-            font-size: 0.85rem;
-            line-height: 1.5;
-            transform: translateY(20px);
-            transition: all 0.7s cubic-bezier(0.25, 0.8, 0.25, 1) 0.1s;
-        }
-
-        .carousel-slide.active .slide-content p {
-            transform: translateY(0);
-        }
-
-        .slide-specs {
-            display: flex;
-            gap: 1rem;
-            margin-top: 0.8rem;
-            transform: translateY(20px);
-            transition: all 0.7s cubic-bezier(0.25, 0.8, 0.25, 1) 0.2s;
-        }
-
-        .carousel-slide.active .slide-specs {
-            transform: translateY(0);
-        }
-
-        .spec-item {
-            background: rgba(0, 255, 127, 0.1);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(0, 255, 127, 0.3);
-            border-radius: 12px;
-            padding: 0.4rem 0.8rem;
-            font-size: 0.7rem;
-            color: var(--primary-green);
-            font-weight: 600;
-        }
-
-        /* Controles del carrusel */
-        .carousel-controls {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 1rem;
-            margin-top: 1.5rem;
-        }
-
-        .carousel-nav {
-            background: var(--glass-bg);
-            backdrop-filter: blur(15px);
-            border: 1px solid var(--glass-border);
-            border-radius: 50%;
-            width: 45px;
-            height: 45px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: var(--primary-green);
-            cursor: pointer;
-            transition: var(--transition-smooth);
-            font-size: 1.2rem;
-            user-select: none;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
-        }
-
-        .carousel-nav:active {
-            transform: scale(0.95);
-            border-color: var(--primary-green);
-            box-shadow: 0 0 20px var(--emerald-glow);
-        }
-
-        .carousel-nav.disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-        }
-
-        .carousel-nav.disabled:active {
-            transform: none;
-            border-color: var(--glass-border);
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
-        }
-
-        /* Indicadores */
-        .carousel-indicators {
-            display: flex;
-            gap: 0.8rem;
-            align-items: center;
-        }
-
-        .indicator {
-            width: 12px;
-            height: 12px;
-            border-radius: 50%;
-            background: rgba(255, 255, 255, 0.3);
-            border: 1px solid var(--glass-border);
-            cursor: pointer;
-            transition: var(--transition-smooth);
-            position: relative;
-        }
-
-        .indicator.active {
-            background: var(--primary-green);
-            border-color: var(--primary-green);
-            box-shadow: 0 0 15px var(--emerald-glow);
-            transform: scale(1.2);
-        }
-
-        .indicator.active::after {
-            content: "";
-            position: absolute;
-            inset: -3px;
-            border-radius: 50%;
-            border: 2px solid rgba(0, 255, 127, 0.3);
-            animation: ripple 2s ease-in-out infinite;
-        }
-
-        @keyframes ripple {
-            0% {
-                transform: scale(1);
-                opacity: 1;
-            }
-
-            100% {
-                transform: scale(1.5);
-                opacity: 0;
-            }
-        }
-
-        /* Thumbnails adicionales para móvil */
-        .carousel-thumbnails {
-            display: flex;
-            gap: 0.8rem;
-            margin-top: 1.5rem;
-            overflow-x: auto;
-            padding: 0.5rem;
-            -webkit-overflow-scrolling: touch;
-            scrollbar-width: none;
-            -ms-overflow-style: none;
-        }
-
-        .carousel-thumbnails::-webkit-scrollbar {
-            display: none;
-        }
-
-        .thumbnail {
-            min-width: 70px;
-            height: 70px;
-            border-radius: 12px;
-            overflow: hidden;
-            border: 2px solid var(--glass-border);
-            cursor: pointer;
-            transition: var(--transition-smooth);
-            position: relative;
-            flex-shrink: 0;
-        }
-
-        .thumbnail img {
+        .carousel-item img {
             width: 100%;
             height: 100%;
-            object-fit: cover;
-            filter: brightness(0.7) saturate(1.2);
+            object-fit: cover; /* Asegura que la imagen cubra el espacio */
             transition: var(--transition-smooth);
         }
 
-        .thumbnail.active {
-            border-color: var(--primary-green);
-            box-shadow: 0 0 15px var(--emerald-glow);
-            transform: scale(1.05);
+        .carousel-item:hover img {
+            transform: scale(1.2);
+            filter: brightness(1.1);
         }
 
-        .thumbnail.active img {
-            filter: brightness(1) saturate(1.4);
-        }
-
-        .thumbnail::after {
-            content: "";
+        /* --- BOTONES DE NAVEGACIÓN --- */
+        .nav-btn {
             position: absolute;
-            inset: 0;
-            background: var(--emerald-glow);
-            opacity: 0;
-            transition: var(--transition-smooth);
+            top: 50%;
+            transform: translateY(-50%);
+            background: var(--card-bg);
+            border: 2px solid var(--primary-green);
+            color: var(--primary-green);
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: var(--transition-bounce);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+            z-index: 10;
         }
 
-        .thumbnail.active::after {
-            opacity: 0.2;
+        .nav-btn:hover {
+            background: var(--primary-green);
+            color: var(--bg-dark);
+            transform: translateY(-50%) scale(1.2);
         }
+        
+        .nav-btn.prev { left: -25px; } /* Posición del botón izquierdo */
+        .nav-btn.next { right: -25px; } /* Posición del botón derecho */
 
-        /* Media query para tablets en portrait */
-        @media (min-width: 481px) and (max-width: 768px) {
-            .emerald-gallery-section {
-                padding: 0 1rem;
+        /* --- ESTILOS RESPONSIVOS --- */
+        @media (max-width: 768px) {
+            .carousel-item {
+                flex: 0 0 200px;
+                height: 140px;
             }
-
-            .carousel-slide {
-                height: 400px;
-            }
-
-            .carousel-thumbnails {
-                justify-content: center;
-                overflow: visible;
-            }
-
-            .thumbnail {
-                min-width: 80px;
-                height: 80px;
-            }
-        }
-
-        /* Media query para PC */
-        @media (min-width: 769px) {
-            .emerald-gallery-section {
-                padding: 0 2rem;
-            }
-
-            .gallery-title {
-                font-size: 2.2rem;
-            }
-
-            .gallery-subtitle {
-                font-size: 1rem;
-            }
-
-            .emerald-carousel {
-                border-radius: 25px;
-            }
-
-            .carousel-slide {
-                height: 450px;
-            }
-
-            .slide-overlay {
-                padding: 3rem 2.5rem;
-            }
-
-            .slide-content h3 {
-                font-size: 2rem;
-            }
-
-            .slide-content p {
-                font-size: 1rem;
-            }
-
-            .carousel-nav {
-                width: 55px;
-                height: 55px;
-                font-size: 1.4rem;
-            }
-
-            .carousel-nav:hover {
-                transform: scale(1.1);
-                border-color: var(--primary-green);
-                box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4),
-                    0 0 25px var(--emerald-glow);
-            }
-
-            .indicator {
-                width: 14px;
-                height: 14px;
-            }
-
-            .thumbnail {
-                min-width: 90px;
-                height: 90px;
-            }
-
-            .thumbnail:hover {
-                transform: scale(1.05);
-                border-color: var(--primary-green);
-                box-shadow: 0 0 15px var(--emerald-soft-glow);
+            .nav-btn {
+                width: 45px;
+                height: 45px;
             }
         }
 
-        /* Animaciones adicionales */
-        @keyframes slideInUp {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
+        @media (max-width: 480px) {
+            .carousel-item {
+                flex: 0 0 160px;
+                height: 120px;
             }
-
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+            .nav-btn.prev { left: -15px; }
+            .nav-btn.next { right: -15px; }
         }
     </style>
 </head>
@@ -520,167 +240,31 @@
         </div>
     </section>
 
-    <section class="section catalog-section" id="catalogo">
-        <div class="section-header">
-            <h2 class="section-title">Catálogo Exclusivo</h2>
-        </div>
-        <div class="emerald-gallery-section">
-            <div class="emerald-carousel" id="emeraldCarousel">
-                <div class="carousel-container" id="carouselContainer">
-                    <!-- Slide 1 -->
-                    <div class="carousel-slide">
-                        <img src="assets/img/esmeralda21.jpg" alt="Esmeralda Natural" />
-                        <div class="slide-overlay">
-                            <div class="slide-badge">Colección Natural</div>
-                            <div class="slide-content">
-                                <h3>Esmeralda Natural</h3>
-                                <p>
-                                    Gema en bruto que exhibe la belleza natural y el
-                                    característico color verde de las esmeraldas Muzo.
-                                </p>
-                                <div class="slide-specs">
-                                    <span class="spec-item">Forma: Oval</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Slide 2 -->
-                    <div class="carousel-slide">
-                        <img src="assets/img/esmeralda27.jpg" alt="Esmeralda Tallada Muzo" />
-                        <div class="slide-overlay">
-                            <div class="slide-badge">Master Cut</div>
-                            <div class="slide-content">
-                                <h3>Esmeralda Gota de Agua</h3>
-                                <p>
-                                    Perfectamente tallada para maximizar su brillantez natural y
-                                    mostrar toda la belleza del verde Muzo.
-                                </p>
-                                <div class="slide-specs">
-                                    <span class="spec-item">Color verde profundo</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Slide 3 -->
-                    <div class="carousel-slide">
-                        <img src="assets/img/eralda11.jpg" alt="Esmeralda Bruta Muzo" />
-                        <div class="slide-overlay">
-                            <div class="slide-badge">Natural Form</div>
-                            <div class="slide-content">
-                                <h3>Esmeralda Trapiche</h3>
-                                <p>
-                                    Espécimen único que muestra la esmeralda en su estado
-                                    natural, directamente extraída de la matriz rocosa.
-                                </p>
-                                <div class="slide-specs">
-                                    <span class="spec-item">Fenómeno único de Muzo</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Slide 4 -->
-                    <div class="carousel-slide">
-                        <img src="assets/img/esmeralda13.jpg" alt="Joyería con Esmeralda Muzo" />
-                        <div class="slide-overlay">
-                            <div class="slide-badge">Fine Jewelry</div>
-                            <div class="slide-content">
-                                <h3>Esmeralda</h3>
-                                <p>
-                                    Elegante solitario que realza la magnificencia de una
-                                    esmeralda Muzo en montadura de oro blanco.
-                                </p>
-                                <div class="slide-specs">
-                                    <span class="spec-item">Elegancia Natural</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Slide 5 -->
-                    <div class="carousel-slide">
-                        <img src="assets/img/esmeralda1.jpg" alt="Collar con Esmeraldas Muzo" />
-                        <div class="slide-overlay">
-                            <div class="slide-content">
-                                <h3>Esmeralda</h3>
-                                <p>
-                                    Exquisito collar con graduación de esmeraldas Muzo, una
-                                    pieza digna de la realeza colombiana.
-                                </p>
-                                <div class="slide-specs">
-                                    <span class="spec-item">Diseñada para Brillar</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- Slide 6 -->
-                    <div class="carousel-slide active">
-                        <img src="assets/img/naturalMuzo.jpg" alt="Esmeralda Premium Muzo" />
-                        <div class="slide-overlay">
-                            <div class="slide-badge">Colección Premium</div>
-                            <div class="slide-content">
-                                <h3>Esmeralda Clásica Muzo</h3>
-                                <p>
-                                    Gema de excepcional transparencia con el característico
-                                    verde intenso que define a las esmeraldas de Muzo.
-                                </p>
-                                <div class="slide-specs">
-                                    <span class="spec-item">Transparencia alta</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+     <section class="carousel-container">
+        
+        <div class="carousel-wrapper">
+            <button class="nav-btn prev">‹</button>
+            
+            <div class="carousel" id="carousel">
                 </div>
-            </div>
-
-            <!-- Controles del carrusel -->
-            <div class="carousel-controls">
-                <div class="carousel-nav" id="prevBtn">‹</div>
-                <div class="carousel-indicators" id="indicators">
-                    <div class="indicator active" data-slide="0"></div>
-                    <div class="indicator" data-slide="1"></div>
-                    <div class="indicator" data-slide="2"></div>
-                    <div class="indicator" data-slide="3"></div>
-                    <div class="indicator" data-slide="4"></div>
-                    <div class="indicator" data-slide="5"></div>
-                </div>
-                <div class="carousel-nav" id="nextBtn">›</div>
-            </div>
-
-            <!-- Thumbnails para navegación rápida -->
-            <div class="carousel-thumbnails" id="thumbnails">
-                <div class="thumbnail active" data-slide="0">
-                    <img src="assets/img/esmeralda21.jpg" alt="Thumbnail 1" />
-                </div>
-                <div class="thumbnail" data-slide="1">
-                    <img src="assets/img/esmeralda27.jpg" alt="Thumbnail 2" />
-                </div>
-                <div class="thumbnail" data-slide="2">
-                    <img src="assets/img/eralda11.jpg" alt="Thumbnail 3" />
-                </div>
-                <div class="thumbnail" data-slide="3">
-                    <img src="assets/img/esmeralda13.jpg" alt="Thumbnail 4" />
-                </div>
-                <div class="thumbnail" data-slide="4">
-                    <img src="assets/img/esmeralda1.jpg" alt="Thumbnail 5" />
-                </div>
-                <div class="thumbnail" data-slide="5">
-                    <img src="assets/img/naturalMuzo.jpg" alt="Thumbnail 6" />
-                </div>
-            </div>
+            
+            <button class="nav-btn next">›</button>
         </div>
     </section>
-
     <section class="premium-gallery-section" id="catalogo">
         <div class="gallery-header">
-            <div class="gallery-badge">Colección Premium</div>
+            
             <h2 class="gallery-title">Galería Exclusiva</h2>
             <p class="gallery-subtitle">
                 Obras maestras en esmeraldas colombianas seleccionadas por su
                 excepcional belleza y rareza
             </p>
+            <div class="view-more-container">
+                <a href="galeria.html" class="view-more-link">
+                    Ver Galería Completa
+                    <span class="view-more-arrow">→</span>
+                </a>
+            </div>
         </div>
 
         <div class="gallery-container">
@@ -753,6 +337,15 @@
                             </div>
                         </div>
                     </div>
+                    <div class="gallery-card premium-card view-more-card">
+                            <div class="view-more-overlay">
+                                <a href="galeria.html" class="view-more-content">
+                                    <div class="view-more-icon">+</div>
+                                    <h3 class="view-more-title">Ver Más</h3>
+                                    <p class="view-more-description">Descubre nuestra colección completa</p>
+                                </a>
+                            </div>
+                        </div>
                 </div>
                 <div class="scroll-indicator">← Desliza para ver más →</div>
 
@@ -899,6 +492,17 @@
                                         Una obra maestra que define la elegancia suprema.
                                     </p>
                                 </div>
+                            </div>
+                        </div>
+
+                        <!-- Tarjeta especial para ver más -->
+                        <div class="gallery-card premium-card view-more-card">
+                            <div class="view-more-overlay">
+                                <a href="galeria.html" class="view-more-content">
+                                    <div class="view-more-icon">+</div>
+                                    <h3 class="view-more-title">Ver Más</h3>
+                                    <p class="view-more-description">Descubre nuestra colección completa</p>
+                                </a>
                             </div>
                         </div>
                     </div>
@@ -1108,7 +712,97 @@
     </footer>
 
     <script src="./assets/js/script.js"></script>
-  
+  <script>
+        // --- JAVASCRIPT PARA LA FUNCIONALIDAD DEL CARRUSEL ---
+
+        document.addEventListener('DOMContentLoaded', () => {
+            // 1. Obtenemos el elemento del carrusel UNA SOLA VEZ.
+            const carousel = document.getElementById('carousel');
+            
+            // Verificación para evitar errores si el elemento no existiera.
+            if (!carousel) {
+                console.error("El elemento del carrusel con id='carousel' no fue encontrado.");
+                return;
+            }
+
+            // Array con la información de las imágenes.
+            const images = [
+                { src: 'assets/img/eralda11.jpg', title: 'Esmeralda Trapiche' },
+                { src: 'assets/img/esmeralda26.jpg', title: 'Esmeralda' },
+                { src: 'assets/img/esmeralda27.jpg', title: ' Esmeralda' },
+                { src: 'assets/img/esmeralda28.jpg', title: ' Esmeralda' },
+                { src: 'assets/img/esmeralda1.jpg', title: 'Esmeralda' },
+                { src: 'assets/img/esmeralda2.jpg', title: 'Esmeralda' },
+                { src: 'assets/img/esmeralda3.jpg', title: 'Esmeralda' },
+                { src: 'assets/img/esmeralda4.jpg', title: 'Esmeralda' },
+                { src: 'assets/img/esmeralda5.jpg', title: 'Esmeralda' },
+                { src: 'assets/img/esmeralda8.jpg', title: 'Esmeralda' },
+                { src: 'assets/img/esmeralda10.jpg', title: 'Esmeralda' },
+                { src: 'assets/img/esmeralda12.jpg', title: 'Esmeralda' }
+            ];
+
+            // 2. Definimos las funciones DENTRO del listener para que tengan acceso a 'carousel'.
+
+            // Función para cargar las imágenes en el carrusel
+            function populateCarousel() {
+                carousel.innerHTML = ''; // Limpia el carrusel
+                images.forEach((img) => {
+                    const item = document.createElement('div');
+                    item.className = 'carousel-item';
+                    item.innerHTML = `<img src="${img.src}" alt="${img.title}" loading="lazy">`;
+                    item.onclick = () => { 
+                        console.log(`Hiciste clic en: ${img.title}`);
+                    };
+                    carousel.appendChild(item);
+                });
+            }
+
+            // Función para desplazar el carrusel con los botones
+            function scrollCarousel(direction) {
+                const scrollAmount = 280;
+                carousel.scrollBy({
+                    left: direction * scrollAmount,
+                    behavior: 'smooth'
+                });
+            }
+
+            let autoScrollInterval;
+
+            // Función para iniciar el desplazamiento automático
+            function startAutoScroll() {
+                // Evita que se creen múltiples intervalos si ya existe uno
+                if (autoScrollInterval) clearInterval(autoScrollInterval);
+
+                autoScrollInterval = setInterval(() => {
+                    // La variable 'carousel' ya está definida y disponible aquí. ¡Ya no dará error!
+                    if (carousel.scrollLeft + carousel.clientWidth >= carousel.scrollWidth - 1) { // Pequeño ajuste para ser más preciso
+                        carousel.scrollTo({ left: 0, behavior: 'smooth' });
+                    } else {
+                        scrollCarousel(1);
+                    }
+                }, 3000);
+            }
+
+            // Función para detener el auto-scroll
+            function stopAutoScroll() {
+                clearInterval(autoScrollInterval);
+            }
+
+            // 3. Ejecutamos la lógica inicial
+            populateCarousel();
+            startAutoScroll();
+
+            // Detiene el auto-scroll si el mouse está sobre el carrusel
+            carousel.addEventListener('mouseenter', stopAutoScroll);
+            carousel.addEventListener('mouseleave', startAutoScroll);
+
+            // Asignamos las funciones a los botones de navegación para que sean accesibles desde el HTML
+            // ya que ahora están dentro de un ámbito local y no global.
+            document.querySelector('.nav-btn.prev').onclick = () => scrollCarousel(-1);
+            document.querySelector('.nav-btn.next').onclick = () => scrollCarousel(1);
+        });
+
+    </script>
 </body>
 
 </html>
