@@ -29,7 +29,8 @@
         { src: 'assets/img/gema17.jpg', type: 'image', category: 'coleccion2', title: 'Esmeralda Corazon', desc: 'forma narutal' },
         { src: 'assets/img/gema18.jpg', type: 'image', category: 'coleccion3', title: 'Esmeralda Rectangular', desc: 'Forma geométrica' },
         { src: 'assets/img/gema19.jpg', type: 'image', category: 'coleccion1', title: 'Esmeralda Pera', desc: 'Forma de lágrima' },
-        { src: 'assets/img/gema20.jpg', type: 'image', category: 'coleccion2', title: 'Esmeralda Princesa', desc: 'Corte cuadrado' }
+        { src: 'assets/img/gema20.jpg', type: 'image', category: 'coleccion2', title: 'Esmeralda Princesa', desc: 'Corte cuadrado' },
+        { src: 'assets/video/esmeralda8.mp4', type: 'Video', category: 'video', title: 'Esmeralda', desc: 'color natural' }
     ];
 
     let currentMediaIndex = 0;
