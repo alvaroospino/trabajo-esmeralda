@@ -19,12 +19,16 @@
 </head>
 
 <body>
-    <div class="loading-screen">
-        <div class="loading-content">
-            <div class="loading-gem"></div>
-            <h2>IMPORT EXPORT</h2>
-            <div class="loading-bar">
-                <div class="loading-progress"></div>
+    <!-- Preloader -->
+     <div class="preloader" id="preloader">
+        <div class="preload-container">
+            <div class="preload-image"></div>
+
+            <div class="dots-container">
+                <div class="dot"></div>
+                <div class="dot"></div>
+                <div class="dot"></div>
+                <div class="dot"></div>
             </div>
         </div>
     </div>
@@ -312,7 +316,7 @@
     </section>
     <section class="section about-section" id="nosotros">
         <div class="about-grid">
-            <div class="about-image" style="background-image: url('assets/img/minero.gif')"></div>
+            <div class="about-image" style="background-image: url('assets/img/minero2.gif')"></div>
             <div class="about-content">
                 <span class="section-badge">Nuestra Historia</span>
                 <h2 class="section-title">
@@ -508,6 +512,17 @@
 
     <script src="./assets/js/script.js"></script>
     <script src="./assets/js/carrusel.js"></script>
+    <script>
+        // NUEVO: Función para actualizar el año
+function updateYear() {
+    const dateElement = document.getElementById("date");
+    if (dateElement) {
+        dateElement.textContent = new Date().getFullYear();
+    }
+}
+
+updateYear();
+    </script>
 </body>
 
 </html>

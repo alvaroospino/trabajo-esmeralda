@@ -28,23 +28,6 @@ class EmeraldElite {
     initVideoHandler() {
         this.videoHandler = new VideoHandler(this);
     }
-
-    // Loading Screen
-    showLoadingScreen() {
-        const loadingScreen = document.querySelector('.loading-screen');
-        if (loadingScreen) {
-            loadingScreen.classList.remove('hidden');
-        }
-    }
-
-    hideLoadingScreen() {
-        const loadingScreen = document.querySelector('.loading-screen');
-        if (loadingScreen) {
-            loadingScreen.classList.add('hidden');
-            this.isLoaded = true;
-        }
-    }
-
     // Particle System
     createParticles() {
         const container = document.querySelector('.hero-particles');
@@ -546,20 +529,10 @@ class ImageModal {
     }
 }
 
-// NUEVO: Función para actualizar el año
-function updateYear() {
-    const dateElement = document.getElementById("date");
-    if (dateElement) {
-        dateElement.textContent = new Date().getFullYear();
-    }
-}
-
-
 // Inicializar todas las clases cuando DOM esté listo
 document.addEventListener('DOMContentLoaded', () => {
     window.emeraldElite = new EmeraldElite();
     new ImageModal();
-    updateYear();
     
     // Estilos CSS adicionales para efectos
     const additionalStyles = `
@@ -608,3 +581,14 @@ document.addEventListener('DOMContentLoaded', () => {
     styleSheet.textContent = additionalStyles;
     document.head.appendChild(styleSheet);
 });
+
+document.addEventListener('DOMContentLoaded', function () {
+            const preloader = document.getElementById('preloader');
+
+            setTimeout(() => {
+                preloader.classList.add('fade-out');
+                setTimeout(() => {
+                    preloader.style.display = 'none';
+                }, 600);
+            }, 2500);
+        });
