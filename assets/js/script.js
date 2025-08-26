@@ -10,18 +10,14 @@ class EmeraldElite {
     }
 
     init() {
-        this.showLoadingScreen();
+        this.realPreloader = new RealPreloader();
         this.setupEventListeners();
         this.createParticles();
         this.setupIntersectionObserver();
         this.setupMobileMenu();
         this.setupGalleryScroll();
-        this.initVideoHandler(); // Nueva inicialización
-        
-        // Simulate loading time
-        setTimeout(() => {
-            this.hideLoadingScreen();
-        }, 3000);
+        this.initVideoHandler();
+        this.setupImageLoadingStates();
     }
 
     // NUEVO: Inicializar el manejador de videos mejorado
@@ -29,20 +25,14 @@ class EmeraldElite {
         this.videoHandler = new VideoHandler(this);
     }
 
-    // Loading Screen
+    // Métodos mantenidos para compatibilidad pero ahora manejados por RealPreloader
     showLoadingScreen() {
-        const loadingScreen = document.querySelector('.loading-screen');
-        if (loadingScreen) {
-            loadingScreen.classList.remove('hidden');
-        }
+        // Manejado por RealPreloader
     }
 
     hideLoadingScreen() {
-        const loadingScreen = document.querySelector('.loading-screen');
-        if (loadingScreen) {
-            loadingScreen.classList.add('hidden');
-            this.isLoaded = true;
-        }
+        // Manejado por RealPreloader
+        this.isLoaded = true;
     }
 
     // Particle System
@@ -93,6 +83,7 @@ class EmeraldElite {
             this.handleNavScroll();
             this.handleScrollIndicator();
             this.handleVideoVisibility(); // NUEVO: Manejar visibilidad de videos
+            this.updateActiveNavLink(); // NUEVO: Actualizar navegación activa
         });
 
         window.addEventListener('resize', () => {
@@ -147,6 +138,32 @@ class EmeraldElite {
         } else {
             indicator.style.opacity = '1';
         }
+    }
+
+    // NUEVO: Actualizar enlace de navegación activo
+    updateActiveNavLink() {
+        const sections = document.querySelectorAll('section[id]');
+        const navLinks = document.querySelectorAll('.nav-link[href^="#"]');
+        
+        let currentSection = '';
+        
+        sections.forEach(section => {
+            const sectionTop = section.offsetTop - 100;
+            const sectionHeight = section.offsetHeight;
+            
+            if (window.scrollY >= sectionTop && window.scrollY < sectionTop + sectionHeight) {
+                currentSection = section.getAttribute('id');
+            }
+        });
+        
+        navLinks.forEach(link => {
+            const href = link.getAttribute('href').substring(1);
+            link.classList.remove('active');
+            
+            if (href === currentSection) {
+                link.classList.add('active');
+            }
+        });
     }
 
     // Mobile Menu
@@ -239,28 +256,154 @@ class EmeraldElite {
         }
     }
 
-    // Intersection Observer for Animations
+    // MEJORADO: Intersection Observer con Dramatic Scroll Reveal
     setupIntersectionObserver() {
+        // Verificar que tenemos soporte para Intersection Observer
+        if (!window.IntersectionObserver) {
+            this.showAllElements();
+            return;
+        }
+
         const observerOptions = {
             threshold: 0.1,
             rootMargin: '0px 0px -50px 0px'
         };
 
-        const observer = new IntersectionObserver((entries, observer) => {
+        // Observer para secciones completas
+        const sectionObserver = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
-                    entry.target.classList.add('visible');
-                    observer.unobserve(entry.target);
+                    entry.target.classList.add('reveal');
                 }
             });
         }, observerOptions);
 
-        const elementsToAnimate = document.querySelectorAll(
-            '.section-header, .gallery-card, .contact-card, .video-card, .about-grid'
-        );
-        elementsToAnimate.forEach(element => {
-            observer.observe(element);
+        // Observer para elementos individuales
+        const elementObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    // Añadir delay progresivo para elementos stagger
+                    if (entry.target.classList.contains('reveal-stagger')) {
+                        const staggerElements = entry.target.parentElement.querySelectorAll('.reveal-stagger');
+                        const index = Array.from(staggerElements).indexOf(entry.target);
+                        setTimeout(() => {
+                            entry.target.classList.add('visible');
+                        }, index * 150);
+                    } else {
+                        entry.target.classList.add('visible');
+                    }
+                }
+            });
+        }, {
+            threshold: 0.15,
+            rootMargin: '0px 0px -30px 0px'
         });
+
+        // Timeout de seguridad: mostrar elementos después de 5 segundos
+        setTimeout(() => {
+            this.showAllElements();
+        }, 5000);
+
+        // Observar secciones principales
+        const sectionsToReveal = document.querySelectorAll('.reveal-section');
+        sectionsToReveal.forEach(section => {
+            sectionObserver.observe(section);
+        });
+
+        // Observar elementos con animaciones direccionales
+        const elementsToReveal = document.querySelectorAll(`
+            .reveal-left, .reveal-right, .reveal-top, .reveal-bottom, 
+            .reveal-zoom, .reveal-flip
+        `);
+        
+        elementsToReveal.forEach(element => {
+            elementObserver.observe(element);
+        });
+
+        // NUEVO: Scroll progress indicator
+        this.setupScrollProgress();
+    }
+
+    // NUEVO: Fallback para mostrar todos los elementos
+    showAllElements() {
+        const sectionsToReveal = document.querySelectorAll('.reveal-section');
+        sectionsToReveal.forEach(section => {
+            section.classList.add('reveal');
+        });
+
+        const elementsToReveal = document.querySelectorAll(`
+            .reveal-left, .reveal-right, .reveal-top, .reveal-bottom, 
+            .reveal-zoom, .reveal-flip
+        `);
+        
+        elementsToReveal.forEach(element => {
+            element.classList.add('visible');
+        });
+    }
+
+    // NUEVO: Indicador de progreso de scroll
+    setupScrollProgress() {
+        // Crear barra de progreso
+        const progressBar = document.createElement('div');
+        progressBar.className = 'scroll-progress-bar';
+        progressBar.innerHTML = '<div class="scroll-progress-fill"></div>';
+        document.body.appendChild(progressBar);
+        
+        const progressFill = progressBar.querySelector('.scroll-progress-fill');
+        
+        window.addEventListener('scroll', () => {
+            const scrollTop = window.pageYOffset;
+            const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+            const scrollPercent = (scrollTop / docHeight) * 100;
+            
+            progressFill.style.width = `${Math.min(scrollPercent, 100)}%`;
+        });
+    }
+
+    // NUEVO: Estados de carga para imágenes
+    setupImageLoadingStates() {
+        const galleryImages = document.querySelectorAll('.gallery-image');
+        
+        galleryImages.forEach(img => {
+            const card = img.closest('.gallery-card');
+            if (!card) return;
+            
+            // Mostrar skeleton mientras carga
+            card.classList.add('loading');
+            
+            if (img.complete) {
+                this.onImageLoaded(card);
+            } else {
+                img.addEventListener('load', () => {
+                    this.onImageLoaded(card);
+                });
+                
+                img.addEventListener('error', () => {
+                    this.onImageError(card);
+                });
+            }
+        });
+    }
+    
+    onImageLoaded(card) {
+        setTimeout(() => {
+            card.classList.remove('loading');
+            card.classList.add('loaded');
+        }, 300); // Pequeño delay para suavizar la transición
+    }
+    
+    onImageError(card) {
+        card.classList.remove('loading');
+        card.classList.add('error');
+        
+        // Mostrar placeholder de error
+        const errorDiv = document.createElement('div');
+        errorDiv.className = 'image-error-placeholder';
+        errorDiv.innerHTML = `
+            <div class="error-icon">⚠️</div>
+            <div class="error-text">Error al cargar imagen</div>
+        `;
+        card.appendChild(errorDiv);
     }
 
     // Handle Window Resize
@@ -274,6 +417,166 @@ class EmeraldElite {
                 this.createParticles();
             }
         }
+    }
+}
+
+// NUEVO: Sistema de Preloader Funcional y Adaptativo
+class RealPreloader {
+    constructor() {
+        this.preloader = document.getElementById('preloader');
+        this.progressBar = null;
+        this.progressText = null;
+        
+        this.startTime = Date.now();
+        this.minDisplayTime = 1500; // Mínimo 1.5 segundos
+        this.maxDisplayTime = 8000; // Máximo 8 segundos
+        this.resourcesLoaded = false;
+        
+        this.totalResources = 0;
+        this.loadedResources = 0;
+        
+        if (this.preloader) {
+            this.init();
+        }
+    }
+    
+    init() {
+        this.createProgressIndicator();
+        this.collectResources();
+        this.startLoading();
+    }
+    
+    createProgressIndicator() {
+        // Crear barra de progreso
+        const progressContainer = document.createElement('div');
+        progressContainer.className = 'preload-progress';
+        progressContainer.innerHTML = `
+            <div class="progress-bar">
+                <div class="progress-fill"></div>
+            </div>
+            <div class="progress-text">Cargando recursos... 0%</div>
+        `;
+        
+        this.preloader.querySelector('.preload-container').appendChild(progressContainer);
+        this.progressBar = progressContainer.querySelector('.progress-fill');
+        this.progressText = progressContainer.querySelector('.progress-text');
+    }
+    
+    collectResources() {
+        const images = document.querySelectorAll('img');
+        const videos = document.querySelectorAll('video');
+        
+        // Contar recursos
+        this.totalResources = images.length + videos.length;
+        
+        // Si no hay recursos, marcar como cargado
+        if (this.totalResources === 0) {
+            this.resourcesLoaded = true;
+            this.checkIfReady();
+            return;
+        }
+        
+        // Monitorear imágenes
+        images.forEach(img => {
+            if (img.complete) {
+                this.onResourceLoaded();
+            } else {
+                img.addEventListener('load', () => this.onResourceLoaded());
+                img.addEventListener('error', () => this.onResourceLoaded());
+            }
+        });
+        
+        // Monitorear videos
+        videos.forEach(video => {
+            if (video.readyState >= 3) { // HAVE_FUTURE_DATA o superior
+                this.onResourceLoaded();
+            } else {
+                video.addEventListener('loadeddata', () => this.onResourceLoaded());
+                video.addEventListener('error', () => this.onResourceLoaded());
+            }
+        });
+        
+        // Timeout de seguridad para recursos que no cargan
+        setTimeout(() => {
+            if (!this.resourcesLoaded) {
+                this.resourcesLoaded = true;
+                this.checkIfReady();
+            }
+        }, this.maxDisplayTime - 1000);
+    }
+    
+    onResourceLoaded() {
+        this.loadedResources++;
+        this.updateProgress();
+        
+        if (this.loadedResources >= this.totalResources) {
+            this.resourcesLoaded = true;
+            this.checkIfReady();
+        }
+    }
+    
+    updateProgress() {
+        const progress = (this.loadedResources / this.totalResources) * 100;
+        
+        if (this.progressBar) {
+            this.progressBar.style.width = `${progress}%`;
+        }
+        
+        if (this.progressText) {
+            if (progress < 100) {
+                this.progressText.textContent = `Cargando recursos... ${Math.round(progress)}%`;
+            } else {
+                this.progressText.textContent = 'Preparando contenido...';
+            }
+        }
+    }
+    
+    checkIfReady() {
+        if (!this.resourcesLoaded) return;
+        
+        const elapsed = Date.now() - this.startTime;
+        const remaining = Math.max(0, this.minDisplayTime - elapsed);
+        
+        setTimeout(() => {
+            this.hide();
+        }, remaining);
+    }
+    
+    startLoading() {
+        // Actualizar texto inicial
+        if (this.progressText) {
+            this.progressText.textContent = `Cargando recursos... 0% (${this.totalResources} elementos)`;
+        }
+        
+        // Timeout absoluto
+        setTimeout(() => {
+            if (this.preloader && this.preloader.style.display !== 'none') {
+                this.hide();
+            }
+        }, this.maxDisplayTime);
+    }
+    
+    hide() {
+        if (!this.preloader) return;
+        
+        // Mostrar 100% antes de ocultar
+        if (this.progressBar) {
+            this.progressBar.style.width = '100%';
+        }
+        if (this.progressText) {
+            this.progressText.textContent = '¡Listo! 100%';
+        }
+        
+        setTimeout(() => {
+            this.preloader.classList.add('fade-out');
+            
+            setTimeout(() => {
+                this.preloader.style.display = 'none';
+                
+                // Trigger evento personalizado para indicar que el preloader terminó
+                document.dispatchEvent(new CustomEvent('preloaderComplete'));
+            }, 600);
+        }, 300);
     }
 }
 
@@ -362,7 +665,6 @@ class VideoHandler {
                     this.activeVideo = video;
                 })
                 .catch(error => {
-                    console.log('Error al reproducir video:', error);
                     this.onVideoError(video, container, error);
                 });
         }
@@ -557,15 +859,10 @@ function updateYear() {
 
 // Inicializar todas las clases cuando DOM esté listo
 document.addEventListener('DOMContentLoaded', () => {
+    // Añadir clase js-loaded para habilitar animaciones
+    document.body.classList.add('js-loaded');
+    
     window.emeraldElite = new EmeraldElite();
-    const preloader = document.getElementById('preloader');
-           
-           setTimeout(() => {
-               preloader.classList.add('fade-out');
-               setTimeout(() => {
-                   preloader.style.display = 'none';
-               }, 600);
-           }, 2500);
     new ImageModal();
     updateYear();
     
@@ -597,6 +894,48 @@ document.addEventListener('DOMContentLoaded', () => {
             animation: endPulse 0.5s ease-out;
         }
         
+        .image-error-placeholder {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            color: #ff4444;
+            background: rgba(255, 68, 68, 0.1);
+            backdrop-filter: blur(10px);
+            padding: 2rem;
+            border-radius: 15px;
+            border: 1px solid #ff4444;
+            z-index: 3;
+        }
+        
+        .error-icon {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .error-text {
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+        
+        .gallery-card.loaded .gallery-image {
+            animation: imageReveal 0.6s ease-out;
+        }
+        
+        @keyframes imageReveal {
+            from {
+                opacity: 0;
+                transform: scale(0.95);
+                filter: blur(5px);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+                filter: blur(0);
+            }
+        }
+        
         @keyframes errorFade {
             0% { opacity: 0; transform: translate(-50%, -50%) scale(0.8); }
             20% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
@@ -608,6 +947,98 @@ document.addEventListener('DOMContentLoaded', () => {
             0% { transform: scale(1); }
             50% { transform: scale(1.02); }
             100% { transform: scale(1); }
+        }
+        
+        /* Preloader Progress Styles */
+        .preload-progress {
+            margin-top: 2rem;
+            text-align: center;
+            width: 100%;
+            max-width: 300px;
+        }
+        
+        .progress-bar {
+            width: 100%;
+            height: 4px;
+            background: rgba(0, 255, 127, 0.2);
+            border-radius: 2px;
+            overflow: hidden;
+            margin-bottom: 1rem;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(0, 255, 127, 0.3);
+        }
+        
+        .progress-fill {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, #00FF7F, #40E0D0);
+            transition: width 0.3s ease;
+            border-radius: 2px;
+            box-shadow: 0 0 10px rgba(0, 255, 127, 0.5);
+            position: relative;
+        }
+        
+        .progress-fill::after {
+            content: '';
+            position: absolute;
+            right: 0;
+            top: 0;
+            width: 6px;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.8);
+            filter: blur(1px);
+            animation: shimmer 2s infinite;
+        }
+        
+        .progress-text {
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 0.9rem;
+            font-weight: 500;
+            text-shadow: 0 0 10px rgba(0, 255, 127, 0.5);
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes shimmer {
+            0%, 100% { opacity: 0.5; }
+            50% { opacity: 1; }
+        }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 0.8; }
+            50% { opacity: 1; }
+        }
+        
+        /* Scroll Progress Bar */
+        .scroll-progress-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: rgba(0, 0, 0, 0.1);
+            z-index: 9999;
+            backdrop-filter: blur(10px);
+        }
+        
+        .scroll-progress-fill {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, var(--primary-green), var(--secondary-green));
+            transition: width 0.25s ease;
+            box-shadow: 0 0 10px var(--emerald-glow);
+            position: relative;
+        }
+        
+        .scroll-progress-fill::after {
+            content: '';
+            position: absolute;
+            right: 0;
+            top: 0;
+            width: 6px;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.8);
+            box-shadow: 0 0 8px var(--primary-green);
+            filter: blur(1px);
         }
     `;
 

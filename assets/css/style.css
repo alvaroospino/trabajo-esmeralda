@@ -407,13 +407,16 @@ body::before {
     transition: var(--transition-smooth);
     text-transform: uppercase;
     letter-spacing: 0.5px;
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
 }
 
 .nav-link::after {
     content: '';
     position: absolute;
     bottom: -5px;
-    left: 0;
+    left: 50%;
+    transform: translateX(-50%);
     width: 0;
     height: 2px;
     background: linear-gradient(90deg, var(--primary-green), var(--secondary-green));
@@ -424,10 +427,26 @@ body::before {
 .nav-link:hover {
     color: var(--primary-green);
     text-shadow: 0 0 10px var(--emerald-glow);
+    background: rgba(0, 255, 127, 0.05);
 }
 
 .nav-link:hover::after {
-    width: 100%;
+    width: 80%;
+}
+
+.nav-link.active {
+    color: var(--primary-green);
+    background: rgba(0, 255, 127, 0.1);
+    text-shadow: 0 0 15px var(--emerald-glow);
+    box-shadow: 
+        inset 0 0 10px rgba(0, 255, 127, 0.1),
+        0 0 20px rgba(0, 255, 127, 0.1);
+}
+
+.nav-link.active::after {
+    width: 80%;
+    background: linear-gradient(90deg, var(--primary-green), var(--secondary-green));
+    box-shadow: 0 0 15px var(--emerald-glow);
 }
 
 /* Logo Image Styles */
@@ -571,6 +590,7 @@ body::before {
     align-items: center;
     justify-content: center;
     overflow: hidden;
+    padding-top: 80px;
 }
 
 .hero-bg {
@@ -602,7 +622,22 @@ body::before {
     left: 0;
     width: 100%;
     height: 100%;
-    background: radial-gradient(circle at center, rgba(0, 128, 64, 0.2) 0%, rgba(0, 0, 0, 0.9) 100%);
+    background: 
+        linear-gradient(135deg, 
+            rgba(6, 26, 13, 0.1) 0%,
+            rgba(0, 128, 64, 0.15) 25%,
+            rgba(0, 0, 0, 0.4) 50%,
+            rgba(6, 26, 13, 0.8) 85%,
+            rgba(0, 0, 0, 0.95) 100%
+        ),
+        radial-gradient(ellipse at 30% 20%, 
+            rgba(0, 255, 127, 0.08) 0%, 
+            transparent 60%
+        ),
+        radial-gradient(ellipse at 80% 80%, 
+            rgba(50, 205, 50, 0.05) 0%, 
+            transparent 50%
+        );
 }
 
 .hero-particles {
@@ -631,21 +666,63 @@ body::before {
     position: relative;
 }
 
-.hero-badge {
+/* Badge mejorado y más prominente */
+.hero-badge-enhanced {
     display: inline-block;
-    padding: 0.5rem 1.5rem;
-    background: var(--glass-bg);
-    backdrop-filter: blur(10px);
-    border: 1px solid var(--glass-border);
+    padding: 0.8rem 2.5rem;
+    background: 
+        linear-gradient(135deg, 
+            rgba(0, 255, 127, 0.12) 0%,
+            rgba(50, 205, 50, 0.08) 100%
+        );
+    backdrop-filter: blur(25px);
+    border: 2px solid transparent;
+    background-clip: padding-box;
     border-radius: 50px;
-    font-size: 0.85rem;
-    font-weight: 500;
+    font-size: clamp(0.95rem, 2.5vw, 1.1rem);
+    font-weight: 700;
     text-transform: uppercase;
-    letter-spacing: 1px;
+    letter-spacing: 2px;
     color: var(--primary-green);
-    margin-bottom: 2rem;
-    animation: fadeInUp 1s ease-out 0.3s both;
-    box-shadow: 0 0 20px var(--emerald-soft-glow);
+    margin-bottom: 1.5rem;
+    animation: heroFadeInUp 1.2s ease-out 0.3s both;
+    box-shadow: 
+        0 12px 40px rgba(0, 255, 127, 0.2),
+        inset 0 1px 0 rgba(255, 255, 255, 0.15),
+        0 0 0 1px rgba(0, 255, 127, 0.1);
+    position: relative;
+    overflow: hidden;
+    text-shadow: 0 0 20px rgba(0, 255, 127, 0.3);
+}
+
+.hero-badge-enhanced::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 50px;
+    padding: 2px;
+    background: linear-gradient(
+        135deg, 
+        var(--primary-green) 0%, 
+        transparent 40%, 
+        var(--secondary-green) 100%
+    );
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    animation: borderGlow 4s ease-in-out infinite;
+}
+
+.hero-badge-enhanced::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: -100%;
+    width: 100%;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+    animation: badgeShine 3s ease-in-out infinite;
 }
 
 .hero-title {
@@ -657,6 +734,19 @@ body::before {
     overflow: hidden;
 }
 
+/* Título optimizado con mejor proporción visual */
+.hero-title-optimized {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2.5rem, 6vw, 4.5rem);
+    font-weight: 600;
+    line-height: 1.1;
+    letter-spacing: -0.01em;
+    margin-bottom: 1.5rem;
+    overflow: hidden;
+    text-align: center;
+    animation: heroFadeInUp 1.4s ease-out 0.6s both;
+}
+
 /* --- HERO TITLE CON EFECTO DE BRILLO METÁLICO --- */
 .title-line {
     display: block;
@@ -666,6 +756,23 @@ body::before {
     -webkit-text-fill-color: transparent;
     text-shadow: 0 0 30px rgba(0, 255, 127, 0.7), 0 0 50px rgba(212, 175, 55, 0.4);
     animation: shineText 6s linear infinite;
+}
+
+/* Estilos específicos para el título optimizado */
+.hero-title-optimized .title-line {
+    background: linear-gradient(
+        135deg, 
+        #ffffff 0%, 
+        #00ff9d 25%,
+        #00b36b 50%, 
+        #d4af37 75%,
+        #ffffff 100%
+    );
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    text-shadow: 0 0 20px rgba(0, 255, 127, 0.5), 0 0 40px rgba(212, 175, 55, 0.3);
+    animation: optimizedShineText 5s ease-in-out infinite;
 }
 
 @keyframes shineText {
@@ -688,10 +795,14 @@ body::before {
 
 .hero-subtitle {
     font-size: clamp(1.1rem, 3vw, 1.6rem);
-    color: var(--text-secondary);
+    color: rgba(255, 255, 255, 0.85);
     font-weight: 300;
     margin-bottom: 3rem;
-    animation: fadeInUp 1s ease-out 0.6s both;
+    animation: heroFadeInUp 1.4s ease-out 0.6s both;
+    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 .hero-actions {
@@ -699,7 +810,7 @@ body::before {
     gap: 1.5rem;
     justify-content: center;
     flex-wrap: wrap;
-    animation: fadeInUp 1s ease-out 0.9s both;
+    animation: heroFadeInUp 1.6s ease-out 0.9s both;
 }
 
 .cta-primary,
@@ -723,7 +834,26 @@ body::before {
 .cta-primary {
     background: linear-gradient(135deg, var(--primary-green) 0%, var(--secondary-green) 100%);
     color: #000;
-    box-shadow: 0 10px 30px var(--emerald-glow);
+    box-shadow: 
+        0 10px 30px rgba(0, 255, 127, 0.25),
+        0 4px 15px rgba(0, 255, 127, 0.15);
+    position: relative;
+    transform-style: preserve-3d;
+    perspective: 1000px;
+    transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+.cta-primary::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.2), transparent);
+    border-radius: 50px;
+    opacity: 0;
+    transition: opacity 0.3s ease;
 }
 
 .cta-primary.large {
@@ -732,21 +862,42 @@ body::before {
 }
 
 .cta-secondary {
-    background: rgba(10, 30, 20, 0.5);
-    border: 1px solid #d4af37;
-    /* dorado */
+    background: rgba(10, 30, 20, 0.3);
+    border: 2px solid #d4af37;
     color: #d4af37;
     font-weight: 600;
     text-shadow: 0 0 10px rgba(212, 175, 55, 0.5);
-    box-shadow: inset 0 0 10px rgba(212, 175, 55, 0.3);
-    transition: all 0.4s ease;
+    box-shadow: 
+        inset 0 0 15px rgba(212, 175, 55, 0.2),
+        0 8px 25px rgba(212, 175, 55, 0.15);
+    transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+    position: relative;
+    overflow: hidden;
+}
+
+.cta-secondary::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(212, 175, 55, 0.2), transparent);
+    transition: left 0.6s ease;
 }
 
 .cta-secondary:hover {
-    background: linear-gradient(135deg, rgba(212, 175, 55, 0.2), rgba(255, 215, 0, 0.4));
+    background: linear-gradient(135deg, rgba(212, 175, 55, 0.15), rgba(255, 215, 0, 0.2));
     color: #fff8dc;
-    transform: translateY(-3px) scale(1.05);
-    box-shadow: 0 0 25px rgba(212, 175, 55, 0.8);
+    transform: translateY(-4px) rotateX(8deg) rotateY(4deg);
+    box-shadow: 
+        0 15px 40px rgba(212, 175, 55, 0.3),
+        inset 0 0 20px rgba(212, 175, 55, 0.25);
+    border-color: #f7dc6f;
+}
+
+.cta-secondary:hover::before {
+    left: 100%;
 }
 
 .cta-shine {
@@ -764,8 +915,19 @@ body::before {
 }
 
 .cta-primary:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 15px 40px var(--emerald-glow);
+    transform: translateY(-5px) rotateX(10deg) rotateY(-5deg);
+    box-shadow: 
+        0 20px 50px rgba(0, 255, 127, 0.4),
+        0 8px 25px rgba(0, 255, 127, 0.25);
+}
+
+.cta-primary:hover::after {
+    opacity: 1;
+}
+
+.cta-primary:active {
+    transform: translateY(-2px) rotateX(5deg) rotateY(-2deg) scale(0.98);
+    transition: all 0.1s ease;
 }
 
 .scroll-line {
@@ -783,12 +945,28 @@ body::before {
     animation: bounce 2s ease-in-out infinite;
 }
 
-/* Sections */
+/* Sections - Dramatic Scroll Reveal */
 .section {
     padding: 2rem;
     max-width: 1400px;
     margin: 0 auto;
     position: relative;
+}
+
+/* Solo aplicar efectos de reveal a secciones cuando JavaScript esté listo */
+.js-loaded .section.reveal-section:not(.reveal) {
+    clip-path: polygon(0 100%, 100% 100%, 100% 100%, 0 100%);
+    filter: blur(10px);
+    opacity: 0;
+    transform: translateY(80px);
+    transition: all 1.2s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+.section.reveal-section.reveal {
+    clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+    filter: blur(0);
+    opacity: 1;
+    transform: translateY(0);
 }
 
 .section::before {
@@ -1162,6 +1340,21 @@ body::before {
     overflow: hidden;
 }
 
+.js-loaded .premium-gallery-section.reveal-section:not(.reveal) {
+    clip-path: polygon(0 100%, 100% 100%, 100% 100%, 0 100%);
+    filter: blur(15px);
+    opacity: 0;
+    transform: translateY(120px) scale(0.95);
+    transition: all 1.6s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+.premium-gallery-section.reveal-section.reveal {
+    clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+    filter: blur(0);
+    opacity: 1;
+    transform: translateY(0) scale(1);
+}
+
 .premium-gallery-section::before {
     content: '';
     position: absolute;
@@ -1406,6 +1599,44 @@ body::before {
     transform-style: preserve-3d;
     perspective: 1000px;
     scroll-snap-align: center;
+}
+
+/* Loading skeleton para imágenes */
+.gallery-card.loading::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: 
+        linear-gradient(90deg,
+            rgba(0, 255, 127, 0.02) 0%,
+            rgba(0, 255, 127, 0.08) 50%,
+            rgba(0, 255, 127, 0.02) 100%
+        );
+    background-size: 200% 100%;
+    animation: skeletonShimmer 2s infinite;
+    z-index: 2;
+}
+
+/* Estado de carga para videos */
+.gallery-card.video-loading .video-overlay {
+    background: rgba(0, 255, 127, 0.1);
+    animation: loadingPulse 1.5s infinite;
+}
+
+.gallery-card.video-loading .video-overlay::before {
+    content: '⏳';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 1.5rem;
+    animation: spin 1s linear infinite;
+    border: none !important;
+    width: auto !important;
+    height: auto !important;
 }
 
 /* VARIANTES DE TAMAÑO PARA DESKTOP */
@@ -2478,6 +2709,181 @@ body::before {
     }
 }
 
+@keyframes heroFadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px) scale(0.95);
+        filter: blur(10px);
+    }
+    
+    50% {
+        opacity: 0.8;
+        transform: translateY(15px) scale(0.98);
+        filter: blur(5px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+        filter: blur(0);
+    }
+}
+
+@keyframes borderGlow {
+    0%, 100% {
+        opacity: 0.6;
+        transform: scale(1);
+    }
+    
+    50% {
+        opacity: 1;
+        transform: scale(1.02);
+    }
+}
+
+@keyframes skeletonShimmer {
+    0% {
+        background-position: -200% 0;
+    }
+    100% {
+        background-position: 200% 0;
+    }
+}
+
+@keyframes loadingPulse {
+    0%, 100% {
+        opacity: 0.3;
+        transform: scale(0.95);
+    }
+    50% {
+        opacity: 0.8;
+        transform: scale(1.05);
+    }
+}
+
+@keyframes spin {
+    from { transform: translate(-50%, -50%) rotate(0deg); }
+    to { transform: translate(-50%, -50%) rotate(360deg); }
+}
+
+@keyframes badgeShine {
+    0%, 100% {
+        left: -100%;
+        opacity: 0;
+    }
+    
+    50% {
+        left: 100%;
+        opacity: 1;
+    }
+}
+
+@keyframes optimizedShineText {
+    0%, 100% {
+        filter: brightness(1) saturate(1);
+        text-shadow: 0 0 20px rgba(0, 255, 127, 0.5), 0 0 40px rgba(212, 175, 55, 0.3);
+    }
+    
+    50% {
+        filter: brightness(1.2) saturate(1.1);
+        text-shadow: 0 0 30px rgba(0, 255, 127, 0.8), 0 0 60px rgba(212, 175, 55, 0.5);
+    }
+}
+
+/* ====== DRAMATIC SCROLL REVEAL ANIMATIONS ====== */
+
+/* Elementos que entran desde la izquierda */
+.js-loaded .reveal-left:not(.visible) {
+    opacity: 0;
+    transform: translateX(-100px) rotateY(-45deg);
+    filter: blur(8px);
+    transition: all 1.2s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+.reveal-left.visible {
+    opacity: 1;
+    transform: translateX(0) rotateY(0);
+    filter: blur(0);
+}
+
+/* Elementos que entran desde la derecha */
+.js-loaded .reveal-right:not(.visible) {
+    opacity: 0;
+    transform: translateX(100px) rotateY(45deg);
+    filter: blur(8px);
+    transition: all 1.2s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+.reveal-right.visible {
+    opacity: 1;
+    transform: translateX(0) rotateY(0);
+    filter: blur(0);
+}
+
+/* Elementos que entran desde arriba */
+.js-loaded .reveal-top:not(.visible) {
+    opacity: 0;
+    transform: translateY(-80px) rotateX(45deg) scale(0.8);
+    filter: blur(10px);
+    transition: all 1.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+.reveal-top.visible {
+    opacity: 1;
+    transform: translateY(0) rotateX(0) scale(1);
+    filter: blur(0);
+}
+
+/* Elementos que entran desde abajo */
+.js-loaded .reveal-bottom:not(.visible) {
+    opacity: 0;
+    transform: translateY(80px) rotateX(-45deg) scale(0.8);
+    filter: blur(10px);
+    transition: all 1.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+.reveal-bottom.visible {
+    opacity: 1;
+    transform: translateY(0) rotateX(0) scale(1);
+    filter: blur(0);
+}
+
+/* Elementos que aparecen con zoom dramático */
+.js-loaded .reveal-zoom:not(.visible) {
+    opacity: 0;
+    transform: scale(0.3) rotate(180deg);
+    filter: blur(15px);
+    transition: all 1.8s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+.reveal-zoom.visible {
+    opacity: 1;
+    transform: scale(1) rotate(0);
+    filter: blur(0);
+}
+
+/* Elementos con efecto de "flip" */
+.js-loaded .reveal-flip:not(.visible) {
+    opacity: 0;
+    transform: rotateY(180deg) scale(0.5);
+    filter: blur(12px);
+    transition: all 1.6s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+.reveal-flip.visible {
+    opacity: 1;
+    transform: rotateY(0) scale(1);
+    filter: blur(0);
+}
+
+/* Stagger delay para elementos múltiples */
+.reveal-stagger:nth-child(1) { transition-delay: 0.1s; }
+.reveal-stagger:nth-child(2) { transition-delay: 0.2s; }
+.reveal-stagger:nth-child(3) { transition-delay: 0.3s; }
+.reveal-stagger:nth-child(4) { transition-delay: 0.4s; }
+.reveal-stagger:nth-child(5) { transition-delay: 0.5s; }
+.reveal-stagger:nth-child(6) { transition-delay: 0.6s; }
+
 @keyframes slideInUp {
     from {
         transform: translateY(100%);
@@ -2689,6 +3095,17 @@ body::before {
 
     .hero-title {
         font-size: 4rem;
+    }
+    
+    .hero-title-optimized {
+        font-size: 3.5rem;
+        line-height: 1.05;
+    }
+    
+    .hero-badge-enhanced {
+        font-size: 1rem;
+        padding: 0.7rem 2rem;
+        margin-bottom: 1.2rem;
     }
 
     .hero-subtitle {

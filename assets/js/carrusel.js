@@ -6,7 +6,6 @@
             
             // Verificación para evitar errores si el elemento no existiera.
             if (!carousel) {
-                console.error("El elemento del carrusel con id='carousel' no fue encontrado.");
                 return;
             }
 
@@ -36,7 +35,7 @@
                     item.className = 'carousel-item';
                     item.innerHTML = `<img src="${img.src}" alt="${img.title}" loading="lazy">`;
                     item.onclick = () => { 
-                        console.log(`Hiciste clic en: ${img.title}`);
+                        // Handle click event if needed
                     };
                     carousel.appendChild(item);
                 });

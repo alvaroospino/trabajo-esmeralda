@@ -1,5 +1,24 @@
 /* Correcciones para vista móvil */
 @media screen and (max-width: 768px) {
+    /* Optimizaciones para el nuevo hero */
+    .hero-title-optimized {
+        font-size: 2rem !important;
+        line-height: 1.1 !important;
+        margin-bottom: 1rem !important;
+    }
+    
+    .hero-badge-enhanced {
+        font-size: 0.8rem !important;
+        padding: 0.6rem 1.5rem !important;
+        margin-bottom: 1rem !important;
+        letter-spacing: 1px !important;
+    }
+    
+    .hero-subtitle {
+        font-size: 0.9rem !important;
+        line-height: 1.4 !important;
+        margin-bottom: 2rem !important;
+    }
     html, body {
         width: 100%;
         max-width: 100%;

@@ -3,120 +3,367 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>Galería Interactiva</title>
+    <title>Galería Premium - Import Export Colombian Emeralds</title>
+    <meta name="description" content="Galería exclusiva de esmeraldas colombianas premium - Import Export">
+    <meta name="keywords" content="esmeraldas colombianas, galería, joyería, gemas, Muzo, Boyacá, import export">
+    <meta name="author" content="Import Export Colombian Emeralds">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://www.importexport-esmeraldas.com/galeria.html">
+    
+    <!-- Open Graph Meta Tags -->
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Galería Premium - Esmeraldas Colombianas">
+    <meta property="og:description" content="Descubre nuestra galería exclusiva de esmeraldas colombianas certificadas de las minas de Muzo, Boyacá">
+    <meta property="og:url" content="https://www.importexport-esmeraldas.com/galeria.html">
+    <meta property="og:image" content="https://www.importexport-esmeraldas.com/assets/img/esmeralda13.jpg">
+    <meta property="og:locale" content="es_CO">
+    <meta property="og:site_name" content="Import Export Colombian Emeralds">
+    
+    <!-- Twitter Card Meta Tags -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Galería Premium - Esmeraldas Colombianas">
+    <meta name="twitter:description" content="Descubre nuestra galería exclusiva de esmeraldas colombianas certificadas">
+    <meta name="twitter:image" content="https://www.importexport-esmeraldas.com/assets/img/esmeralda1.jpg">
+    
+    <!-- Schema.org Structured Data -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "ImageGallery",
+        "name": "Galería Premium de Esmeraldas Colombianas",
+        "description": "Galería exclusiva de esmeraldas colombianas certificadas de las minas de Muzo, Boyacá",
+        "url": "https://www.importexport-esmeraldas.com/galeria.html",
+        "author": {
+            "@type": "Organization",
+            "name": "Import Export Colombian Emeralds",
+            "url": "https://www.importexport-esmeraldas.com"
+        },
+        "mainEntity": {
+            "@type": "ItemList",
+            "name": "Colección de Esmeraldas Colombianas",
+            "itemListElement": [
+                {
+                    "@type": "Product",
+                    "name": "Esmeraldas de Muzo",
+                    "category": "Gemas Preciosas",
+                    "brand": "Import Export Colombian Emeralds"
+                }
+            ]
+        }
+    }
+    </script>
+    
     <link rel="icon" type="image/png" href="assets/img/logo.png" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="./assets/css/gallery.css">
+    <link rel="stylesheet" href="./assets/css/gallery-main.css">
 </head>
 <body>
-    <!-- Reduced particles for better mobile performance -->
+    <!-- Enhanced particles system -->
     <div class="particles" id="particles"></div>
+    <div class="floating-gems" id="floatingGems"></div>
     
-    <!-- BOTÓN DE NAVEGACIÓN -->
-    <a href="index.html" class="back-button" id="backButton" title="Regresar a la página de inicio">
-        <i class="fas fa-home back-button-icon"></i>
-        <span class="back-button-text">Inicio</span>
-    </a>
+    <!-- Navigation -->
+    <nav class="navigation">
+        <a href="index.html" class="nav-button" id="backButton" title="Regresar al inicio">
+            <i class="nav-button__icon fas fa-home"></i>
+            <span class="nav-button__text">Inicio</span>
+        </a>
+    </nav>
     
     <!-- Header -->
-    <header class="header">
-        <h1><i class="fas fa-gem header-icon"></i> GALERÍA IMPORT EXPORT <i class="fas fa-gem header-icon"></i></h1>
-        <p>Nuestra Galería de Esmeralda</p>
+    <header class="header" id="mainHeader">
+        <div class="header__content">
+            <div class="header__brand">
+                <h1 class="header__title">GALERÍA PREMIUM</h1>
+                <div class="header__subtitle">Import Export</div>
+                <div class="header__description">Esmeraldas Colombianas Exclusivas</div>
+            </div>
+            <div class="header__stats">
+                <div class="stat">
+                    <span class="stat__number" id="totalItems">0</span>
+                    <span class="stat__label">Piezas Únicas</span>
+                </div>
+                <div class="stat__divider"></div>
+                <div class="stat">
+                    <span class="stat__number">5</span>
+                    <span class="stat__label">Colecciones</span>
+                </div>
+                <div class="stat__divider"></div>
+                <div class="stat">
+                    <span class="stat__number">100%</span>
+                    <span class="stat__label">Autenticidad</span>
+                </div>
+            </div>
+        </div>
     </header>
 
-    <!-- Interactive carousel -->
-    <section class="carousel-container">
-        <div class="carousel-wrapper">
-            <div class="carousel" id="carousel">
-                <div class="loading"></div>
+    <!-- Featured Section -->
+    <section class="featured">
+        <div class="featured__container">
+            <div class="featured__header">
+                <h2 class="featured__title">
+                    <i class="featured__title-icon fas fa-crown"></i>
+                    <span>Piezas Destacadas</span>
+                    <i class="featured__title-icon fas fa-crown"></i>
+                </h2>
+                <p class="featured__subtitle">Selección exclusiva de nuestras gemas más excepcionales</p>
             </div>
-            <div class="scroll-indicator"><i class="fas fa-chevron-left"></i> Desliza para ver más <i class="fas fa-chevron-right"></i></div>
-        </div>
-    </section>
-
-    <!-- Gallery controls -->
-    <section class="gallery-container">
-        <div class="gallery-controls">
-            <button class="control-btn active" onclick="filterGallery('all', this)"><i class="fas fa-images"></i> Todas</button>
-            <button class="control-btn" onclick="filterGallery('videos', this)"><i class="fas fa-film"></i> Videos</button>
-            <button class="control-btn" onclick="filterGallery('coleccion1', this)"><i class="fas fa-gem"></i> Colección 1</button>
-            <button class="control-btn" onclick="filterGallery('coleccion2', this)"><i class="fas fa-gem"></i> Colección 2</button>
-            <button class="control-btn" onclick="filterGallery('coleccion3', this)"><i class="fas fa-gem"></i> Colección 3</button>
-            <button class="control-btn" onclick="shuffleGallery(this)"><i class="fas fa-random"></i> Mezclar</button>
-        </div>
-        
-        <div class="gallery-grid" id="galleryGrid">
-            <div class="loading"></div>
-        </div>
-    </section>
-
-    <!-- MODAL MEJORADO Y PROFESIONAL -->
-    <div class="modal" id="modal">
-        <div class="modal-container">
-            <!-- Header con información -->
-            <div class="modal-header">
-                <div class="modal-info">
-                    <div class="modal-title" id="modalTitle">Título del medio</div>
-                    <div class="modal-description" id="modalDescription">Descripción del medio</div>
+            <div class="featured__carousel-wrapper">
+                <button class="featured__nav prev" id="carouselPrev">
+                    <i class="fas fa-chevron-left"></i>
+                </button>
+                <button class="featured__nav next" id="carouselNext">
+                    <i class="fas fa-chevron-right"></i>
+                </button>
+                <div class="featured__carousel" id="carousel">
+                    <div class="featured__loading">
+                        <div class="featured__spinner"></div>
+                        <p class="featured__loading-text">Cargando piezas exclusivas...</p>
+                    </div>
                 </div>
-                <div class="modal-counter" id="modalCounter">1 / 20</div>
+                <div class="featured__indicators" id="carouselIndicators"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Filters -->
+    <section class="filters">
+        <div class="filters__container">
+            <div class="filters__tabs">
+                <button class="filter-tab is-active" data-filter="all" onclick="window.galleryCore?.filterGallery('all', this)">
+                    <i class="filter-tab__icon fas fa-grip"></i>
+                    <span class="filter-tab__label">Todas</span>
+                    <span class="filter-tab__counter" id="countAll">0</span>
+                </button>
+                <button class="filter-tab" data-filter="videos" onclick="window.galleryCore?.filterGallery('videos', this)">
+                    <i class="filter-tab__icon fas fa-play-circle"></i>
+                    <span class="filter-tab__label">Videos</span>
+                    <span class="filter-tab__counter" id="countVideos">0</span>
+                </button>
+                <button class="filter-tab" data-filter="coleccion1" onclick="window.galleryCore?.filterGallery('coleccion1', this)">
+                    <i class="filter-tab__icon fas fa-gem"></i>
+                    <span class="filter-tab__label">Premium</span>
+                    <span class="filter-tab__counter" id="countCol1">0</span>
+                </button>
+                <button class="filter-tab" data-filter="coleccion2" onclick="window.galleryCore?.filterGallery('coleccion2', this)">
+                    <i class="filter-tab__icon fas fa-star"></i>
+                    <span class="filter-tab__label">Exclusiva</span>
+                    <span class="filter-tab__counter" id="countCol2">0</span>
+                </button>
+                <button class="filter-tab" data-filter="coleccion3" onclick="window.galleryCore?.filterGallery('coleccion3', this)">
+                    <i class="filter-tab__icon fas fa-crown"></i>
+                    <span class="filter-tab__label">Royal</span>
+                    <span class="filter-tab__counter" id="countCol3">0</span>
+                </button>
+            </div>
+            
+            <div class="filters__actions">
+                <button class="action-button shuffle-btn" onclick="window.galleryCore?.shuffleGallery(this)" title="Mezclar galería">
+                    <i class="action-button__icon fas fa-shuffle"></i>
+                    <span>Aleatorio</span>
+                </button>
+                <div class="view-options">
+                    <button class="view-option is-active" data-view="grid" onclick="window.galleryCore?.changeView('grid', this)" title="Vista en cuadrícula">
+                        <i class="fas fa-th"></i>
+                    </button>
+                    <button class="view-option" data-view="masonry" onclick="window.galleryCore?.changeView('masonry', this)" title="Vista mosaico">
+                        <i class="fas fa-th-large"></i>
+                    </button>
+                </div>
             </div>
 
-            <!-- Botón de cerrar -->
-            <button class="modal-close" id="modalClose">
+            <div class="filters__status">
+                <div class="status__info">
+                    <span class="status__current" id="currentFilter">Todas las piezas</span>
+                    <span class="status__divider">•</span>
+                    <span class="status__count" id="itemCount">0 elementos</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Gallery -->
+    <section class="gallery">
+        <div class="gallery__container">
+            <div class="gallery__grid grid-view" id="galleryGrid">
+                <div class="gallery__loading">
+                    <div class="gallery__spinner"></div>
+                    <p class="gallery__loading-text">Preparando la colección...</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Modal -->
+    <div class="modal" id="modal">
+        <div class="modal__container">
+            <div class="modal__header">
+                <div class="modal__brand">
+                    <div class="modal__brand-icon">
+                        <i class="fas fa-gem"></i>
+                    </div>
+                    <div class="modal__info">
+                        <div class="modal__title" id="modalTitle">Esmeralda Premium</div>
+                        <div class="modal__subtitle" id="modalDescription">Gema de colección exclusiva</div>
+                    </div>
+                </div>
+                <div class="modal__meta">
+                    <div class="modal__counter" id="modalCounter">1 / 20</div>
+                    <div class="modal__category" id="modalCategory">Premium</div>
+                </div>
+            </div>
+
+            <button class="modal__close" id="modalClose" title="Cerrar galería">
                 <i class="fas fa-times"></i>
             </button>
 
-            <!-- Navegación lateral -->
-            <button class="modal-nav prev" id="modalPrev">
-                <i class="fas fa-chevron-left"></i>
-            </button>
-            <button class="modal-nav next" id="modalNext">
-                <i class="fas fa-chevron-right"></i>
-            </button>
-
-            <!-- Contenido principal -->
-            <div class="modal-content">
-                <img id="modalImage" class="modal-media" src="" alt="" style="display: none;">
-                <video id="modalVideo" class="modal-media" style="display: none;" muted></video>
-                
-                <!-- Barra de progreso para video -->
-                <div class="modal-progress" id="modalProgress" style="display: none;">
-                    <div class="modal-progress-bar" id="modalProgressBar"></div>
-                </div>
-                
+            <div class="modal__navigation">
+                <button class="modal__nav prev" id="modalPrev" title="Anterior">
+                    <i class="modal__nav-icon fas fa-chevron-left"></i>
+                    <span class="modal__nav-label">Anterior</span>
+                </button>
+                <button class="modal__nav next" id="modalNext" title="Siguiente">
+                    <i class="modal__nav-icon fas fa-chevron-right"></i>
+                    <span class="modal__nav-label">Siguiente</span>
+                </button>
             </div>
 
-            <!-- Controles de video -->
-            <div class="modal-video-controls" id="modalVideoControls" style="display: none;">
-                <button class="modal-video-btn" id="modalPlayPauseBtn">
-                    <i class="fas fa-play"></i>
-                </button>
-                <button class="modal-video-btn" id="modalMuteBtn">
-                    <i class="fas fa-volume-up"></i>
-                </button>
-                <button class="modal-video-btn" id="modalFullscreenBtn">
-                    <i class="fas fa-expand"></i>
-                </button>
+            <div class="modal__content">
+                <img id="modalImage" class="modal__media" src="" alt="" style="display: none;">
+                <video id="modalVideo" class="modal__media modal__video-clickable" style="display: none;" muted></video>
+                
+                <!-- Centered Play Button for Videos -->
+                <div class="modal__video-play" id="modalVideoPlay" style="display: none;">
+                    <button class="modal__play-button" id="modalCenteredPlayBtn">
+                        <i class="fas fa-play"></i>
+                    </button>
+                </div>
+                
+                <div class="modal__loading" id="mediaLoader">
+                    <div class="modal__spinner"></div>
+                    <p>Cargando pieza...</p>
+                </div>
+
+                <div class="modal__progress" id="modalProgress" style="display: none;">
+                    <div class="modal__progress-bar" id="modalProgressBar"></div>
+                </div>
+            </div>
+
+            <div class="modal__video-controls" id="modalVideoControls" style="display: none;">
+                <div class="modal__controls-group primary">
+                    <button class="modal__control-btn" id="modalPlayPauseBtn" title="Reproducir/Pausar">
+                        <i class="fas fa-play"></i>
+                    </button>
+                    <button class="modal__control-btn" id="modalMuteBtn" title="Silenciar/Activar sonido">
+                        <i class="fas fa-volume-up"></i>
+                    </button>
+                </div>
+                
+                <div class="modal__controls-group secondary">
+                    <button class="modal__control-btn" id="modalSpeedBtn" title="Velocidad">
+                        <span class="modal__speed-indicator">1x</span>
+                    </button>
+                    <button class="modal__control-btn" id="modalFullscreenBtn" title="Pantalla completa">
+                        <i class="fas fa-expand"></i>
+                    </button>
+                </div>
             </div>
         </div>
     </div>
     
-    <!-- Footer mejorado -->
+    <!-- Footer -->
     <footer class="footer">
-        <div class="footer-content">
-            <div class="footer-brand">
+        <div class="footer__container">
+            <div class="footer__brand">
+                <div class="footer__brand-emblem">
+                    <i class="footer__brand-gem fas fa-gem"></i>
+                    <i class="footer__brand-gem fas fa-gem"></i>
+                    <i class="footer__brand-gem fas fa-gem"></i>
+                </div>
                 <div class="logo">
-                    <i class="fas fa-gem" style="font-size: 2rem; color: var(--primary-emerald);"></i>
+                    <img src="assets/img/logo.png" class="logo-image" alt="Import Export - Esmeraldas Colombianas de Muzo Logo" />
                     <span class="logo-text">IMPORT EXPORT</span>
                 </div>
-                <p>Excelencia en gemas colombianas de lujo</p>
+                <p class="footer__brand-tagline">Colombian Emeralds Excellence</p>
+                <div class="footer__description">
+                    <p>Especialistas en esmeraldas colombianas de la más alta calidad. Cada pieza representa décadas de experiencia y pasión por la excelencia gemológica.</p>
+                </div>
+            </div>
+
+            <div class="footer__nav">
+                <div class="footer__nav-section">
+                    <h4 class="footer__nav-title">Navegación</h4>
+                    <ul class="footer__nav-list">
+                        <li><a href="index.html" class="footer__nav-link"><i class="footer__nav-icon fas fa-home"></i> Inicio</a></li>
+                        <li><a href="index.html#catalogo" class="footer__nav-link"><i class="footer__nav-icon fas fa-gem"></i> Catálogo</a></li>
+                        <li><a href="index.html#nosotros" class="footer__nav-link"><i class="footer__nav-icon fas fa-users"></i> Nosotros</a></li>
+                        <li><a href="index.html#contacto" class="footer__nav-link"><i class="footer__nav-icon fas fa-envelope"></i> Contacto</a></li>
+                        <li><a href="#gallery" class="footer__nav-link"><i class="footer__nav-icon fas fa-images"></i> Galería</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer__nav-section">
+                    <h4 class="footer__nav-title">Colecciones</h4>
+                    <ul class="footer__nav-list">
+                        <li><a href="#" class="footer__nav-link" onclick="window.galleryCore?.filterGallery('coleccion1')"><i class="footer__nav-icon fas fa-gem"></i> Premium</a></li>
+                        <li><a href="#" class="footer__nav-link" onclick="window.galleryCore?.filterGallery('coleccion2')"><i class="footer__nav-icon fas fa-star"></i> Exclusiva</a></li>
+                        <li><a href="#" class="footer__nav-link" onclick="window.galleryCore?.filterGallery('coleccion3')"><i class="footer__nav-icon fas fa-crown"></i> Royal</a></li>
+                        <li><a href="#" class="footer__nav-link" onclick="window.galleryCore?.filterGallery('videos')"><i class="footer__nav-icon fas fa-play"></i> Videos</a></li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="footer__quality">
+                <div class="footer__quality-grid">
+                    <div class="footer__seal">
+                        <i class="footer__seal-icon fas fa-certificate"></i>
+                        <span class="footer__seal-text">Certificado GIA</span>
+                    </div>
+                    <div class="footer__seal">
+                        <i class="footer__seal-icon fas fa-shield-alt"></i>
+                        <span class="footer__seal-text">100% Auténtico</span>
+                    </div>
+                    <div class="footer__seal">
+                        <i class="footer__seal-icon fas fa-award"></i>
+                        <span class="footer__seal-text">Calidad Premium</span>
+                    </div>
+                    <div class="footer__seal">
+                        <i class="footer__seal-icon fas fa-globe-americas"></i>
+                        <span class="footer__seal-text">Origen Colombia</span>
+                    </div>
+                </div>
             </div>
         </div>
-        <div class="footer-bottom">
-            <p>&copy; <span id="date"></span> Import Export. Todos los derechos reservados.</p>
+        
+        <div class="footer__bottom">
+            <div class="footer__copyright">
+                <p>&copy; <span id="date"></span> Import Export Colombian Emeralds. Todos los derechos reservados.</p>
+                <p class="footer__legal-notice">Galería Premium • Piezas Únicas • Certificación Internacional</p>
+            </div>
         </div>
     </footer>
-   <script src="./assets/js/gallery.js.js"></script>
+
+    <!-- Page Loader -->
+    <div class="page-loader" id="pageLoader">
+        <div class="page-loader__content">
+            <div class="page-loader__spinner"></div>
+            <h2 class="page-loader__title">Import Export</h2>
+            <p class="page-loader__subtitle">Cargando galería premium...</p>
+            <div class="page-loader__progress">
+                <div class="page-loader__progress-bar" id="loadProgress"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scroll to Top -->
+    <button class="scroll-to-top" id="scrollToTop" title="Volver arriba">
+        <i class="fas fa-chevron-up"></i>
+    </button>
+
+    <!-- New Modular JavaScript -->
+    <script type="module" src="./assets/js/gallery-app.js"></script>
 </body>
 </html>

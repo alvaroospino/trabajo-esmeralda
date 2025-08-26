@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" 
+        xmlns:image="http://www.google.com/schemas/sitemap-image/1.1"
+        xmlns:video="http://www.google.com/schemas/sitemap-video/1.1">
+
+    <!-- Página Principal -->
+    <url>
+        <loc>https://www.importexport-esmeraldas.com/</loc>
+        <lastmod>2024-12-19</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>1.0</priority>
+        
+        <!-- Imágenes principales para SEO -->
+        <image:image>
+            <image:loc>https://www.importexport-esmeraldas.com/assets/img/esmeralda28.jpg</image:loc>
+            <image:title>Esmeralda colombiana auténtica de Muzo</image:title>
+            <image:caption>Esmeralda colombiana de alta calidad extraída de las minas de Muzo, Boyacá</image:caption>
+        </image:image>
+        
+        <image:image>
+            <image:loc>https://www.importexport-esmeraldas.com/assets/img/esmeralda22.jpg</image:loc>
+            <image:title>Esmeralda Rio Verde de Muzo</image:title>
+            <image:caption>Gema certificada de esmeralda colombiana Rio Verde</image:caption>
+        </image:image>
+        
+        <image:image>
+            <image:loc>https://www.importexport-esmeraldas.com/assets/img/muzo.jpg</image:loc>
+            <image:title>Minas de Muzo Colombia</image:title>
+            <image:caption>Vista de las famosas minas de Muzo en Boyacá, Colombia</image:caption>
+        </image:image>
+
+        <!-- Videos para SEO -->
+        <video:video>
+            <video:thumbnail_loc>https://www.importexport-esmeraldas.com/assets/img/esmeralda28.jpg</video:thumbnail_loc>
+            <video:title>Esmeraldas Colombianas Auténticas de Muzo</video:title>
+            <video:description>Descubre la belleza de las esmeraldas colombianas extraídas de las minas de Muzo. Gemas certificadas de calidad excepcional.</video:description>
+            <video:content_loc>https://www.importexport-esmeraldas.com/assets/video/esmeralda01.mp4</video:content_loc>
+            <video:duration>30</video:duration>
+        </video:video>
+    </url>
+
+    <!-- Galería de Esmeraldas -->
+    <url>
+        <loc>https://www.importexport-esmeraldas.com/galeria.html</loc>
+        <lastmod>2024-12-19</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.9</priority>
+        
+        <image:image>
+            <image:loc>https://www.importexport-esmeraldas.com/assets/img/esmeralda23.jpg</image:loc>
+            <image:title>Esmeralda Suprema colombiana</image:title>
+            <image:caption>Esmeralda colombiana Suprema de calidad premium</image:caption>
+        </image:image>
+        
+        <image:image>
+            <image:loc>https://www.importexport-esmeraldas.com/assets/img/esmeralda27.jpg</image:loc>
+            <image:title>Esmeralda Imperial colombiana</image:title>
+            <image:caption>Esmeralda Imperial de Muzo para joyería exclusiva</image:caption>
+        </image:image>
+    </url>
+
+    <!-- Secciones específicas de la página principal -->
+    <url>
+        <loc>https://www.importexport-esmeraldas.com/#catalogo</loc>
+        <lastmod>2024-12-19</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.8</priority>
+    </url>
+
+    <url>
+        <loc>https://www.importexport-esmeraldas.com/#nosotros</loc>
+        <lastmod>2024-12-19</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.7</priority>
+    </url>
+
+    <url>
+        <loc>https://www.importexport-esmeraldas.com/#muzo-mines</loc>
+        <lastmod>2024-12-19</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.8</priority>
+    </url>
+
+    <url>
+        <loc>https://www.importexport-esmeraldas.com/#contacto</loc>
+        <lastmod>2024-12-19</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.6</priority>
+    </url>
+
+</urlset>

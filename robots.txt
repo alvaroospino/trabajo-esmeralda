@@ -1,0 +1,52 @@
+# robots.txt - Import Export Esmeraldas Colombianas
+# Optimizado para SEO de esmeraldas colombianas y gemas de Muzo
+
+User-agent: *
+Allow: /
+
+# Páginas principales permitidas
+Allow: /index.html
+Allow: /galeria.html
+
+# Permitir todos los recursos importantes
+Allow: /assets/css/
+Allow: /assets/js/
+Allow: /assets/img/
+Allow: /assets/video/
+
+# Bloquear archivos innecesarios
+Disallow: /CLAUDE.md
+Disallow: /README.md
+Disallow: /prueba.html
+Disallow: /assets/css/base/
+Disallow: /assets/css/components/
+Disallow: /assets/js/modules/
+
+# Sitemap
+Sitemap: https://www.importexport-esmeraldas.com/sitemap.xml
+
+# Crawl-delay para ser amigables con los crawlers
+Crawl-delay: 1
+
+# Directrices específicas para motores de búsqueda principales
+User-agent: Googlebot
+Allow: /
+Crawl-delay: 1
+
+User-agent: Bingbot
+Allow: /
+Crawl-delay: 2
+
+User-agent: Slurp
+Allow: /
+Crawl-delay: 3
+
+# Permitir bots de redes sociales para Open Graph
+User-agent: facebookexternalhit/
+Allow: /
+
+User-agent: Twitterbot
+Allow: /
+
+User-agent: LinkedInBot
+Allow: /
