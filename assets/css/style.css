@@ -347,7 +347,6 @@ body::before {
     right: 0;
     z-index: 1000;
     background: rgba(13, 40, 24, 0.8);
-    backdrop-filter: blur(20px);
     border-bottom: 1px solid var(--glass-border);
     box-shadow: 0 4px 20px var(--emerald-soft-glow);
     transition: var(--transition-smooth);
@@ -541,7 +540,6 @@ body::before {
     left: 0;
     right: 0;
     background: rgba(6, 26, 13, 0.95);
-    backdrop-filter: blur(20px);
     border-bottom: 1px solid var(--glass-border);
     transform: translateY(-100%);
     opacity: 0;
@@ -648,14 +646,14 @@ body::before {
     pointer-events: none;
 }
 
-/* --- PARTÍCULAS MÁS LUJOSAS (BRILLOS DE GEMA) --- */
+/* --- PARTÍCULAS OPTIMIZADAS --- */
 .particle {
-    width: 5px;
-    height: 5px;
-    background: radial-gradient(circle, #00ff9d, transparent);
+    width: 3px;
+    height: 3px;
+    background: var(--primary-green);
     border-radius: 50%;
-    animation: floatParticles 10s ease-in-out infinite;
-    box-shadow: 0 0 10px rgba(0, 255, 127, 0.8), 0 0 20px rgba(212, 175, 55, 0.4);
+    animation: floatParticles 12s ease-in-out infinite;
+    opacity: 0.6;
 }
 
 .hero-content {
@@ -675,7 +673,6 @@ body::before {
             rgba(0, 255, 127, 0.12) 0%,
             rgba(50, 205, 50, 0.08) 100%
         );
-    backdrop-filter: blur(25px);
     border: 2px solid transparent;
     background-clip: padding-box;
     border-radius: 50px;
@@ -953,21 +950,6 @@ body::before {
     position: relative;
 }
 
-/* Solo aplicar efectos de reveal a secciones cuando JavaScript esté listo */
-.js-loaded .section.reveal-section:not(.reveal) {
-    clip-path: polygon(0 100%, 100% 100%, 100% 100%, 0 100%);
-    filter: blur(10px);
-    opacity: 0;
-    transform: translateY(80px);
-    transition: all 1.2s cubic-bezier(0.25, 0.8, 0.25, 1);
-}
-
-.section.reveal-section.reveal {
-    clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
-    filter: blur(0);
-    opacity: 1;
-    transform: translateY(0);
-}
 
 .section::before {
     content: '';
@@ -991,7 +973,6 @@ body::before {
     display: inline-block;
     padding: 0.4rem 1.2rem;
     background: var(--glass-bg);
-    backdrop-filter: blur(10px);
     border: 1px solid var(--glass-border);
     border-radius: 50px;
     font-size: 0.8rem;
@@ -1067,7 +1048,6 @@ body::before {
     width: 50px;
     height: 50px;
     background: rgba(6, 26, 13, 0.8);
-    backdrop-filter: blur(10px);
     border: 1px solid var(--glass-border);
     border-radius: 50%;
     display: flex;
@@ -1130,7 +1110,6 @@ body::before {
 
 .video-card {
     background: var(--card-bg);
-    backdrop-filter: blur(20px);
     border: 1px solid var(--glass-border);
     border-radius: 20px;
     overflow: hidden;
@@ -1175,7 +1154,6 @@ body::before {
     width: 80px;
     height: 80px;
     background: rgba(0, 255, 127, 0.2);
-    backdrop-filter: blur(15px);
     border: 2px solid var(--primary-green);
     border-radius: 50%;
     display: flex;
@@ -1198,7 +1176,6 @@ body::before {
     width: 70px;
     height: 70px;
     background: var(--glass-bg);
-    backdrop-filter: blur(10px);
     border: 1px solid var(--primary-green);
     border-radius: 50%;
     display: flex;
@@ -1286,7 +1263,6 @@ body::before {
 
 .contact-card {
     background: var(--card-bg);
-    backdrop-filter: blur(20px);
     border: 1px solid var(--glass-border);
     border-radius: 15px;
     padding: 2.5rem;
@@ -1333,27 +1309,10 @@ body::before {
 .premium-gallery-section {
     position: relative;
     padding: 6rem 0;
-    background:
-        radial-gradient(ellipse at top left, rgba(0, 255, 127, 0.05) 0%, transparent 50%),
-        radial-gradient(ellipse at bottom right, rgba(50, 205, 50, 0.03) 0%, transparent 50%),
-        radial-gradient(ellipse at center, rgba(0, 255, 127, 0.02) 0%, transparent 70%);
+    background: rgba(0, 255, 127, 0.02);
     overflow: hidden;
 }
 
-.js-loaded .premium-gallery-section.reveal-section:not(.reveal) {
-    clip-path: polygon(0 100%, 100% 100%, 100% 100%, 0 100%);
-    filter: blur(15px);
-    opacity: 0;
-    transform: translateY(120px) scale(0.95);
-    transition: all 1.6s cubic-bezier(0.25, 0.8, 0.25, 1);
-}
-
-.premium-gallery-section.reveal-section.reveal {
-    clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
-    filter: blur(0);
-    opacity: 1;
-    transform: translateY(0) scale(1);
-}
 
 .premium-gallery-section::before {
     content: '';
@@ -1362,9 +1321,7 @@ body::before {
     left: 0;
     width: 100%;
     height: 100%;
-    background:
-        linear-gradient(45deg, transparent 30%, rgba(0, 255, 127, 0.02) 50%, transparent 70%),
-        linear-gradient(-45deg, transparent 30%, rgba(50, 205, 50, 0.01) 50%, transparent 70%);
+    background: rgba(0, 255, 127, 0.01);
     pointer-events: none;
     z-index: -1;
 }
@@ -1394,7 +1351,6 @@ body::before {
     display: inline-block;
     padding: 0.8rem 2rem;
     background: linear-gradient(135deg, rgba(0, 255, 127, 0.1), rgba(50, 205, 50, 0.05));
-    backdrop-filter: blur(20px);
     border: 2px solid transparent;
     background-clip: padding-box;
     border-radius: 50px;
@@ -1588,7 +1544,6 @@ body::before {
     border-radius: 25px;
     overflow: hidden;
     background: var(--glass-bg);
-    backdrop-filter: blur(30px);
     border: 1px solid var(--glass-border);
     transition: all 0.8s cubic-bezier(0.25, 0.8, 0.25, 1);
     cursor: pointer;
@@ -1697,7 +1652,6 @@ body::before {
     width: 80px;
     height: 80px;
     background: rgba(0, 255, 127, 0.2);
-    backdrop-filter: blur(15px);
     border: 2px solid var(--primary-green);
     border-radius: 50%;
     display: flex;
@@ -1811,7 +1765,6 @@ body::before {
 .item-badge {
     align-self: flex-start;
     background: rgba(0, 255, 127, 0.15);
-    backdrop-filter: blur(15px);
     border: 1px solid var(--primary-green);
     color: var(--primary-green);
     font-size: 0.75rem;
@@ -1868,7 +1821,6 @@ body::before {
 /* ESPECIFICACIONES - VISIBLES POR DEFECTO */
 .spec-item {
     background: rgba(0, 255, 127, 0.1);
-    backdrop-filter: blur(10px);
     border: 1px solid rgba(0, 255, 127, 0.3);
     padding: 0.4rem 0.8rem;
     border-radius: 12px;
@@ -2097,7 +2049,6 @@ body::before {
     display: inline-block;
     padding: 0.7rem 1.5rem;
     background: linear-gradient(135deg, rgba(0, 255, 127, 0.15), rgba(50, 205, 50, 0.08));
-    backdrop-filter: blur(15px);
     border: 1px solid var(--glass-border);
     border-radius: 25px;
     font-size: 0.75rem;
@@ -2152,7 +2103,6 @@ body::before {
     overflow: hidden;
     height: 280px;
     background: var(--glass-bg);
-    backdrop-filter: blur(20px);
     border: 1px solid var(--glass-border);
     box-shadow:
         0 15px 35px rgba(0, 0, 0, 0.4),
@@ -2186,7 +2136,6 @@ body::before {
     top: 1.5rem;
     right: 1.5rem;
     background: rgba(0, 255, 127, 0.2);
-    backdrop-filter: blur(10px);
     border: 1px solid var(--primary-green);
     color: var(--primary-green);
     font-size: 0.7rem;
@@ -2267,7 +2216,6 @@ body::before {
 
 .muzo-feature-card {
     background: var(--glass-bg);
-    backdrop-filter: blur(20px);
     border: 1px solid var(--glass-border);
     border-radius: 15px;
     padding: 1.5rem;
@@ -2328,7 +2276,6 @@ body::before {
 
 .stat-card {
     background: var(--card-bg);
-    backdrop-filter: blur(20px);
     border: 1px solid var(--glass-border);
     border-radius: 15px;
     padding: 1.5rem 1rem;
@@ -2790,99 +2737,6 @@ body::before {
     }
 }
 
-/* ====== DRAMATIC SCROLL REVEAL ANIMATIONS ====== */
-
-/* Elementos que entran desde la izquierda */
-.js-loaded .reveal-left:not(.visible) {
-    opacity: 0;
-    transform: translateX(-100px) rotateY(-45deg);
-    filter: blur(8px);
-    transition: all 1.2s cubic-bezier(0.25, 0.8, 0.25, 1);
-}
-
-.reveal-left.visible {
-    opacity: 1;
-    transform: translateX(0) rotateY(0);
-    filter: blur(0);
-}
-
-/* Elementos que entran desde la derecha */
-.js-loaded .reveal-right:not(.visible) {
-    opacity: 0;
-    transform: translateX(100px) rotateY(45deg);
-    filter: blur(8px);
-    transition: all 1.2s cubic-bezier(0.25, 0.8, 0.25, 1);
-}
-
-.reveal-right.visible {
-    opacity: 1;
-    transform: translateX(0) rotateY(0);
-    filter: blur(0);
-}
-
-/* Elementos que entran desde arriba */
-.js-loaded .reveal-top:not(.visible) {
-    opacity: 0;
-    transform: translateY(-80px) rotateX(45deg) scale(0.8);
-    filter: blur(10px);
-    transition: all 1.4s cubic-bezier(0.25, 0.8, 0.25, 1);
-}
-
-.reveal-top.visible {
-    opacity: 1;
-    transform: translateY(0) rotateX(0) scale(1);
-    filter: blur(0);
-}
-
-/* Elementos que entran desde abajo */
-.js-loaded .reveal-bottom:not(.visible) {
-    opacity: 0;
-    transform: translateY(80px) rotateX(-45deg) scale(0.8);
-    filter: blur(10px);
-    transition: all 1.4s cubic-bezier(0.25, 0.8, 0.25, 1);
-}
-
-.reveal-bottom.visible {
-    opacity: 1;
-    transform: translateY(0) rotateX(0) scale(1);
-    filter: blur(0);
-}
-
-/* Elementos que aparecen con zoom dramático */
-.js-loaded .reveal-zoom:not(.visible) {
-    opacity: 0;
-    transform: scale(0.3) rotate(180deg);
-    filter: blur(15px);
-    transition: all 1.8s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-}
-
-.reveal-zoom.visible {
-    opacity: 1;
-    transform: scale(1) rotate(0);
-    filter: blur(0);
-}
-
-/* Elementos con efecto de "flip" */
-.js-loaded .reveal-flip:not(.visible) {
-    opacity: 0;
-    transform: rotateY(180deg) scale(0.5);
-    filter: blur(12px);
-    transition: all 1.6s cubic-bezier(0.25, 0.8, 0.25, 1);
-}
-
-.reveal-flip.visible {
-    opacity: 1;
-    transform: rotateY(0) scale(1);
-    filter: blur(0);
-}
-
-/* Stagger delay para elementos múltiples */
-.reveal-stagger:nth-child(1) { transition-delay: 0.1s; }
-.reveal-stagger:nth-child(2) { transition-delay: 0.2s; }
-.reveal-stagger:nth-child(3) { transition-delay: 0.3s; }
-.reveal-stagger:nth-child(4) { transition-delay: 0.4s; }
-.reveal-stagger:nth-child(5) { transition-delay: 0.5s; }
-.reveal-stagger:nth-child(6) { transition-delay: 0.6s; }
 
 @keyframes slideInUp {
     from {
@@ -3360,7 +3214,6 @@ body::before {
     border: 1px solid var(--glass-border);
     border-radius: 2rem;
     background: var(--glass-bg);
-    backdrop-filter: blur(10px);
     transition: var(--transition-smooth);
 }
 

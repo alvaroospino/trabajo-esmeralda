@@ -13,7 +13,6 @@ class EmeraldElite {
         this.realPreloader = new RealPreloader();
         this.setupEventListeners();
         this.createParticles();
-        this.setupIntersectionObserver();
         this.setupMobileMenu();
         this.setupGalleryScroll();
         this.initVideoHandler();
@@ -40,7 +39,7 @@ class EmeraldElite {
         const container = document.querySelector('.hero-particles');
         if (!container) return;
 
-        const particleCount = window.innerWidth < 768 ? 15 : 30;
+        const particleCount = window.innerWidth < 768 ? 8 : 15;
         
         for (let i = 0; i < particleCount; i++) {
             const particle = document.createElement('div');
@@ -256,90 +255,7 @@ class EmeraldElite {
         }
     }
 
-    // MEJORADO: Intersection Observer con Dramatic Scroll Reveal
-    setupIntersectionObserver() {
-        // Verificar que tenemos soporte para Intersection Observer
-        if (!window.IntersectionObserver) {
-            this.showAllElements();
-            return;
-        }
 
-        const observerOptions = {
-            threshold: 0.1,
-            rootMargin: '0px 0px -50px 0px'
-        };
-
-        // Observer para secciones completas
-        const sectionObserver = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add('reveal');
-                }
-            });
-        }, observerOptions);
-
-        // Observer para elementos individuales
-        const elementObserver = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    // Añadir delay progresivo para elementos stagger
-                    if (entry.target.classList.contains('reveal-stagger')) {
-                        const staggerElements = entry.target.parentElement.querySelectorAll('.reveal-stagger');
-                        const index = Array.from(staggerElements).indexOf(entry.target);
-                        setTimeout(() => {
-                            entry.target.classList.add('visible');
-                        }, index * 150);
-                    } else {
-                        entry.target.classList.add('visible');
-                    }
-                }
-            });
-        }, {
-            threshold: 0.15,
-            rootMargin: '0px 0px -30px 0px'
-        });
-
-        // Timeout de seguridad: mostrar elementos después de 5 segundos
-        setTimeout(() => {
-            this.showAllElements();
-        }, 5000);
-
-        // Observar secciones principales
-        const sectionsToReveal = document.querySelectorAll('.reveal-section');
-        sectionsToReveal.forEach(section => {
-            sectionObserver.observe(section);
-        });
-
-        // Observar elementos con animaciones direccionales
-        const elementsToReveal = document.querySelectorAll(`
-            .reveal-left, .reveal-right, .reveal-top, .reveal-bottom, 
-            .reveal-zoom, .reveal-flip
-        `);
-        
-        elementsToReveal.forEach(element => {
-            elementObserver.observe(element);
-        });
-
-        // NUEVO: Scroll progress indicator
-        this.setupScrollProgress();
-    }
-
-    // NUEVO: Fallback para mostrar todos los elementos
-    showAllElements() {
-        const sectionsToReveal = document.querySelectorAll('.reveal-section');
-        sectionsToReveal.forEach(section => {
-            section.classList.add('reveal');
-        });
-
-        const elementsToReveal = document.querySelectorAll(`
-            .reveal-left, .reveal-right, .reveal-top, .reveal-bottom, 
-            .reveal-zoom, .reveal-flip
-        `);
-        
-        elementsToReveal.forEach(element => {
-            element.classList.add('visible');
-        });
-    }
 
     // NUEVO: Indicador de progreso de scroll
     setupScrollProgress() {
@@ -428,8 +344,8 @@ class RealPreloader {
         this.progressText = null;
         
         this.startTime = Date.now();
-        this.minDisplayTime = 1500; // Mínimo 1.5 segundos
-        this.maxDisplayTime = 8000; // Máximo 8 segundos
+        this.minDisplayTime = 600; // Mínimo 0.6 segundos
+        this.maxDisplayTime = 2500; // Máximo 2.5 segundos
         this.resourcesLoaded = false;
         
         this.totalResources = 0;
@@ -464,9 +380,10 @@ class RealPreloader {
     
     collectResources() {
         const images = document.querySelectorAll('img');
-        const videos = document.querySelectorAll('video');
+        // Solo contar videos con preload diferente de 'none'
+        const videos = document.querySelectorAll('video:not([preload="none"])');
         
-        // Contar recursos
+        // Contar recursos críticos
         this.totalResources = images.length + videos.length;
         
         // Si no hay recursos, marcar como cargado
@@ -486,12 +403,12 @@ class RealPreloader {
             }
         });
         
-        // Monitorear videos
+        // Monitorear solo videos críticos (hero video principalmente)
         videos.forEach(video => {
-            if (video.readyState >= 3) { // HAVE_FUTURE_DATA o superior
+            if (video.readyState >= 2 || video.classList.contains('hero-video')) {
                 this.onResourceLoaded();
             } else {
-                video.addEventListener('loadeddata', () => this.onResourceLoaded());
+                video.addEventListener('canplay', () => this.onResourceLoaded());
                 video.addEventListener('error', () => this.onResourceLoaded());
             }
         });
@@ -502,7 +419,7 @@ class RealPreloader {
                 this.resourcesLoaded = true;
                 this.checkIfReady();
             }
-        }, this.maxDisplayTime - 1000);
+        }, 1500); // Timeout rápido de 1.5 segundos
     }
     
     onResourceLoaded() {
@@ -859,8 +776,6 @@ function updateYear() {
 
 // Inicializar todas las clases cuando DOM esté listo
 document.addEventListener('DOMContentLoaded', () => {
-    // Añadir clase js-loaded para habilitar animaciones
-    document.body.classList.add('js-loaded');
     
     window.emeraldElite = new EmeraldElite();
     new ImageModal();
