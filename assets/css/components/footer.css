@@ -7,7 +7,6 @@
   background: linear-gradient(135deg, #0a1a0a 0%, #1a3d1a 50%, #0f2a0f 100%);
   border-top: 2px solid rgba(0, 255, 127, 0.3);
   position: relative;
-  margin-top: var(--space-4xl, 4rem);
   padding: 4rem 0 2rem;
   overflow: hidden;
 }
@@ -336,32 +335,39 @@
 @media (max-width: 1200px) {
     .footer__container {
         grid-template-columns: 1fr;
-        gap: 2.5rem;
+        gap: 3rem;
         text-align: center;
+        padding: 0 1.5rem;
     }
-    
+
     .footer__brand {
         text-align: center;
+        margin-bottom: 1rem;
     }
-    
+
     .footer__brand-emblem {
         justify-content: center;
+        margin-bottom: 1.5rem;
     }
-    
+
     .footer__description {
         max-width: 100%;
+        margin-bottom: 2rem;
     }
-    
+
     .footer__nav {
         justify-content: center;
+        margin-bottom: 2rem;
     }
-    
+
     .footer__quality {
         text-align: center;
+        margin-bottom: 2rem;
     }
-    
+
     .footer__quality-grid {
         margin: 0 auto;
+        max-width: 300px;
     }
 }
 
@@ -369,33 +375,42 @@
     .footer {
         padding: 3rem 0 1.5rem;
     }
-    
+
     .footer__container {
         padding: 0 1rem;
         gap: 2rem;
     }
-    
+
     .footer__nav {
-        flex-direction: column;
-        gap: 2rem;
+        gap: 1.5rem;
+        justify-content: center;
     }
-    
+
     .footer__nav-section {
         min-width: auto;
+        text-align: center;
     }
-    
+
     .footer__quality-grid {
-        grid-template-columns: 1fr;
+        grid-template-columns: repeat(2, 1fr);
         gap: 0.75rem;
-        max-width: 200px;
+        max-width: 300px;
     }
-    
+
     .footer__seal {
         padding: 0.75rem;
     }
-    
+
     .footer__seal-icon {
         font-size: 1.25rem;
+    }
+
+    .footer__brand-emblem {
+        margin-bottom: 1rem;
+    }
+
+    .footer__description {
+        margin-bottom: 1.5rem;
     }
 }
 

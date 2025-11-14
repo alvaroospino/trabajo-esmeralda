@@ -742,6 +742,7 @@ body::before {
     overflow: hidden;
     text-align: center;
     animation: heroFadeInUp 1.4s ease-out 0.6s both;
+    filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.3));
 }
 
 /* --- HERO TITLE CON EFECTO DE BRILLO METÁLICO --- */
@@ -1251,7 +1252,6 @@ body::before {
 /* Contact Section */
 .contact-section {
     padding-top: 0;
-    padding-bottom: 8rem;
 }
 
 .contact-grid {

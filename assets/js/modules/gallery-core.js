@@ -103,10 +103,17 @@ export class GalleryCore {
       coleccion3: this.mediaItems.filter(item => item.category === 'coleccion3').length
     };
 
-    // Update counter elements
-    Object.entries(counters).forEach(([key, count]) => {
-      const element = DOM.get(`#count${key.charAt(0).toUpperCase() + key.slice(1)}`);
-      if (element) element.textContent = count;
+    // Update counter elements using config selectors
+    const counterElements = {
+      all: DOM.get(GALLERY_CONFIG.SELECTORS.COUNT_ALL),
+      videos: DOM.get(GALLERY_CONFIG.SELECTORS.COUNT_VIDEOS),
+      coleccion1: DOM.get(GALLERY_CONFIG.SELECTORS.COUNT_COL1),
+      coleccion2: DOM.get(GALLERY_CONFIG.SELECTORS.COUNT_COL2),
+      coleccion3: DOM.get(GALLERY_CONFIG.SELECTORS.COUNT_COL3)
+    };
+
+    Object.entries(counterElements).forEach(([key, element]) => {
+      if (element) element.textContent = counters[key];
     });
 
     // Update total items
@@ -191,19 +198,75 @@ export class GalleryCore {
         DOM.toggleClass(btn, GALLERY_CONFIG.CLASSES.ACTIVE, false);
       });
       DOM.toggleClass(buttonElement, GALLERY_CONFIG.CLASSES.ACTIVE, true);
-      
+
       // Update gallery grid class
       const galleryGrid = DOM.get(GALLERY_CONFIG.SELECTORS.GALLERY_GRID);
       if (galleryGrid) {
         galleryGrid.classList.remove(GALLERY_CONFIG.CLASSES.GRID_VIEW, GALLERY_CONFIG.CLASSES.MASONRY_VIEW);
         galleryGrid.classList.add(`${viewType}-view`);
+
+        // For masonry view, ensure proper layout after class change
+        if (viewType === 'masonry') {
+          Performance.raf(() => {
+            this.adjustMasonryLayout();
+          });
+        }
       }
-      
+
       this.currentView = viewType;
-      
+
     } catch (error) {
       // Change view error handled silently
     }
+  }
+
+  /**
+   * Adjust masonry layout for proper item positioning
+   */
+  adjustMasonryLayout() {
+    const galleryGrid = DOM.get(GALLERY_CONFIG.SELECTORS.GALLERY_GRID);
+    if (!galleryGrid) return;
+
+    const items = galleryGrid.querySelectorAll(`.${GALLERY_CONFIG.CLASSES.GALLERY_ITEM}`);
+    items.forEach((item, index) => {
+      // Force reflow to ensure proper masonry positioning
+      item.style.gridRowEnd = 'span 1';
+      Performance.raf(() => {
+        // For masonry layout, we need to calculate the actual height of each item
+        // and set grid-row-end accordingly to create the masonry effect
+        const mediaElement = item.querySelector('.gallery-item__media');
+        if (mediaElement) {
+          // Wait for image/video to load to get proper dimensions
+          if (mediaElement.complete || mediaElement.readyState >= 2) {
+            this.setMasonrySpan(item, mediaElement);
+          } else {
+            // If not loaded yet, wait for load event
+            DOM.on(mediaElement, 'load', () => {
+              this.setMasonrySpan(item, mediaElement);
+            }, { once: true });
+          }
+        }
+      });
+    });
+  }
+
+  /**
+   * Set the grid-row-end span for masonry layout based on media dimensions
+   * @param {Element} item - Gallery item element
+   * @param {Element} mediaElement - Media element (img or video)
+   */
+  setMasonrySpan(item, mediaElement) {
+    const rect = mediaElement.getBoundingClientRect();
+    const aspectRatio = rect.width / rect.height;
+
+    // Calculate how many grid rows this item should span
+    // Base this on the aspect ratio - taller items span more rows
+    let span = Math.ceil(aspectRatio * 8); // Adjust multiplier for desired effect
+
+    // Ensure minimum and maximum spans
+    span = Math.max(8, Math.min(20, span)); // Min 8 rows, max 20 rows
+
+    item.style.gridRowEnd = `span ${span}`;
   }
 
   /**
