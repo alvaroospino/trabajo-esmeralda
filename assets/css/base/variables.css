@@ -3,39 +3,53 @@
    ========================================== */
 
 :root {
-  /* === Color Palette === */
+  /* === Enhanced Color Palette === */
   --emerald-primary: #00ff7f;
   --emerald-secondary: #32cd32;
+  --emerald-tertiary: #20b545;
   --emerald-dark: #228b22;
   --emerald-deep: #0a1f12;
   --emerald-darker: #061a0d;
+  --emerald-darkest: #04100a;
+
+  /* === Premium Gradients === */
+  --gradient-primary: linear-gradient(135deg, var(--emerald-primary) 0%, var(--emerald-secondary) 50%, var(--emerald-tertiary) 100%);
+  --gradient-secondary: linear-gradient(135deg, var(--emerald-dark) 0%, var(--emerald-deep) 100%);
+  --gradient-glass: linear-gradient(135deg, rgba(13, 40, 24, 0.4) 0%, rgba(0, 255, 127, 0.1) 50%, rgba(13, 40, 24, 0.4) 100%);
+  --gradient-text: linear-gradient(135deg, var(--emerald-primary), #00ff9f, var(--emerald-secondary));
 
   /* === Semantic Colors === */
   --color-primary: var(--emerald-primary);
   --color-secondary: var(--emerald-secondary);
-  --color-accent: var(--emerald-dark);
-  
-  /* === Text Colors === */
-  --text-primary: #ffffff;
-  --text-secondary: rgba(255, 255, 255, 0.9);
-  --text-muted: rgba(255, 255, 255, 0.7);
-  --text-disabled: rgba(255, 255, 255, 0.5);
+  --color-accent: var(--emerald-tertiary);
+  --color-surface: var(--emerald-dark);
 
-  /* === Background Colors === */
+  /* === Enhanced Text Colors === */
+  --text-primary: #ffffff;
+  --text-secondary: rgba(255, 255, 255, 0.95);
+  --text-muted: rgba(255, 255, 255, 0.75);
+  --text-disabled: rgba(255, 255, 255, 0.6);
+  --text-accent: var(--emerald-primary);
+
+  /* === Enhanced Background Colors === */
   --bg-primary: #000000;
   --bg-secondary: var(--emerald-darker);
-  --bg-surface: rgba(13, 40, 24, 0.6);
-  --bg-overlay: rgba(0, 0, 0, 0.8);
+  --bg-surface: rgba(13, 40, 24, 0.7);
+  --bg-overlay: rgba(0, 0, 0, 0.85);
+  --bg-glass: rgba(13, 40, 24, 0.25);
 
-  /* === Glass Effect === */
-  --glass-bg: rgba(13, 40, 24, 0.3);
-  --glass-border: rgba(0, 255, 127, 0.2);
-  --glass-blur: 20px;
+  /* === Advanced Glass Effects === */
+  --glass-bg: rgba(13, 40, 24, 0.35);
+  --glass-border: rgba(0, 255, 127, 0.3);
+  --glass-blur: 25px;
+  --glass-shadow: 0 8px 32px rgba(0, 255, 127, 0.1);
 
-  /* === Glow Effects === */
-  --glow-primary: rgba(0, 255, 127, 0.4);
-  --glow-secondary: rgba(50, 205, 50, 0.3);
-  --glow-soft: rgba(0, 255, 127, 0.1);
+  /* === Enhanced Glow Effects === */
+  --glow-primary: rgba(0, 255, 127, 0.5);
+  --glow-secondary: rgba(50, 205, 50, 0.4);
+  --glow-soft: rgba(0, 255, 127, 0.15);
+  --glow-strong: rgba(0, 255, 127, 0.8);
+  --glow-ambient: rgba(0, 255, 127, 0.05);
 
   /* === Typography Scale === */
   --font-family-primary: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;

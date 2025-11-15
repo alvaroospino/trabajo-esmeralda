@@ -5,6 +5,32 @@
 .gallery {
   padding: 0 var(--space-base);
   margin-bottom: var(--space-3xl);
+  position: relative;
+  overflow: hidden;
+}
+
+.gallery::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(circle at 30% 20%, var(--glow-ambient) 0%, transparent 50%),
+    radial-gradient(circle at 70% 80%, var(--glow-soft) 0%, transparent 50%),
+    linear-gradient(45deg, transparent 0%, var(--glow-primary) 30%, transparent 100%);
+  pointer-events: none;
+  z-index: var(--z-behind);
+  animation: galleryGlow 12s ease-in-out infinite;
+}
+
+@keyframes galleryGlow {
+  0%, 100% {
+    opacity: 0.1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.3;
+    transform: scale(1.02);
+  }
 }
 
 .gallery__container {
@@ -33,15 +59,15 @@
 /* === Gallery Item === */
 .gallery-item {
   position: relative;
-  background: var(--glass-bg);
+  background: var(--gradient-glass);
   border-radius: var(--radius-2xl);
-  border: 1px solid transparent;
+  border: 1px solid var(--glass-border);
   backdrop-filter: blur(var(--glass-blur));
   overflow: hidden;
   cursor: pointer;
-  transition: var(--transition-base);
+  transition: var(--transition-spring);
   aspect-ratio: 4/3;
-  box-shadow: var(--shadow-base);
+  box-shadow: var(--glass-shadow);
   opacity: 0;
   transform: translateY(20px);
 }
@@ -56,11 +82,12 @@
   content: '';
   position: absolute;
   inset: -1px;
-  background: linear-gradient(135deg, var(--color-primary), transparent, var(--color-secondary));
+  background: var(--gradient-primary);
   border-radius: var(--radius-2xl);
   opacity: 0;
   transition: var(--transition-base);
   z-index: var(--z-behind);
+  box-shadow: 0 0 25px var(--glow-primary);
 }
 
 .gallery-item:hover::before {
@@ -68,12 +95,13 @@
 }
 
 .gallery-item:hover {
-  transform: translateY(-8px) scale(1.02);
+  transform: translateY(-12px) scale(1.05) rotate(0.5deg);
   box-shadow: var(--shadow-glow-lg);
+  border-color: var(--color-primary);
 }
 
 .gallery-item:active {
-  transform: translateY(-4px) scale(1.01);
+  transform: translateY(-6px) scale(1.02);
 }
 
 /* === Media Element === */

@@ -6,20 +6,37 @@
   position: relative;
   padding: var(--space-2xl) var(--space-base) var(--space-xl);
   text-align: center;
-  background: var(--glass-bg);
+  background: var(--gradient-glass);
   backdrop-filter: blur(var(--glass-blur));
   border-bottom: 1px solid var(--glass-border);
+  box-shadow: var(--glass-shadow);
   z-index: var(--z-sticky);
   margin-bottom: var(--space-xl);
+  overflow: hidden;
 }
 
 .header::before {
   content: '';
   position: absolute;
   inset: 0;
-  background: radial-gradient(circle at center, var(--glow-soft) 0%, transparent 70%);
+  background:
+    radial-gradient(circle at 20% 30%, var(--glow-ambient) 0%, transparent 50%),
+    radial-gradient(circle at 80% 70%, var(--glow-soft) 0%, transparent 50%),
+    linear-gradient(135deg, transparent 0%, var(--glow-primary) 50%, transparent 100%);
   pointer-events: none;
   z-index: var(--z-behind);
+  animation: headerGlow 8s ease-in-out infinite;
+}
+
+@keyframes headerGlow {
+  0%, 100% {
+    opacity: 0.3;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.6;
+    transform: scale(1.05);
+  }
 }
 
 /* === Header Content === */

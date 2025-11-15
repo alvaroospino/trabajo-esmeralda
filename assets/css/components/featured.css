@@ -2,6 +2,32 @@
 .featured {
   margin-bottom: var(--space-3xl);
   padding: 0 var(--space-base);
+  position: relative;
+  overflow: hidden;
+}
+
+.featured::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(circle at 25% 25%, var(--glow-ambient) 0%, transparent 40%),
+    radial-gradient(circle at 75% 75%, var(--glow-soft) 0%, transparent 40%),
+    linear-gradient(135deg, transparent 0%, var(--glow-primary) 40%, transparent 100%);
+  pointer-events: none;
+  z-index: var(--z-behind);
+  animation: featuredGlow 15s ease-in-out infinite;
+}
+
+@keyframes featuredGlow {
+  0%, 100% {
+    opacity: 0.15;
+    transform: scale(1) rotate(0deg);
+  }
+  50% {
+    opacity: 0.25;
+    transform: scale(1.05) rotate(1deg);
+  }
 }
 
 .featured__container {
@@ -67,27 +93,28 @@
 .featured__item {
   flex: 0 0 280px;
   aspect-ratio: 4/3;
-  background: var(--glass-bg);
+  background: var(--gradient-glass);
   border-radius: var(--radius-xl);
-  border: 1px solid transparent;
+  border: 1px solid var(--glass-border);
   backdrop-filter: blur(var(--glass-blur));
   overflow: hidden;
   cursor: pointer;
-  transition: var(--transition-base);
+  transition: var(--transition-spring);
   position: relative;
   scroll-snap-align: center;
-  box-shadow: var(--shadow-base);
+  box-shadow: var(--glass-shadow);
 }
 
 .featured__item::before {
   content: '';
   position: absolute;
   inset: -1px;
-  background: linear-gradient(135deg, var(--color-primary), transparent, var(--color-secondary));
+  background: var(--gradient-primary);
   border-radius: var(--radius-xl);
   opacity: 0;
   transition: var(--transition-base);
   z-index: var(--z-behind);
+  box-shadow: 0 0 30px var(--glow-primary);
 }
 
 .featured__item:hover::before,
@@ -97,8 +124,13 @@
 
 .featured__item:hover,
 .featured__item.is-active {
-  transform: scale(1.05);
-  box-shadow: var(--shadow-glow);
+  transform: scale(1.08) rotate(1deg);
+  box-shadow: var(--shadow-glow-lg);
+  border-color: var(--color-primary);
+}
+
+.featured__item:hover .featured__media {
+  transform: scale(1.1);
 }
 
 .featured__item-media {
