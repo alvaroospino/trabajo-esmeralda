@@ -923,31 +923,20 @@ export class GalleryCore {
       carousel.style.cursor = 'grab';
     });
 
-    // Mouse wheel support for desktop - only when hovering carousel
+    // Mouse wheel support for desktop - allow natural scrolling
     DOM.on(carousel, 'wheel', (e) => {
       if (window.innerWidth >= 1024) {
         // Only prevent default if the user is directly interacting with carousel
         const rect = carousel.getBoundingClientRect();
         const isHoveringCarousel = e.clientX >= rect.left && e.clientX <= rect.right &&
                                    e.clientY >= rect.top && e.clientY <= rect.bottom;
-        
+
         if (isHoveringCarousel) {
-          e.preventDefault();
-          e.stopPropagation();
-          
-          if (e.deltaY > 0) {
-            // Scroll down/right - next
-            const maxIndex = Math.max(0, featuredItems.length - 1);
-            currentIndex = Math.min(maxIndex, currentIndex + 1);
-          } else {
-            // Scroll up/left - previous
-            currentIndex = Math.max(0, currentIndex - 1);
-          }
-          
-          updateCarouselPosition();
+          // Allow natural scrolling behavior - don't prevent default
+          // The carousel will scroll naturally with mouse wheel
         }
       }
-    }, { passive: false });
+    }, { passive: true });
 
     // Keyboard navigation for desktop - only when carousel is focused or hovered
     let isCarouselFocused = false;

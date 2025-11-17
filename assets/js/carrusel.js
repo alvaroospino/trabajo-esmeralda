@@ -14,7 +14,7 @@
                 { src: 'assets/img/eralda11.jpg', title: 'Esmeralda Trapiche' },
                 { src: 'assets/img/esmeralda26.jpg', title: 'Esmeralda' },
                 { src: 'assets/img/esmeralda27.jpg', title: ' Esmeralda' },
-                { src: 'assets/img/esmeralda28.jpg', title: ' Esmeralda' },
+                { src: 'assets/img/esmeralda-muestra.png', title: ' Esmeralda' },
                 { src: 'assets/img/esmeralda1.jpg', title: 'Esmeralda' },
                 { src: 'assets/img/esmeralda2.jpg', title: 'Esmeralda' },
                 { src: 'assets/img/esmeralda3.jpg', title: 'Esmeralda' },

@@ -78,11 +78,12 @@
   display: flex;
   gap: var(--space-base);
   overflow-x: auto;
-  scroll-behavior: smooth;
-  scroll-snap-type: x mandatory;
+  scroll-behavior: auto;
+  scroll-snap-type: x proximity;
   padding: var(--space-base);
   scrollbar-width: none;
   -ms-overflow-style: none;
+  scroll-padding: var(--space-base);
 }
 
 .featured__carousel::-webkit-scrollbar {
@@ -388,16 +389,24 @@
 @media (min-width: 1024px) {
   .featured__carousel {
     gap: var(--space-xl);
-    overflow: visible;
+    overflow-x: auto;
+    overflow-y: hidden;
     justify-content: flex-start;
     flex-wrap: nowrap;
-    scroll-behavior: smooth;
+    scroll-behavior: auto;
     cursor: grab;
     position: relative;
     transform: translateX(0);
-    transition: transform 0.5s cubic-bezier(0.25, 0.8, 0.25, 1);
+    transition: none;
+    scroll-snap-type: none;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
   }
-  
+
+  .featured__carousel::-webkit-scrollbar {
+    display: none;
+  }
+
   .featured__carousel:active {
     cursor: grabbing;
   }
@@ -405,6 +414,7 @@
   .featured__item {
     flex: 0 0 350px;
     transition: var(--transition-base);
+    scroll-snap-align: start;
   }
 
   .featured__nav {
@@ -415,7 +425,7 @@
     width: 3.5rem;
     height: 3.5rem;
   }
-  
+
   .featured__carousel-wrapper {
     position: relative;
     overflow: hidden;

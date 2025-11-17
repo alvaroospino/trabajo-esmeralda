@@ -151,7 +151,71 @@ export const GALLERY_CONFIG = {
       category: 'videos', 
       title: 'Video Esmeralda', 
       description: 'Presentación de nuestra colección premium',
+      featured: false
+    },
+    { 
+      src: 'assets/video/video-esmeralda2.mp4', 
+      type: 'video', 
+      category: 'videos', 
+      title: 'Video Esmeralda', 
+      description: 'Presentación de nuestra colección premium',
       featured: true
+    },
+    { 
+      src: 'assets/video/esmeralda3.mp4', 
+      type: 'video', 
+      category: 'videos', 
+      title: 'Video Esmeralda', 
+      description: 'Presentación de nuestra colección premium',
+      featured: true
+    },
+    { 
+      src: 'assets/video/esmeralda4.mp4', 
+      type: 'video', 
+      category: 'videos', 
+      title: 'Video Esmeralda', 
+      description: 'Presentación de nuestra colección premium',
+      featured: true
+    },
+    { 
+      src: 'assets/video/esmeralda5.mp4', 
+      type: 'video', 
+      category: 'videos', 
+      title: 'Video Esmeralda', 
+      description: 'Presentación de nuestra colección premium',
+      featured: true
+    },
+     { 
+      src: 'assets/img/contrato.jpg', 
+      type: 'image', 
+      category: 'coleccion2', 
+      title: 'Contrato de Concesión Minera', 
+      description: 'Contrato de Concesión minera No. HF5 - 101',
+      featured: true
+    },
+    { 
+      src: 'assets/img/minas.jpg', 
+      type: 'image', 
+      category: 'coleccion2', 
+      title: 'Minas', 
+      description: 'Fotografía de nuestras minas',
+      featured: true
+    },
+    { 
+      src: 'assets/img/coleccion.jpg', 
+      type: 'image', 
+      category: 'coleccion2', 
+      title: 'colección', 
+      description: 'Fotografía de nuestra colección de esmeraldas',
+      featured: false
+    },
+    { 
+      src: 'assets/img/esmeraldas.jpg', 
+      type: 'image', 
+      category: 'coleccion2', 
+      title: 'Esmeraldas', 
+      description: 'Fotografía de nuestras esmeraldas',
+      featured: false
     },
     { 
       src: 'assets/img/gema2.jpg', 
